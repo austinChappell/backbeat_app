@@ -15,6 +15,8 @@ import {
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import { Provider } from 'react-redux';
 import store from './store/';
+import { styles, color } from './assets/styles';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import DashboardScreen from './components/DashboardScreen';
 import HomeScreen from './components/HomeScreen';
@@ -37,9 +39,16 @@ const Stack = StackNavigator({
   LoggedIn: {
     screen: LoggedInNavigation,
     navigationOptions: {
-      headerLeft: <Button title="Profile" />,
-      headerRight: <Button title="Info" />,
-      title: 'The Backbeat'
+      headerLeft: <Icon name="ios-person" size={30} color={color.white} />,
+      headerRight: <Icon name="ios-mail" size={30} color={color.white} />,
+      title: 'The Backbeat',
+      headerStyle: {
+        backgroundColor: color.primary,
+        padding: 20
+      },
+      headerTitleStyle: {
+        color: color.white
+      }
     }
   }
 })
