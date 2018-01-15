@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 import {
   Platform,
   StyleSheet,
+  Button,
   Text,
   View
 } from 'react-native';
@@ -17,6 +18,7 @@ import store from './store/';
 
 import DashboardScreen from './components/DashboardScreen';
 import HomeScreen from './components/HomeScreen';
+import LoggedInNavigation from './components/LoggedInNavigation';
 import LoginScreen from './components/LoginScreen';
 import ProfileScreen from './components/ProfileScreen';
 import SettingsScreen from './components/SettingsScreen';
@@ -32,19 +34,15 @@ import SignupScreen from './components/SignupScreen';
 const Stack = StackNavigator({
   Home: { screen: HomeScreen },
   Login: { screen: LoginScreen },
-  Signup: { screen: SignupScreen },
-  Dashboard: { screen: DashboardScreen }
+  LoggedIn: {
+    screen: LoggedInNavigation,
+    navigationOptions: {
+      headerLeft: <Button title="Profile" />,
+      headerRight: <Button title="Info" />,
+      title: 'The Backbeat'
+    }
+  }
 })
-
-const Tabs = TabNavigator({
-  Settings: { screen: SettingsScreen },
-  Dashboard: { screen: DashboardScreen }
-})
-
-// const App = StackNavigator({
-//   Home: { screen: HomeScreen },
-//   Profile: { screen: ProfileScreen }
-// })
 
 class App extends Component {
   render() {
