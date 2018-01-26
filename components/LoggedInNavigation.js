@@ -42,7 +42,7 @@ const LoggedInNavigation = TabNavigator({
   }
 }, {
   tabBarPosition: 'bottom',
-  animationEnabled: true,
+  animationEnabled: false,
   tabBarOptions: {
     activeTintColor: color.secondary
   }

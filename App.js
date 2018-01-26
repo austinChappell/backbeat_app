@@ -39,8 +39,16 @@ const Stack = StackNavigator({
   LoggedIn: {
     screen: LoggedInNavigation,
     navigationOptions: {
-      headerLeft: <Icon name="ios-person" size={30} color={color.white} />,
-      headerRight: <Icon name="ios-mail" size={30} color={color.white} />,
+      headerLeft: <Icon
+        name="ios-person"
+        size={30}
+        color={color.white}
+      />,
+      headerRight: <Icon
+        name="ios-mail"
+        size={30}
+        color={color.white}
+      />,
       title: 'The Backbeat',
       headerStyle: {
         backgroundColor: color.primary,

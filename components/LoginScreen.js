@@ -52,10 +52,10 @@ class LoginScreen extends Component {
       }
     }).then((user) => {
       if (user) {
-        // console.log('USER', user);
-        this.setUser(user.token, user.userid);
-        // this.props.setToken(user.token);
+        console.log('USER', user);
         // AsyncStorage.setItem('token', user.token);
+        this.props.setToken(user.token);
+        this.setUser(user.token, user.userid);
         // this.props.history.push('/dashboard');
       }
     }).catch((err) => {
@@ -77,7 +77,7 @@ class LoginScreen extends Component {
       return response.json();
     }).then((results) => {
       const user = results.rows[0];
-      this.props.setUser(user);
+      this.props.setUser(user, token);
       navigate('Dashboard');
     }).catch((err) => {
       console.error('ERROR SETTING USER', err);
