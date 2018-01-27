@@ -1,4 +1,8 @@
+import React from 'react';
 import { StackNavigator, TabNavigator } from 'react-navigation';
+import { Icon } from 'react-native-elements';
+
+import { colors } from './assets/styles';
 
 import Bands from './screens/Bands';
 import Chat from './screens/Chat';
@@ -10,41 +14,85 @@ import Settings from './screens/Settings';
 import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
 
-export const SignedOut = StackNavigator({
-  SignUp: {
-    screen: SignUp,
-    navigationOptions: {
-      title: 'Sign Up'
+export const SignedOut = StackNavigator(
+  {
+    SignUp: {
+      screen: SignUp,
+      navigationOptions: {
+        title: 'Sign Up'
+      }
+    },
+    SignIn: {
+      screen: SignIn,
+      navigationOptions: {
+        title: 'Sign In'
+      }
     }
   },
-  SignIn: {
-    screen: SignIn,
-    navigationOptions: {
-      title: 'Sign In'
-    }
+  {
+    headerMode: 'none',
   }
-})
+)
 
 export const SignedIn = TabNavigator(
   {
     Settings: {
       screen: Settings,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => <Icon
+          name="ios-settings"
+          type="ionicon"
+          color={tintColor}
+        />
+      }
     },
     Bands: {
-      screen: Bands
+      screen: Bands,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => <Icon
+          name="ios-musical-notes"
+          type="ionicon"
+          color={tintColor}
+        />
+      }
     },
     Dashboard: {
       screen: Dashboard,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => <Icon
+          name="ios-stats"
+          type="ionicon"
+          color={tintColor}
+        />
+      }
     },
     Map: {
       screen: Map,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => <Icon
+          name="ios-compass"
+          type="ionicon"
+          color={tintColor}
+        />
+      }
     },
     Notifications: {
       screen: Notifications,
+      navigationOptions: {
+        tabBarIcon: ({tintColor}) => <Icon
+          name="ios-notifications"
+          type="ionicon"
+          color={tintColor}
+        />
+      }
     },
   },
   {
-    initialRouteName: 'Dashboard'
+    initialRouteName: 'Dashboard',
+    tabBarOptions: {
+      activeTintColor: colors.primary,
+      // showLabel: false
+    }
   }
 )
 

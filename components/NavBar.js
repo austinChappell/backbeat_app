@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Header, Icon } from 'react-native-elements';
+import { colors } from '../assets/styles';
 
 class NavBar extends Component {
   render() {
@@ -8,6 +9,8 @@ class NavBar extends Component {
 
     return (
       <Header
+        statusBarProps={{ barStyle: 'light-content' }}
+        backgroundColor={colors.primary}
         leftComponent={<Icon
           name="ios-person"
           type="ionicon"
@@ -15,7 +18,7 @@ class NavBar extends Component {
           onPress={() => navigation.navigate('Profile')}
         />}
         centerComponent={{
-          text: 'BackBeat',
+          text: 'The BackBeat',
           style: {
             color: '#fff'
           }

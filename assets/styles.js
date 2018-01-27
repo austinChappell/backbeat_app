@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 
-const color = {
-  primary: '#1a237e',
-  primaryDark: '#000051',
-  primaryLight: '#534bae',
-  secondary: '#e040fb',
-  secondaryDark: '#aa00c7',
-  secondaryLight: '#ff79ff',
+const colors = {
+  primary: '#7b1fa2',
+  primaryDark: '#4a0072',
+  primaryLight: '#ae52d4',
+  primaryDisabled: '#e1bee7',
+  secondary: '#3949ab',
+  secondaryDark: '#00227b',
+  secondaryLight: '#6f74dd',
   white: '#ffffff',
   black: '#111111',
   bgLight: '#eee',
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   tabBar: {
-    backgroundColor: color.bgLight,
+    backgroundColor: colors.bgLight,
     flexDirection: 'row',
     justifyContent: 'space-around',
     position: 'absolute',
@@ -79,4 +80,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export { color, styles };
+export { colors, styles };
