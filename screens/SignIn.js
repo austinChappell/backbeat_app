@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Button, Card, FormLabel, FormInput } from 'react-native-elements';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import Api from '../assets/api';
 import { onSignIn } from '../auth';
-import { colors } from '../assets/styles';
+import { colors, styles } from '../assets/styles';
+
+import FadeInView from '../components/FadeInView';
 
 const api = new Api()
 const { getUserInfo, login } = api;
@@ -19,7 +21,7 @@ class SignIn extends Component {
   }
 
   enterSite = (user) => {
-    this.props.setUser(user[0])
+    this.props.setUser(user)
     onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'))
   }
 
@@ -50,29 +52,47 @@ class SignIn extends Component {
     const { navigation } = this.props;
 
     return (
-      <View style={{ paddingVertical: 20 }}>
-        <Card>
-          <FormLabel>Username</FormLabel>
-          <FormInput
-            onChangeText={(val) => this.handleInputChange(val, 'username')}
-            value={this.state.username}
-          />
-          <FormLabel>Password</FormLabel>
-          <FormInput
-            secureTextEntry={true}
-            onChangeText={(val) => this.handleInputChange(val, 'password')}
-            value={this.state.password}
-          />
-          <Button
-            backgroundColor={colors.primary}
-            disabled={this.state.loading}
-            disabledStyle={{ backgroundColor: colors.primaryDisabled }}
-            loading={this.state.loading}
-            color={colors.white}
-            title="Sign In"
-            onPress={this.signIn}
-          />
-        </Card>
+      <View style={ styles.container }>
+        <FadeInView>
+          <Text style={ styles.header }>
+            The Back Beat
+          </Text>
+          <Text style={ styles.subHeader }>
+            Connecting musicians in a digital age.
+          </Text>
+          <Card>
+            <FormLabel>Username</FormLabel>
+            <FormInput
+              onChangeText={(val) => this.handleInputChange(val, 'username')}
+              value={this.state.username}
+            />
+            <FormLabel>Password</FormLabel>
+            <FormInput
+              secureTextEntry={true}
+              onChangeText={(val) => this.handleInputChange(val, 'password')}
+              value={this.state.password}
+            />
+            <Button
+              backgroundColor={colors.primary}
+              disabled={this.state.loading}
+              disabledStyle={{ backgroundColor: colors.primaryDisabled }}
+              loading={this.state.loading}
+              color={colors.white}
+              buttonStyle={ styles.button }
+              title="Sign In"
+              onPress={this.signIn}
+            />
+            <Text style={{ textAlign: 'center' }}>
+              Need an account?
+            </Text>
+            <Button
+              backgroundColor={'transparent'}
+              color={colors.primary}
+              title="Sign Up"
+              onPress={() => navigation.navigate('SignUp')}
+            />
+          </Card>
+        </FadeInView>
       </View>
     )
 

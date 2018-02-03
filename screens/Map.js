@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Mapbox from '@mapbox/react-native-mapbox-gl';
 import MapView from 'react-native-maps';
 import NavBar from '../components/NavBar';
-
-Mapbox.setAccessToken('pk.eyJ1IjoiYXVzdGlud2MzMyIsImEiOiJjamN6cHV3Y3cxbmQ5Mnluc2J0MW1ianFrIn0.1VXh5wkY_-sCJLHxrmPomw');
 
 export default class App extends Component<{}> {
   render() {
@@ -37,12 +34,6 @@ export default class App extends Component<{}> {
             description={"House of Blues"}
           />
         </MapView>
-        {/* <Mapbox.MapView
-            styleURL={Mapbox.StyleURL.Street}
-            zoomLevel={12}
-            centerCoordinate={[-96.797, 32.777]}
-            style={styles.container}>
-        </Mapbox.MapView> */}
       </View>
     );
   }

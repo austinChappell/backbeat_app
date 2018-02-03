@@ -30,7 +30,14 @@ class Api {
       return response.json();
     }).then((results) => {
       console.log('USER INFO', results);
-      cb(results)
+      const user = results[0]
+      const { first_name, last_name } = user;
+      console.log('FIRST NAME', first_name)
+      console.log('LAST NAME', last_name)
+      cb(user)
+      AsyncStorage.setItem('firstName', first_name)
+      AsyncStorage.setItem('lastName', last_name)
+      AsyncStorage.removeItem('user')
     })
   }
 

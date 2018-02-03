@@ -1,19 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Text } from 'react-native-elements';
-import { View } from 'react-native';
+import { AsyncStorage, View } from 'react-native';
 
 import GoBackNavBar from '../components/GoBackNavBar';
 import Api from '../assets/api';
 
 const api = new Api()
 const { getProfile } = api;
+const user = {}
+
+AsyncStorage.getItem('firstName').then(value => user.firstName = value)
+AsyncStorage.getItem('lastName').then(value => user.lastName = value)
 
 class Profile extends Component {
 
   render() {
 
     console.log('PROPS', this.props)
+    console.log('USER', user)
 
     const { navigation } = this.props;
 
@@ -21,7 +26,7 @@ class Profile extends Component {
       <View>
         <GoBackNavBar navigation={navigation} logoutButton={true} />
         <Text>
-          Hello, {this.props.user.first_name} {this.props.user.last_name}
+          Hello, {user.firstName} {user.lastName}
         </Text>
       </View>
     )

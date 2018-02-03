@@ -16,6 +16,7 @@ const colors = {
 
 const styles = StyleSheet.create({
   button: {
+    marginBottom: 20,
     marginTop: 20,
     width: '100%',
     borderRadius: 4,
@@ -35,10 +36,11 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    color: '#0d47a1',
+    color: colors.primary,
     fontSize: 36,
     fontWeight: '700',
-    marginBottom: 20
+    marginBottom: 20,
+    textAlign: 'center'
   },
   hide: {
     display: 'none'

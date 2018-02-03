@@ -16,18 +16,18 @@ import SignIn from './screens/SignIn';
 
 export const SignedOut = StackNavigator(
   {
+    SignIn: {
+      screen: SignIn,
+      navigationOptions: {
+        title: 'Sign In'
+      }
+    },
     SignUp: {
       screen: SignUp,
       navigationOptions: {
         title: 'Sign Up'
       }
     },
-    SignIn: {
-      screen: SignIn,
-      navigationOptions: {
-        title: 'Sign In'
-      }
-    }
   },
   {
     headerMode: 'none',
