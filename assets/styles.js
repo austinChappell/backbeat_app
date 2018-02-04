@@ -28,15 +28,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  containerLoggedOut: {
+  containerDark: {
+    flex: 1,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  containerTop: {
     flex: 1,
     backgroundColor: '#ffffff',
+  },
+  containerLoggedOut: {
+    flex: 1,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
   },
   header: {
     color: colors.primary,
+    fontSize: 36,
+    fontWeight: '700',
+    marginBottom: 20,
+    textAlign: 'center'
+  },
+  headerLight: {
+    color: colors.white,
     fontSize: 36,
     fontWeight: '700',
     marginBottom: 20,
@@ -53,6 +70,16 @@ const styles = StyleSheet.create({
     padding: 5,
     width: 250,
   },
+  line: {
+    borderBottomColor: colors.secondaryDark,
+    borderBottomWidth: 1,
+    flexGrow: 1,
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  message: {
+
+  },
   spinnerContainer: {
     flex: 1,
     paddingTop: '40%',
@@ -65,6 +92,12 @@ const styles = StyleSheet.create({
   },
   subHeader: {
     color: '#0d47a1',
+    fontSize: 26,
+    marginBottom: 20,
+    textAlign: 'center'
+  },
+  subHeaderLight: {
+    color: colors.white,
     fontSize: 26,
     marginBottom: 20,
     textAlign: 'center'

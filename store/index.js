@@ -1,10 +1,12 @@
 import { createStore, combineReducers } from 'redux';
 
 import general from './general';
+import messages from './messages';
 import user from './user';
 
 const reducer = combineReducers({
   general,
+  messages,
   user
 })
 

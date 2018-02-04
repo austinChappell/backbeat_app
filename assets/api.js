@@ -31,13 +31,19 @@ class Api {
     }).then((results) => {
       console.log('USER INFO', results);
       const user = results[0]
-      const { first_name, last_name } = user;
-      console.log('FIRST NAME', first_name)
-      console.log('LAST NAME', last_name)
+      const {
+        activation_key,
+        first_name,
+        id,
+        is_active,
+        last_name,
+        onboarding_stage,
+       } = user;
       cb(user)
       AsyncStorage.setItem('firstName', first_name)
+      AsyncStorage.setItem('id', String(id))
       AsyncStorage.setItem('lastName', last_name)
-      AsyncStorage.removeItem('user')
+      AsyncStorage.setItem('onboardingStage', String(onboarding_stage))
     })
   }
 
@@ -56,6 +62,17 @@ class Api {
     }).catch((err) => {
       console.error('ERROR', err)
     })
+  }
+
+  logout = (cb) => {
+    return fetch(`${api}/logout`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST'
+    }).then((response) => {
+      cb(response)
+    }).catch(err => console.error('PROBLEM LOGGING OUT', err))
   }
 
 }
