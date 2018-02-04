@@ -62,21 +62,17 @@ class Chat extends Component {
 
   loadMessages = (tag) => {
     console.log('TAG', tag)
-    this.setState({ currentRecipientId: tag }, () => {
-      const { currentRecipientId } = this.state;
-      const { token, setUserMessages } = this;
-      getUserMessages(currentRecipientId, token, setUserMessages)
+    const { messages } = this.props;
+    const userMessages = messages.filter(message => {
+      return message.sender_id === tag || message.recipient_id === tag
     })
+    this.setState({ currentRecipientId: tag, userMessages })
   }
 
   setMessages = (messages) => {
     console.log('ALL MESSAGES', messages)
     this.props.setAllMessages(messages)
     this.getMessageHistory()
-  }
-
-  setUserMessages = (userMessages) => {
-    this.setState({ userMessages })
   }
 
   render() {
