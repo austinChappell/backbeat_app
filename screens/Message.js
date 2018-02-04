@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { Avatar, Header, Icon } from 'react-native-elements';
 
 import { colors, styles } from '../assets/styles';
@@ -23,12 +23,16 @@ class Message extends Component {
         <Header
           backgroundColor={colors.bgLight}
           leftComponent={
-            <Icon
-              color={colors.primary}
-              name="ios-arrow-dropleft"
+            <TouchableOpacity
+              hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
               onPress={this.props.goBack}
-              type="ionicon"
-            />
+            >
+              <Icon
+                color={colors.primary}
+                name="ios-arrow-dropleft"
+                type="ionicon"
+              />
+            </TouchableOpacity>
           }
         />
 
@@ -50,12 +54,12 @@ class Message extends Component {
                   <View style={styles.line} />
                   <Text
                     style={{
-                      textAlign: 'center', fontSize: 16
+                      textAlign: 'center', fontSize: 16, color: colors.secondary, fontWeight: '700'
                     }}
                     >
                       {date}
                     </Text>
-                    <View style={styles.line} />
+                  <View style={styles.line} />
                 </View>
               </View>;
             }
@@ -75,10 +79,10 @@ class Message extends Component {
                     <Avatar
                       small
                       rounded
-                      source={{ uri: message.profile_image_url || '' }}
+                      source={{ uri: message.profile_image_url || 'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png' }}
                     />
                     <Text
-                      style={{ marginLeft: 20, marginRight: 20 }}
+                      style={{ marginLeft: 20, marginRight: 20, fontSize: 18 }}
                     >
                       {message.content}
                     </Text>

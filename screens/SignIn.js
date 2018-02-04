@@ -43,7 +43,7 @@ class SignIn extends Component {
   signIn = () => {
     this.setState({ loading: true }, () => {
       const { username, password } = this.state;
-      const credentials = { username, password }
+      const credentials = { username: username.toLowerCase(), password }
       login(credentials, this.getUser)
     })
   }

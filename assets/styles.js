@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: 250,
   },
   line: {
-    borderBottomColor: colors.secondaryDark,
+    borderBottomColor: colors.secondary,
     borderBottomWidth: 1,
     flexGrow: 1,
     marginLeft: 5,

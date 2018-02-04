@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { TouchableOpacity } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { colors } from '../assets/styles';
 
@@ -11,24 +12,36 @@ class NavBar extends Component {
       <Header
         statusBarProps={{ barStyle: 'light-content' }}
         backgroundColor={colors.primary}
-        leftComponent={<Icon
-          name="ios-person"
-          type="ionicon"
-          color='#fff'
-          onPress={() => navigation.navigate('Profile')}
-        />}
+        leftComponent={
+          <TouchableOpacity
+            hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <Icon
+              name="ios-person"
+              type="ionicon"
+              color='#fff'
+            />
+          </TouchableOpacity>
+        }
         centerComponent={{
           text: 'The BackBeat',
           style: {
             color: '#fff'
           }
         }}
-        rightComponent={<Icon
-          name="ios-chatbubbles"
-          type="ionicon"
-          color='#fff'
-          onPress={() => navigation.navigate('Chat')}
-        />}
+        rightComponent={
+          <TouchableOpacity
+            hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
+            onPress={() => navigation.navigate('Chat')}
+          >
+            <Icon
+              name="ios-chatbubbles"
+              type="ionicon"
+              color='#fff'
+            />
+          </TouchableOpacity>
+        }
       />
     )
 
