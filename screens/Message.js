@@ -86,7 +86,7 @@ class Message extends Component {
 
         <ScrollView>
 
-          {this.props.messages.map((message, index) => {
+          {this.props.messages.slice().reverse().map((message, index) => {
             const date = new Date(message.created_at).toDateString()
             let displayDate = null;
             if (!dates.includes(date)) {
