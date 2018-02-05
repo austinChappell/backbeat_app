@@ -2,21 +2,34 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { AsyncStorage, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Avatar, Button, FormInput, Header, Icon } from 'react-native-elements';
-
+import io from "socket.io-client";
 import { colors, styles } from '../assets/styles';
-
 import MessageAPI from '../assets/APIs/messageAPI';
+import data from '../assets/data';
 
+const { apiURL } = data;
 const messageAPI = new MessageAPI();
-
 const { sendMessage } = messageAPI;
 
 class Message extends Component {
 
-  state = {
-    message: '',
-    numOfMessages: 20,
-    loaded: false,
+  constructor() {
+    super()
+
+    this.state = {
+      message: '',
+      numOfMessages: 20,
+      loaded: false,
+    }
+
+    console.log('API URL', apiURL)
+
+    this.socket = io(apiURL)
+
+    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
+      console.log('RECEIVING MESSAGE', data)
+    })
+
   }
 
   componentDidMount() {
