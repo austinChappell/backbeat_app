@@ -16,6 +16,7 @@ class Chat extends Component {
 
   state = {
     currentRecipientId: null,
+    currentRecipientName: null,
     messageHistory: [],
     userMessages: []
   }
@@ -24,12 +25,13 @@ class Chat extends Component {
     console.log('CHAT SCREEN MOUNTED')
     AsyncStorage.getItem('auth_token').then((value) => {
       this.token = value
+      console.log('TOKEN', this.token)
       getAllMessages(this.token, this.setMessages)
     })
   }
 
   clearRecipient = () => {
-    this.setState({ currentRecipientId: null , userMessages: [] })
+    this.setState({ currentRecipientId: null, currentRecipientName: null, userMessages: [] })
   }
 
   getMessageHistory = () => {
@@ -60,13 +62,13 @@ class Chat extends Component {
 
   }
 
-  loadMessages = (tag) => {
+  loadMessages = (tag, currentRecipientName) => {
     console.log('TAG', tag)
     const { messages } = this.props;
     const userMessages = messages.filter(message => {
       return message.sender_id === tag || message.recipient_id === tag
     })
-    this.setState({ currentRecipientId: tag, userMessages })
+    this.setState({ currentRecipientId: tag, currentRecipientName, userMessages })
   }
 
   setMessages = (messages) => {
@@ -83,8 +85,11 @@ class Chat extends Component {
     const displayContent = this.state.currentRecipientId
     ?
     <Message
+      currentRecipientId={this.state.currentRecipientId}
+      currentRecipientName={this.state.currentRecipientName}
       goBack={this.clearRecipient}
       messages={this.state.userMessages}
+      token={this.token}
     />
     :
     <ScrollView>
@@ -98,7 +103,7 @@ class Chat extends Component {
           return (
             <ListItem
               key={index}
-              onPress={() => this.loadMessages(tag)}
+              onPress={() => this.loadMessages(tag, displayName)}
               rightTitle={displayDate}
               subtitle={content}
               title={displayName}

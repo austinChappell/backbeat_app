@@ -25,19 +25,46 @@ class MessageAPI {
     })
   }
 
-  getUserMessages = (userid, token, cb) => {
-    return fetch(`${api}/messages/${userid}`, {
+  // getUserMessages = (userid, token, cb) => {
+  //   return fetch(`${api}/messages/${userid}`, {
+  //     credentials: 'include',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       token
+  //     }
+  //   }).then((response) => {
+  //     return response.json()
+  //   }).then((results) => {
+  //     cb(results.rows)
+  //   }).catch((err) => {
+  //     console.error('ERROR GETTING USER MESSAGES', err)
+  //   })
+  // }
+
+  sendMessage = (token, recipientId, message, sender, recipient, cb) => {
+    const body = {
+      date: new Date(),
+      message,
+      recipientId,
+      sender,
+      recipient
+    }
+
+    console.log('BODY', body)
+    return fetch(`${api}/message/send`, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         token
-      }
+      },
+      method: 'POST',
+      body: JSON.stringify(body)
     }).then((response) => {
       return response.json()
     }).then((results) => {
       cb(results.rows)
     }).catch((err) => {
-      console.error('ERROR GETTING USER MESSAGES', err)
+      console.error('ERROR SENDING MESSAGE', err)
     })
   }
 
