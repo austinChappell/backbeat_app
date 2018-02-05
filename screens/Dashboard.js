@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Api from '../assets/api';
-import { AsyncStorage, View } from 'react-native';
+import { ActivityIndicator, AsyncStorage, View } from 'react-native';
 import { Text } from 'react-native-elements';
+import { styles } from '../assets/styles';
 
 import NavBar from '../components/NavBar';
 
@@ -10,6 +11,10 @@ const api = new Api();
 const { getUserInfo } = api;
 
 class Dashboard extends Component {
+
+  state = {
+    loading: true,
+  }
 
   componentDidMount() {
     AsyncStorage.getItem('id').then(userid => {
@@ -20,19 +25,28 @@ class Dashboard extends Component {
   setUser = (user) => {
     console.log('SETTING USER', user)
     this.props.setUser(user)
+    this.setState({ loading: false })
   }
 
   render() {
 
     const { navigation } = this.props;
 
+    const content = this.state.loading ?
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color="#0000ff" />
+    </View>
+    :
+    <View>
+      <NavBar navigation={navigation} />
+      <Text>
+        Dashboard Screen
+      </Text>
+    </View>
+
+
     return (
-      <View>
-        <NavBar navigation={navigation} />
-        <Text>
-          Dashboard Screen
-        </Text>
-      </View>
+      content
     )
 
   }
