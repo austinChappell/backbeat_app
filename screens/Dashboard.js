@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Api from '../assets/api';
 import { ActivityIndicator, AsyncStorage, View } from 'react-native';
 import { Text } from 'react-native-elements';
-import { styles } from '../assets/styles';
+import { colors, styles } from '../assets/styles';
 
 import NavBar from '../components/NavBar';
 
@@ -34,7 +34,7 @@ class Dashboard extends Component {
 
     const content = this.state.loading ?
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size="large" color={colors.secondary} />
     </View>
     :
     <View>

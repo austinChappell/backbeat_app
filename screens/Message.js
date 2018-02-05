@@ -15,7 +15,8 @@ class Message extends Component {
 
   state = {
     message: '',
-    numOfMessages: 20
+    numOfMessages: 20,
+    loaded: false,
   }
 
   componentDidMount() {
@@ -26,6 +27,13 @@ class Message extends Component {
 
   handleMessageChange = (message) => {
     this.setState({ message })
+  }
+
+  handleSizeChange = (width, height) => {
+    if (!this.state.loaded) {
+      this.scrollView.scrollToEnd({ animated: false })
+      this.setState({ loaded: true })
+    }
   }
 
   submit = () => {
@@ -46,7 +54,13 @@ class Message extends Component {
 
   updateMessages = (results) => {
     console.log('MESSAGE SENT', results)
-    this.setState({ message: '' })
+    const message = results[0];
+    this.props.messages.unshift(message)
+    this.setState({ message: '' }, () => {
+      setTimeout(() => {
+        this.scrollView.scrollToEnd()
+      }, 0)
+    })
   }
 
   render() {
@@ -84,10 +98,15 @@ class Message extends Component {
           }
         />
 
-        <ScrollView>
+        <ScrollView
+          onContentSizeChange={this.handleSizeChange}
+          ref={(scrollView) => this.scrollView = scrollView}
+        >
 
           {this.props.messages.slice().reverse().map((message, index) => {
             const date = new Date(message.created_at).toDateString()
+            const today = new Date().toDateString()
+            const dateView = date === today ? 'Today' : date;
             let displayDate = null;
             if (!dates.includes(date)) {
               dates.push(date)
@@ -105,7 +124,7 @@ class Message extends Component {
                       textAlign: 'center', fontSize: 16, color: colors.secondary, fontWeight: '700'
                     }}
                     >
-                      {date}
+                      {dateView}
                     </Text>
                   <View style={styles.line} />
                 </View>
@@ -165,6 +184,7 @@ class Message extends Component {
               marginRight: 5,
               flexGrow: 1,
             }}
+            value={this.state.message}
           />
           <Icon
             color={this.state.message.trim() ? colors.primary : colors.disabled}
