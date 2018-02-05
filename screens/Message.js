@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { AsyncStorage, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Avatar, Button, FormInput, Header, Icon } from 'react-native-elements';
-import io from "socket.io-client";
+import io from 'socket.io-client';
 import { colors, styles } from '../assets/styles';
 import MessageAPI from '../assets/APIs/messageAPI';
 import data from '../assets/data';
@@ -28,6 +28,7 @@ class Message extends Component {
 
     this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
       console.log('RECEIVING MESSAGE', data)
+      this.addMessage(data[0])
     })
 
   }
@@ -38,15 +39,30 @@ class Message extends Component {
     AsyncStorage.getItem('lastName').then(lastName => this.user.lastName = lastName)
   }
 
+  addMessage = (message) => {
+    this.props.messages.unshift(message)
+    this.setState({ message: '' }, () => {
+      setTimeout(() => {
+        this.scrollView.scrollToEnd()
+      }, 0)
+    })
+  }
+
   handleMessageChange = (message) => {
     this.setState({ message })
   }
 
   handleSizeChange = (width, height) => {
     if (!this.state.loaded) {
-      this.scrollView.scrollToEnd({ animated: false })
+      this.scrollDown(false)
       this.setState({ loaded: true })
     }
+  }
+
+  scrollDown = (animated) => {
+    setTimeout(() => {
+      this.scrollView.scrollToEnd({ animated })
+    }, 0)
   }
 
   submit = () => {
@@ -67,13 +83,7 @@ class Message extends Component {
 
   updateMessages = (results) => {
     console.log('MESSAGE SENT', results)
-    const message = results[0];
-    this.props.messages.unshift(message)
-    this.setState({ message: '' }, () => {
-      setTimeout(() => {
-        this.scrollView.scrollToEnd()
-      }, 0)
-    })
+    this.socket.emit('SEND_INDIVIDUAL_MESSAGE', results)
   }
 
   render() {
@@ -145,7 +155,7 @@ class Message extends Component {
             }
             if (index >= this.props.messages.length - this.state.numOfMessages) {
               return (
-                <View key={index}>
+                <KeyboardAvoidingView key={index}>
 
                   {displayDate}
 
@@ -167,7 +177,7 @@ class Message extends Component {
                       {message.content}
                     </Text>
                   </View>
-                </View>
+                </KeyboardAvoidingView>
               )
             }
           })}
@@ -187,6 +197,7 @@ class Message extends Component {
         >
           <TextInput
             onChangeText={this.handleMessageChange}
+            onFocus={() => this.scrollDown(true)}
             style={{
               backgroundColor: colors.white,
               borderColor: colors.secondary,
