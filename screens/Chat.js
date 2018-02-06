@@ -50,6 +50,11 @@ class Chat extends Component {
         const displayName = sender_id === user.id ? recipient_name : sender_name;
         message.displayName = displayName;
         message.tag = id;
+        const { unreadMessages } = this.props;
+        const unread = unreadMessages.find(msg => msg.sender_id === id);
+        if (unread) {
+          message.unread = true;
+        }
         messageHistory.push(message)
 
       }
@@ -96,7 +101,7 @@ class Chat extends Component {
       <GoBackNavBar navigation={navigation} logoutButton={false} />
       <List>
         {this.state.messageHistory.map((message, index) => {
-          const leftIcon = index > 2 ? 
+          const leftIcon = message.unread ? 
           { size: 20, name: 'dot-single', type: 'entypo', color: '#ff0000' }
           :
           null;
@@ -129,6 +134,7 @@ class Chat extends Component {
 const mapStateToProps = (state) => {
   return {
     messages: state.messages.messages,
+    unreadMessages: state.messages.unreadMessages,
     user: state.user.user
   }
 }

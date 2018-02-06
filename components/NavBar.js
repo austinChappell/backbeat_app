@@ -13,10 +13,6 @@ const { getAllMessages } = messageAPI;
 
 class NavBar extends Component {
 
-  state = {
-    unreadMessages: []
-  }
-
   componentDidMount() {
     console.log('NAVBAR MOUNTED', this.props)
     AsyncStorage.getItem('auth_token').then((value) => {
@@ -35,15 +31,15 @@ class NavBar extends Component {
   setMessages = (messages) => {
     this.props.setAllMessages(messages)
     const unreadMessages = findUnreadMessages(messages, this.props.user.id)
-    this.setState({ unreadMessages })
+    this.props.setUnreadMessages(unreadMessages)
   }
 
   render() {
 
     console.log('NAVBAR PROPS', this.props)
 
-    const { navigation } = this.props;
-    const unreadNotification = this.state.unreadMessages.length > 0 ?
+    const { navigation, unreadMessages } = this.props;
+    const unreadNotification = unreadMessages.length > 0 ?
       <View style={{ position: 'absolute', top: -12, right: -4, zIndex: 10 }}>
         <Icon
           size={30}
@@ -101,6 +97,7 @@ const mapStateToProps = (state) => {
   return {
 
     messages: state.messages.messages,
+    unreadMessages: state.messages.unreadMessages,
     user: state.user.user
 
   }
@@ -112,6 +109,11 @@ const mapDispatchToProps = (dispatch) => {
     setAllMessages: (messages) => {
       const action = { type: 'SET_ALL_MESSAGES', messages };
       dispatch(action)
+    },
+
+    setUnreadMessages: (messages) => {
+      const action = { type: 'SET_UNREAD_MESSAGES', messages };
+      dispatch(action);
     }
   }
 }
