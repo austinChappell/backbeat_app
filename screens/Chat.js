@@ -9,7 +9,6 @@ import Message from './Message';
 import MessageAPI from '../assets/APIs/messageAPI';
 
 const messageAPI = new MessageAPI();
-
 const { getAllMessages, getUserMessages } = messageAPI;
 
 class Chat extends Component {
@@ -25,9 +24,8 @@ class Chat extends Component {
     console.log('CHAT SCREEN MOUNTED')
     AsyncStorage.getItem('auth_token').then((value) => {
       this.token = value
-      console.log('TOKEN', this.token)
-      getAllMessages(this.token, this.setMessages)
     })
+    this.getMessageHistory()
   }
 
   clearRecipient = () => {
@@ -76,12 +74,6 @@ class Chat extends Component {
     this.setState({ currentRecipientId: tag, currentRecipientName, userMessages })
   }
 
-  setMessages = (messages) => {
-    console.log('ALL MESSAGES', messages)
-    this.props.setAllMessages(messages)
-    this.getMessageHistory()
-  }
-
   render() {
 
     console.log('CHAT STATE', this.state)
@@ -89,6 +81,7 @@ class Chat extends Component {
 
     const displayContent = this.state.currentRecipientId
     ?
+    // PROBABLY REFACTOR THIS SO THE MESSAGES PROP GETS FILTERED ON THE WAY IN INSTEAD OF FILTERING ON LIST ITEM CLICK. THIS WAY WE CAN MORE EASILY HAVE REAL-TIME MESSAGE UPDATE FROM THE MESSAGE VIEW
     <Message
       currentRecipientId={this.state.currentRecipientId}
       currentRecipientName={this.state.currentRecipientName}
@@ -141,10 +134,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setAllMessages: (messages) => {
-      const action = { type: 'SET_ALL_MESSAGES', messages };
-      dispatch(action)
-    }
   }
 }
 
