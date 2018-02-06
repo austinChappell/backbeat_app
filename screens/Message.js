@@ -4,11 +4,14 @@ import { AsyncStorage, KeyboardAvoidingView, ScrollView, Text, TextInput, Toucha
 import { Avatar, Button, FormInput, Header, Icon } from 'react-native-elements';
 import io from 'socket.io-client';
 import { colors, styles } from '../assets/styles';
+import GeneralAPI from '../assets/APIs/generalAPI';
 import MessageAPI from '../assets/APIs/messageAPI';
 import data from '../assets/data';
 
 const { apiURL } = data;
+const generalAPI = new GeneralAPI();
 const messageAPI = new MessageAPI();
+const { getUserPhoto } = generalAPI;
 const { sendMessage } = messageAPI;
 
 class Message extends Component {
@@ -17,9 +20,12 @@ class Message extends Component {
     super()
 
     this.state = {
+      isTyping: false,
+      loaded: false,
       message: '',
       numOfMessages: 20,
-      loaded: false,
+      profileImage: 'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png',
+      userTyping: null,
     }
 
     console.log('API URL', apiURL)
@@ -31,12 +37,27 @@ class Message extends Component {
       this.addMessage(data[0])
     })
 
+    this.socket.on('NOTIFY_TYPING', (user) => {
+      if (user.id !== this.props.user.id) {
+        console.log('NOTIFY TYPING', user)
+        this.setUserTyping(user)
+      }
+    })
+
+    this.socket.on('REMOVE_TYPING_USER', (user) => {
+      if (user.id !== this.props.user.id) {
+        console.log('REMOVE_TYPING_USER', user)
+        this.clearUserTyping()
+      }
+    })
+
   }
 
   componentDidMount() {
     this.user = {}
     AsyncStorage.getItem('firstName').then(firstName => this.user.firstName = firstName)
     AsyncStorage.getItem('lastName').then(lastName => this.user.lastName = lastName)
+    this.fetchPhoto()
   }
 
   addMessage = (message) => {
@@ -48,8 +69,26 @@ class Message extends Component {
     })
   }
 
+  clearUserTyping = () => {
+    this.setState({ userTyping: null }, () => this.scrollDown(true))
+  }
+
+  fetchPhoto = () => {
+    const { currentRecipientId, token } = this.props;
+    getUserPhoto(currentRecipientId, token, this.setPhoto)
+  }
+
   handleMessageChange = (message) => {
-    this.setState({ message })
+    clearTimeout(this.stopTyping)
+    if (!this.state.isTyping) {
+      this.socket.emit('MESSAGE_TYPING', this.props.user)
+    }
+    this.setState({ message, isTyping: true }, () => {
+      this.stopTyping = setTimeout(() => {
+        this.socket.emit('STOP_TYPING', this.props.user)
+        this.setState({ isTyping: false })
+      }, 2000)
+    })
   }
 
   handleSizeChange = (width, height) => {
@@ -65,12 +104,27 @@ class Message extends Component {
     }, 0)
   }
 
+  setPhoto = (data) => {
+    console.log('PROFILE IMAGE', profileImage)
+    const profileImage = data.profile_image_url 
+    ? 
+    data.profile_image_url 
+    :
+    'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png'
+
+    this.setState({ profileImage })
+  }
+
+  setUserTyping = (user) => {
+    console.log('SET USER TYPING', user)
+    this.setState({ userTyping: user.first_name }, this.scrollDown(true))
+  }
+
   submit = () => {
     const { message } = this.state;
     const { currentRecipientId, currentRecipientName, token } = this.props;
     const { user } = this;
     const sender = `${user.firstName} ${user.lastName}`;
-    // TODO: start back here. Need to get first name and last name of recipient
     sendMessage(
       token,
       currentRecipientId,
@@ -90,6 +144,14 @@ class Message extends Component {
 
     const { messages } = this.props;
     const dates = []
+
+    const userTyping = this.state.userTyping ? 
+    <View style={{ paddingLeft: 20, paddingBottom: 10 }}>
+      <Text>
+        {this.state.userTyping} is typing...
+          </Text>
+    </View>
+    : null;
 
     return (
 
@@ -119,12 +181,19 @@ class Message extends Component {
               {this.props.currentRecipientName}
             </Text>
           }
+          rightComponent={
+            <Avatar
+              small
+              rounded
+              source={{ uri: this.state.profileImage }}
+            />
+          }
         />
 
         <ScrollView
           onContentSizeChange={this.handleSizeChange}
           ref={(scrollView) => this.scrollView = scrollView}
-        >
+          >
 
           {this.props.messages.slice().reverse().map((message, index) => {
             const date = new Date(message.created_at).toDateString()
@@ -155,7 +224,7 @@ class Message extends Component {
             }
             if (index >= this.props.messages.length - this.state.numOfMessages) {
               return (
-                <KeyboardAvoidingView key={index}>
+                <View key={index}>
 
                   {displayDate}
 
@@ -177,10 +246,12 @@ class Message extends Component {
                       {message.content}
                     </Text>
                   </View>
-                </KeyboardAvoidingView>
+                </View>
               )
             }
           })}
+
+          {userTyping}
 
         </ScrollView>
 
@@ -197,7 +268,7 @@ class Message extends Component {
         >
           <TextInput
             onChangeText={this.handleMessageChange}
-            onFocus={() => this.scrollDown(true)}
+            onFocus={() => setTimeout(() => this.scrollDown(true), 250)}
             style={{
               backgroundColor: colors.white,
               borderColor: colors.secondary,
