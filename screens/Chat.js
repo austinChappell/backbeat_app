@@ -96,6 +96,11 @@ class Chat extends Component {
       <GoBackNavBar navigation={navigation} logoutButton={false} />
       <List>
         {this.state.messageHistory.map((message, index) => {
+          const leftIcon = index > 2 ? 
+          { size: 20, name: 'dot-single', type: 'entypo', color: '#ff0000' }
+          :
+          null;
+
           const { content, displayName, tag } = message;
           const date = new Date(message.created_at).toDateString();
           const today = new Date().toDateString();
@@ -103,6 +108,7 @@ class Chat extends Component {
           return (
             <ListItem
               key={index}
+              leftIcon={leftIcon}
               onPress={() => this.loadMessages(tag, displayName)}
               rightTitle={displayDate}
               subtitle={content}

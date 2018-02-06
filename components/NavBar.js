@@ -1,12 +1,59 @@
 import React, { Component } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { AsyncStorage, TouchableOpacity, View } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 import { colors } from '../assets/styles';
+import MessageAPI from '../assets/APIs/messageAPI';
+import Helpers from '../assets/helpers';
+
+const helpers = new Helpers()
+const messageAPI = new MessageAPI();
+const { findUnreadMessages } = helpers;
+const { getAllMessages } = messageAPI;
 
 class NavBar extends Component {
+
+  state = {
+    unreadMessages: []
+  }
+
+  componentDidMount() {
+    console.log('NAVBAR MOUNTED', this.props)
+    AsyncStorage.getItem('auth_token').then((value) => {
+      this.token = value
+      console.log('TOKEN', this.token)
+      getAllMessages(this.token, this.setMessages)
+    })
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.messages.length !== this.props.messages.length) {
+      console.log('NAVBAR WILL RECEIVE PROPS', newProps.messages.length, this.props.messages.length)
+    }
+  }
+
+  setMessages = (messages) => {
+    this.props.setAllMessages(messages)
+    const unreadMessages = findUnreadMessages(messages, this.props.user.id)
+    this.setState({ unreadMessages })
+  }
+
   render() {
 
+    console.log('NAVBAR PROPS', this.props)
+
     const { navigation } = this.props;
+    const unreadNotification = this.state.unreadMessages.length > 0 ?
+      <View style={{ position: 'absolute', top: -12, right: -4, zIndex: 10 }}>
+        <Icon
+          size={30}
+          name="dot-single"
+          type="entypo"
+          color="#ff0000"
+        />
+      </View>
+      :
+      null;
 
     return (
       <Header
@@ -35,6 +82,7 @@ class NavBar extends Component {
             hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
             onPress={() => navigation.navigate('Chat')}
           >
+            {unreadNotification}
             <Icon
               name="ios-chatbubbles"
               type="ionicon"
@@ -48,4 +96,24 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+const mapStateToProps = (state) => {
+
+  return {
+
+    messages: state.messages.messages,
+    user: state.user.user
+
+  }
+
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAllMessages: (messages) => {
+      const action = { type: 'SET_ALL_MESSAGES', messages };
+      dispatch(action)
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

@@ -28,25 +28,20 @@ class Message extends Component {
       userTyping: null,
     }
 
-    console.log('API URL', apiURL)
-
     this.socket = io(apiURL)
 
     this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
-      console.log('RECEIVING MESSAGE', data)
       this.addMessage(data[0])
     })
 
     this.socket.on('NOTIFY_TYPING', (user) => {
       if (user.id !== this.props.user.id) {
-        console.log('NOTIFY TYPING', user)
         this.setUserTyping(user)
       }
     })
 
     this.socket.on('REMOVE_TYPING_USER', (user) => {
       if (user.id !== this.props.user.id) {
-        console.log('REMOVE_TYPING_USER', user)
         this.clearUserTyping()
       }
     })
@@ -105,7 +100,6 @@ class Message extends Component {
   }
 
   setPhoto = (data) => {
-    console.log('PROFILE IMAGE', profileImage)
     const profileImage = data.profile_image_url 
     ? 
     data.profile_image_url 
@@ -116,7 +110,6 @@ class Message extends Component {
   }
 
   setUserTyping = (user) => {
-    console.log('SET USER TYPING', user)
     this.setState({ userTyping: user.first_name }, this.scrollDown(true))
   }
 
@@ -136,7 +129,6 @@ class Message extends Component {
   }
 
   updateMessages = (results) => {
-    console.log('MESSAGE SENT', results)
     this.socket.emit('SEND_INDIVIDUAL_MESSAGE', results)
   }
 
