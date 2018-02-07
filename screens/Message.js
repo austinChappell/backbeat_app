@@ -221,6 +221,7 @@ class Message extends Component {
             if (index >= this.props.messages.length - this.state.numOfMessages) {
               const bg = isSender ? colors.secondary : colors.bgLight;
               const color = isSender ? colors.white : colors.black;
+              const align = isSender ? 'flex-end' : 'flex-start';
               const messageStyle = {
                 color,
                 fontSize: 16,
@@ -238,9 +239,9 @@ class Message extends Component {
                       marginRight: 10,
                       marginBottom: 10,
                       flexDirection: 'row', 
-                      justifyContent: isSender ? 'flex-end' : 'flex-start'
+                      justifyContent: align
                     }}
-                    >
+                  >
                     <View
                       style={{
                         borderRadius: 10,
