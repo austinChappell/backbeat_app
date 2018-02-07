@@ -17,10 +17,8 @@ const { getAllMessages } = messageAPI;
 class NavBar extends Component {
 
   componentDidMount() {
-    console.log('NAVBAR MOUNTED', this.props)
     AsyncStorage.getItem('auth_token').then((value) => {
       this.token = value
-      console.log('TOKEN', this.token)
       getAllMessages(this.token, this.setMessages)
     })
 
@@ -29,12 +27,6 @@ class NavBar extends Component {
     this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
       getAllMessages(this.token, this.setMessages)
     })
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (newProps.messages.length !== this.props.messages.length) {
-      console.log('NAVBAR WILL RECEIVE PROPS', newProps.messages.length, this.props.messages.length)
-    }
   }
 
   componentWillUnmount() {
@@ -48,8 +40,6 @@ class NavBar extends Component {
   }
 
   render() {
-
-    console.log('NAVBAR PROPS', this.props)
 
     const { navigation, unreadMessages } = this.props;
     const unreadNotification = unreadMessages.length > 0 ?

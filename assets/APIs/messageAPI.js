@@ -5,8 +5,6 @@ const api = data.apiURL;
 class MessageAPI {
 
   getAllMessages = (token, cb) => {
-    console.log('FETCHING ALL MESSAGES');
-    console.log('TOKEN', token)
 
     return fetch(`${api}/messages/all`, {
       credentials: 'include',
@@ -15,10 +13,8 @@ class MessageAPI {
         token
       }
     }).then((response) => {
-      console.log('RESPONSE', response)
       return response.json();
     }).then((results) => {
-      console.log('FETCHED MESSAGES', results);
       cb(results.rows);
     }).catch((err) => {
       console.error('ERROR FETCHING MESSAGES', err)
@@ -42,7 +38,6 @@ class MessageAPI {
   // }
 
   markAsRead = (token, messageId, cb) => {
-    console.log('MARK AS READ RUNNING', token, messageId, cb)
     return fetch(`${api}/message/${messageId}/markasread`, {
       credentials: 'include',
       headers: {
@@ -51,10 +46,8 @@ class MessageAPI {
       },
       method: 'PUT',
     }).then((response) => {
-      console.log('MARK AS READ RESPONSE', response)
       return response.json()
     }).then((results) => {
-      console.log('MARK AS READ RESULTS', results)
       cb(results.rows[0])
     }).catch((err) => {
       console.error('MARK AS READ ERROR', err)
@@ -70,7 +63,6 @@ class MessageAPI {
       recipient
     }
 
-    console.log('BODY', body)
     return fetch(`${api}/message/send`, {
       credentials: 'include',
       headers: {

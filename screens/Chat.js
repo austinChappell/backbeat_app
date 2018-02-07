@@ -27,7 +27,6 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    console.log('CHAT SCREEN MOUNTED')
     AsyncStorage.getItem('auth_token').then((value) => {
       this.token = value
     })
@@ -76,14 +75,11 @@ class Chat extends Component {
 
     })
 
-    console.log('MESSAGE HISTORY', messageHistory)
-
     this.setState({ messageHistory })
 
   }
 
   loadMessages = (tag, currentRecipientName) => {
-    console.log('TAG', tag)
     const { messages } = this.props;
     const userMessages = messages.filter(message => {
       return message.sender_id === tag || message.recipient_id === tag
@@ -104,7 +100,6 @@ class Chat extends Component {
 
   render() {
 
-    console.log('CHAT STATE', this.state)
     const { navigation } = this.props;
 
     const displayContent = this.state.currentRecipientId

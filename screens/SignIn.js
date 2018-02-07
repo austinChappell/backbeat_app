@@ -22,14 +22,11 @@ class SignIn extends Component {
 
   enterSite = (user) => {
     this.props.setUser(user)
-    console.log('ENTERING SITE', this.token)
     onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'))
   }
 
   getUser = (results) => {
     const { userid, token } = results;
-    console.log('ID', userid)
-    console.log('TOKEN', token)
     this.token = token;
     getUserInfo(userid, this.enterSite)
   }

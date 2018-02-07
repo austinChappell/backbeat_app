@@ -23,7 +23,6 @@ class Dashboard extends Component {
   }
 
   setUser = (user) => {
-    console.log('SETTING USER', user)
     this.props.setUser(user)
     this.setState({ loading: false })
   }

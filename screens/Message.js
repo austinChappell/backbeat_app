@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { AsyncStorage, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Avatar, Button, FormInput, Header, Icon } from 'react-native-elements';
 import io from 'socket.io-client';
 import { colors, styles } from '../assets/styles';
@@ -61,6 +61,7 @@ class Message extends Component {
 
   addMessage = (message) => {
     this.props.messages.unshift(message)
+    Keyboard.dismiss()
     this.setState({ message: '' }, () => {
       setTimeout(() => {
         this.scrollView.scrollToEnd()
@@ -98,7 +99,6 @@ class Message extends Component {
   }
 
   readMessage = (message) => {
-    console.log('MARK AS READ RESULTS INSIDE MESSAGE PAGE', message)
     message.read = false;
   }
 
