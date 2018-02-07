@@ -245,7 +245,7 @@ class Message extends Component {
                       style={{
                         borderRadius: 10,
                         backgroundColor: bg,
-                        width: '70%'
+                        maxWidth: '70%'
                       }}
                     >
                       <Text
