@@ -78,9 +78,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
   },
-  message: {
-
-  },
   spinnerContainer: {
     flex: 1,
     paddingTop: '40%',

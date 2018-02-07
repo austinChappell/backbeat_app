@@ -134,7 +134,7 @@ class Message extends Component {
 
   render() {
 
-    const { messages } = this.props;
+    const { messages, user } = this.props;
     const dates = []
 
     const userTyping = this.state.userTyping ? 
@@ -185,12 +185,14 @@ class Message extends Component {
         <ScrollView
           onContentSizeChange={this.handleSizeChange}
           ref={(scrollView) => this.scrollView = scrollView}
+          style={{ padding: 10 }}
           >
 
           {this.props.messages.slice().reverse().map((message, index) => {
             const date = new Date(message.created_at).toDateString()
             const today = new Date().toDateString()
             const dateView = date === today ? 'Today' : date;
+            const isSender = message.sender_id === user.id ? true : false;
             let displayDate = null;
             if (!dates.includes(date)) {
               dates.push(date)
@@ -200,7 +202,9 @@ class Message extends Component {
                   flexDirection: 'row',
                   alignItems: 'center',
                   marginLeft: 10,
-                  marginRight: 10
+                  marginRight: 10,
+                  marginBottom: 10,
+                  marginTop: 20
                 }}>
                   <View style={styles.line} />
                   <Text
@@ -215,28 +219,41 @@ class Message extends Component {
               </View>;
             }
             if (index >= this.props.messages.length - this.state.numOfMessages) {
+              const bg = isSender ? colors.secondary : colors.bgLight;
+              const color = isSender ? colors.white : colors.black;
+              const messageStyle = {
+                color,
+                fontSize: 16,
+                padding: 10,
+              }
               return (
                 <View key={index}>
 
                   {displayDate}
 
                   <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      padding: 20
+                    style={{ 
+                      flex: 1, 
+                      marginLeft: 10,
+                      marginRight: 10,
+                      marginBottom: 10,
+                      flexDirection: 'row', 
+                      justifyContent: isSender ? 'flex-end' : 'flex-start'
                     }}
-                  >
-                    <Avatar
-                      small
-                      rounded
-                      source={{ uri: message.profile_image_url || 'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png' }}
-                    />
-                    <Text
-                      style={{ marginLeft: 20, marginRight: 20, fontSize: 18 }}
                     >
-                      {message.content}
-                    </Text>
+                    <View
+                      style={{
+                        borderRadius: 10,
+                        backgroundColor: bg,
+                        width: '70%'
+                      }}
+                    >
+                      <Text
+                        style={messageStyle}
+                      >
+                        {message.content}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               )
