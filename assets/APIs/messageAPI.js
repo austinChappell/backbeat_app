@@ -55,6 +55,7 @@ class MessageAPI {
       return response.json()
     }).then((results) => {
       console.log('MARK AS READ RESULTS', results)
+      cb(results.rows[0])
     }).catch((err) => {
       console.error('MARK AS READ ERROR', err)
     })

@@ -97,8 +97,9 @@ class Message extends Component {
     }
   }
 
-  readMessage = (results) => {
-    console.log('MARK AS READ RESULTS INSIDE MESSAGE PAGE', results)
+  readMessage = (message) => {
+    console.log('MARK AS READ RESULTS INSIDE MESSAGE PAGE', message)
+    message.read = false;
   }
 
   scrollDown = (animated) => {
@@ -138,6 +139,7 @@ class Message extends Component {
 
   updateMessages = (results) => {
     this.socket.emit('SEND_INDIVIDUAL_MESSAGE', results)
+    this.socket.emit('STOP_TYPING', this.props.user)
   }
 
   render() {

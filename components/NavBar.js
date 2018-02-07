@@ -5,7 +5,10 @@ import { Header, Icon } from 'react-native-elements';
 import { colors } from '../assets/styles';
 import MessageAPI from '../assets/APIs/messageAPI';
 import Helpers from '../assets/helpers';
+import io from 'socket.io-client';
+import data from '../assets/data';
 
+const { apiURL } = data;
 const helpers = new Helpers()
 const messageAPI = new MessageAPI();
 const { findUnreadMessages } = helpers;
@@ -20,12 +23,22 @@ class NavBar extends Component {
       console.log('TOKEN', this.token)
       getAllMessages(this.token, this.setMessages)
     })
+
+    this.socket = io(apiURL)
+
+    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
+      getAllMessages(this.token, this.setMessages)
+    })
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.messages.length !== this.props.messages.length) {
       console.log('NAVBAR WILL RECEIVE PROPS', newProps.messages.length, this.props.messages.length)
     }
+  }
+
+  componentWillUnmount() {
+    this.socket.close()
   }
 
   setMessages = (messages) => {

@@ -8,7 +8,10 @@ import GoBackNavBar from '../components/GoBackNavBar';
 import Helpers from '../assets/helpers';
 import Message from './Message';
 import MessageAPI from '../assets/APIs/messageAPI';
+import io from 'socket.io-client';
+import data from '../assets/data';
 
+const { apiURL } = data;
 const helpers = new Helpers()
 const messageAPI = new MessageAPI();
 const { findUnreadMessages } = helpers;
@@ -29,6 +32,17 @@ class Chat extends Component {
       this.token = value
     })
     this.getMessageHistory()
+
+    this.socket = io(apiURL)
+
+    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
+      this.reloadMessages()
+    })
+
+  }
+
+  componentWillUnmount() {
+    this.socket.close()
   }
 
   clearRecipient = () => {
