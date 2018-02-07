@@ -5,10 +5,13 @@ import { List, ListItem } from 'react-native-elements';
 import { ScrollView } from 'react-native';
 
 import GoBackNavBar from '../components/GoBackNavBar';
+import Helpers from '../assets/helpers';
 import Message from './Message';
 import MessageAPI from '../assets/APIs/messageAPI';
 
+const helpers = new Helpers()
 const messageAPI = new MessageAPI();
+const { findUnreadMessages } = helpers;
 const { getAllMessages, getUserMessages } = messageAPI;
 
 class Chat extends Component {
@@ -29,7 +32,7 @@ class Chat extends Component {
   }
 
   clearRecipient = () => {
-    this.setState({ currentRecipientId: null, currentRecipientName: null, userMessages: [] })
+    this.setState({ currentRecipientId: null, currentRecipientName: null, userMessages: [] }, () => this.reloadMessages())
   }
 
   getMessageHistory = () => {
@@ -72,6 +75,17 @@ class Chat extends Component {
       return message.sender_id === tag || message.recipient_id === tag
     })
     this.setState({ currentRecipientId: tag, currentRecipientName, userMessages })
+  }
+
+  reloadMessages = () => {
+    getAllMessages(this.token, this.setMessages)
+  }
+
+  setMessages = (messages) => {
+    this.props.setAllMessages(messages)
+    const unreadMessages = findUnreadMessages(messages, this.props.user.id)
+    this.props.setUnreadMessages(unreadMessages)
+    this.getMessageHistory()
   }
 
   render() {
@@ -134,6 +148,15 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    setAllMessages: (messages) => {
+      const action = { type: 'SET_ALL_MESSAGES', messages };
+      dispatch(action)
+    },
+
+    setUnreadMessages: (messages) => {
+      const action = { type: 'SET_UNREAD_MESSAGES', messages };
+      dispatch(action);
+    }
   }
 }
 

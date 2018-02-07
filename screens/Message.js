@@ -55,6 +55,10 @@ class Message extends Component {
     this.fetchPhoto()
   }
 
+  componentWillUnmount() {
+    this.socket.close()
+  }
+
   addMessage = (message) => {
     this.props.messages.unshift(message)
     this.setState({ message: '' }, () => {
@@ -145,7 +149,7 @@ class Message extends Component {
     <View style={{ paddingLeft: 20, paddingBottom: 10 }}>
       <Text>
         {this.state.userTyping} is typing...
-          </Text>
+      </Text>
     </View>
     : null;
 
