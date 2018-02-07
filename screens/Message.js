@@ -12,7 +12,7 @@ const { apiURL } = data;
 const generalAPI = new GeneralAPI();
 const messageAPI = new MessageAPI();
 const { getUserPhoto } = generalAPI;
-const { sendMessage } = messageAPI;
+const { markAsRead, sendMessage } = messageAPI;
 
 class Message extends Component {
 
@@ -91,6 +91,10 @@ class Message extends Component {
       this.scrollDown(false)
       this.setState({ loaded: true })
     }
+  }
+
+  readMessage = (results) => {
+    console.log('MARK AS READ RESULTS INSIDE MESSAGE PAGE', results)
   }
 
   scrollDown = (animated) => {
@@ -219,6 +223,7 @@ class Message extends Component {
               </View>;
             }
             if (index >= this.props.messages.length - this.state.numOfMessages) {
+              const { message_id, read } = message;
               const bg = isSender ? colors.secondary : colors.bgLight;
               const color = isSender ? colors.white : colors.black;
               const align = isSender ? 'flex-end' : 'flex-start';
@@ -226,6 +231,9 @@ class Message extends Component {
                 color,
                 fontSize: 16,
                 padding: 10,
+              }
+              if (!read && !isSender) {
+                markAsRead(this.props.token, message_id, this.readMessage)
               }
               return (
                 <View key={index}>

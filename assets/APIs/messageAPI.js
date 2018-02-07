@@ -41,6 +41,25 @@ class MessageAPI {
   //   })
   // }
 
+  markAsRead = (token, messageId, cb) => {
+    console.log('MARK AS READ RUNNING', token, messageId, cb)
+    return fetch(`${api}/message/${messageId}/markasread`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        token
+      },
+      method: 'PUT',
+    }).then((response) => {
+      console.log('MARK AS READ RESPONSE', response)
+      return response.json()
+    }).then((results) => {
+      console.log('MARK AS READ RESULTS', results)
+    }).catch((err) => {
+      console.error('MARK AS READ ERROR', err)
+    })
+  }
+
   sendMessage = (token, recipientId, message, sender, recipient, cb) => {
     const body = {
       date: new Date(),
