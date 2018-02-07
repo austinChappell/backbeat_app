@@ -291,6 +291,7 @@ class Message extends Component {
           }}
         >
           <TextInput
+            multiline={true}
             onChangeText={this.handleMessageChange}
             onFocus={() => setTimeout(() => this.scrollDown(true), 250)}
             style={{
