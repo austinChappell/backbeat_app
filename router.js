@@ -13,6 +13,7 @@ import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import SignUp from './screens/SignUp';
 import SignIn from './screens/SignIn';
+import SignUpType from './screens/SignUpType';
 
 export const SignedOut = StackNavigator(
   {
@@ -28,6 +29,12 @@ export const SignedOut = StackNavigator(
         title: 'Sign Up'
       }
     },
+    SignUpType: {
+      screen: SignUpType,
+      navigationOptions: {
+        title: 'Sign Up Type'
+      }
+    }
   },
   {
     headerMode: 'none',

@@ -12,7 +12,10 @@ const colors = {
   white: '#ffffff',
   black: '#111111',
   bgLight: '#eee',
-  bgDark: '#555555'
+  bgDark: '#555555',
+  facebook: '#3B5998',
+  google: '#d34836',
+  linkedin: '#0077b5'
 }
 
 const styles = StyleSheet.create({

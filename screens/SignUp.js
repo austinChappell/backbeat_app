@@ -21,25 +21,45 @@ class SignUp extends Component {
     this.setState(o);
   }
 
-  // handleSignUpWithFacebookButton() {
-  //   // Attempt a login using the Facebook login dialog asking for default permissions.
-  //   LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
-  //     (result) => {
-  //       if (result.isCancelled) {
-  //         console.log('Login with facebook was cancelled');
-  //       } else {
-  //         AccessToken.getCurrentAccessToken().then((data) => {
-  //           console.log('DATA ', data);
-  //           console.log('ACCESS TOKEN ', data.accessToken);
-  //           this.props.facebookAuth(data.accessToken);
-  //         });
-  //       }
-  //     },
-  //     (error) => {
-  //       console.log(`Login fail with error: ${error}`);
-  //     },
-  //   );
-  // }
+  handleSignUpWithFacebookButton() {
+    // Attempt a login using the Facebook login dialog asking for default permissions.
+    LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
+      (result) => {
+        if (result.isCancelled) {
+          console.log('Login with facebook was cancelled');
+        } else {
+          AccessToken.getCurrentAccessToken().then((data) => {
+            const { accessToken } = data;
+
+            const responseInfoCallback = (err, result) => {
+              if (err) {
+                console.error(err)
+                alert(`Error logging in ${error.toString()}`)
+              } else {
+                console.log('================RESULTS===================', result)
+                alert(`Success fetching data ${result.toString()}`)
+              }
+            }
+
+            const infoRequest = new GraphRequest('/me', {
+              accessToken,
+              parameters: {
+                fields: {
+                  string: 'email,name,first_name,last_name'
+                }
+              }
+            }, responseInfoCallback)
+
+            new GraphRequestManager().addRequest(infoRequest).start()
+
+          });
+        }
+      },
+      (error) => {
+        console.log(`Login fail with error: ${error}`);
+      },
+    );
+  }
 
   signUp = () => {
 
@@ -98,12 +118,12 @@ class SignUp extends Component {
             onPress={() => navigation.goBack()}
           />
 
-          {/* <Button
-            backgroundColor={'transparent'}
-            color={colors.primary}
+          <Button
+            backgroundColor={colors.facebook}
+            color={colors.white}
             title="Sign In with Facebook"
             onPress={this.handleSignUpWithFacebookButton}
-          /> */}
+          />
 
 
           {/* <LoginButton
@@ -124,7 +144,7 @@ class SignUp extends Component {
             onLogoutFinished={() => alert('User logged out')}
           /> */}
 
-          <LoginButton
+          {/* <LoginButton
             onLoginFinished={
               (error, result) => {
                 if (error) {
@@ -170,7 +190,7 @@ class SignUp extends Component {
                 }
               }
             }
-            onLogoutFinished={() => alert("logout.")}/>
+            onLogoutFinished={() => alert("logout.")}/> */}
 
         </FadeInView>
       </View>
