@@ -8,14 +8,16 @@ import Api from '../assets/api';
 
 const api = new Api()
 const { getProfile } = api;
-const user = {}
-
-AsyncStorage.getItem('firstName').then(value => user.firstName = value)
-AsyncStorage.getItem('lastName').then(value => user.lastName = value)
+// const user = {}
+//
+// AsyncStorage.getItem('firstName').then(value => user.firstName = value)
+// AsyncStorage.getItem('lastName').then(value => user.lastName = value)
 
 class Profile extends Component {
 
   render() {
+
+    const { user } = this.props;
 
     console.log('PROPS', this.props)
     console.log('USER', user)
@@ -26,7 +28,7 @@ class Profile extends Component {
       <View>
         <GoBackNavBar navigation={navigation} logoutButton={true} />
         <Text>
-          Hello, {user.firstName} {user.lastName}
+          Hello, {user.first_name} {user.last_name}
         </Text>
       </View>
     )

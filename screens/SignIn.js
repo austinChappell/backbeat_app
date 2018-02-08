@@ -21,6 +21,7 @@ class SignIn extends Component {
   }
 
   enterSite = (user) => {
+    console.log('ENTERING THE SITE WITH USER', user)
     this.props.setUser(user)
     onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'))
   }

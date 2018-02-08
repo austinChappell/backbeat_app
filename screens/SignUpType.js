@@ -1,15 +1,29 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
-import { Text, View } from 'react-native';
+import { AsyncStorage, Text, View } from 'react-native';
 import { colors, styles } from '../assets/styles';
 import FBSDK, { GraphRequest, GraphRequestManager, LoginButton, LoginManager, AccessToken } from 'react-native-fbsdk';
 import FadeInView from '../components/FadeInView';
+import AuthAPI from '../assets/APIs/authAPI';
+import Api from '../assets/api';
+import { onSignIn } from '../auth';
+
+const api = new Api()
+const authAPI = new AuthAPI()
+const { getUserInfo } = api;
+const { register } = authAPI;
 
 console.log('button', Button)
 
 class SignUpType extends Component {
 
-  handleSignUpWithFacebookButton() {
+  enterSite = (user) => {
+    this.props.setUser(user)
+    onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'))
+  }
+
+  handleSignUpWithFacebookButton = () => {
     // Attempt a login using the Facebook login dialog asking for default permissions.
     LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
       (result) => {
@@ -24,8 +38,13 @@ class SignUpType extends Component {
                 console.error(err)
                 alert(`Error logging in ${error.toString()}`)
               } else {
-                console.log('================RESULTS===================', result)
-                alert(`Success fetching data ${result.toString()}`)
+                const user = {
+                  first_name: result.first_name,
+                  last_name: result.last_name,
+                  email: result.email,
+                  city: 'Dallas, TX'
+                }
+                this.signUp(user)
               }
             }
 
@@ -47,6 +66,16 @@ class SignUpType extends Component {
         console.log(`Login fail with error: ${error}`);
       },
     );
+  }
+
+  setUser = (results) => {
+    const user = results.rows[0];
+    this.token = user.token;
+    getUserInfo(user.id, this.enterSite)
+  }
+
+  signUp = (user) => {
+    register(user, this.setUser)
   }
 
   render() {
@@ -99,4 +128,13 @@ class SignUpType extends Component {
 
 }
 
-export default SignUpType;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setUser: (user) => {
+      const action = { type: 'SET_USER', user }
+      dispatch(action)
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(SignUpType);

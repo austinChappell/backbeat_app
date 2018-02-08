@@ -39,11 +39,20 @@ class Api {
         last_name,
         onboarding_stage,
        } = user;
-      cb(user)
+      // cb(user)
       AsyncStorage.setItem('firstName', first_name)
-      AsyncStorage.setItem('id', String(id))
-      AsyncStorage.setItem('lastName', last_name)
-      AsyncStorage.setItem('onboardingStage', String(onboarding_stage))
+      .then(() => {
+        AsyncStorage.setItem('id', String(id))
+      })
+      .then(() => {
+        AsyncStorage.setItem('lastName', last_name)
+      })
+      .then(() => {
+        AsyncStorage.setItem('onboardingStage', String(onboarding_stage))
+      })
+      .then(() => {
+        cb(user)
+      })
     })
   }
 

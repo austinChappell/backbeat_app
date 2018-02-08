@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Card, FormInput, FormLabel } from 'react-native-elements';
-import { Text, View } from 'react-native';
+import { AsyncStorage, Text, View } from 'react-native';
 import { colors, styles } from '../assets/styles';
 import FBSDK, { GraphRequest, GraphRequestManager, LoginButton, LoginManager, AccessToken } from 'react-native-fbsdk';
 
