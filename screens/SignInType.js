@@ -12,11 +12,11 @@ import { onSignIn } from '../auth';
 const api = new Api()
 const authAPI = new AuthAPI()
 const { getUserInfo } = api;
-const { register } = authAPI;
+const { checkFBToken } = authAPI;
 
 console.log('button', Button)
 
-class SignUpType extends Component {
+class SignInType extends Component {
 
   enterSite = (user) => {
     this.props.setUser(user)
@@ -32,7 +32,6 @@ class SignUpType extends Component {
         } else {
           AccessToken.getCurrentAccessToken().then((data) => {
             const { accessToken } = data;
-            console.log('access token', accessToken)
 
             const responseInfoCallback = (err, result) => {
               if (err) {
@@ -43,9 +42,10 @@ class SignUpType extends Component {
                   first_name: result.first_name,
                   last_name: result.last_name,
                   email: result.email,
-                  city: 'Dallas, TX'
+                  city: 'Dallas, TX',
+                  access_token: accessToken
                 }
-                this.signUp(user)
+                this.signIn(user)
               }
             }
 
@@ -53,7 +53,7 @@ class SignUpType extends Component {
               accessToken,
               parameters: {
                 fields: {
-                  string: 'email,name,first_name,last_name'
+                  string: 'email,name,first_name,last_name,id'
                 }
               }
             }, responseInfoCallback)
@@ -69,14 +69,13 @@ class SignUpType extends Component {
     );
   }
 
-  setUser = (results) => {
-    const user = results.rows[0];
+  setUser = (user) => {
     this.token = user.token;
     getUserInfo(user.id, this.enterSite)
   }
 
-  signUp = (user) => {
-    register(user, this.setUser)
+  signIn = (user) => {
+    checkFBToken(user, this.setUser)
   }
 
   render() {
@@ -138,4 +137,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(SignUpType);
+export default connect(null, mapDispatchToProps)(SignInType);

@@ -12,11 +12,18 @@ import Notifications from './screens/Notifications';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import SignUp from './screens/SignUp';
+import SignInType from './screens/SignInType';
 import SignIn from './screens/SignIn';
 import SignUpType from './screens/SignUpType';
 
 export const SignedOut = StackNavigator(
   {
+    SignInType: {
+      screen: SignInType,
+      navigationOptions: {
+        title: 'Sign In Type'
+      }
+    },
     SignIn: {
       screen: SignIn,
       navigationOptions: {
