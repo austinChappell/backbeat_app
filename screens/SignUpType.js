@@ -32,7 +32,6 @@ class SignUpType extends Component {
         } else {
           AccessToken.getCurrentAccessToken().then((data) => {
             const { accessToken } = data;
-            console.log('access token', accessToken)
 
             const responseInfoCallback = (err, result) => {
               if (err) {

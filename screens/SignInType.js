@@ -12,7 +12,7 @@ import { onSignIn } from '../auth';
 const api = new Api()
 const authAPI = new AuthAPI()
 const { getUserInfo } = api;
-const { checkFBToken } = authAPI;
+const { checkFBToken, register } = authAPI;
 
 console.log('button', Button)
 
@@ -38,14 +38,14 @@ class SignInType extends Component {
                 console.error(err)
                 alert(`Error logging in ${error.toString()}`)
               } else {
-                const user = {
+                this.user = {
                   first_name: result.first_name,
                   last_name: result.last_name,
                   email: result.email,
                   city: 'Dallas, TX',
                   access_token: accessToken
                 }
-                this.signIn(user)
+                this.signIn(this.user)
               }
             }
 
@@ -69,18 +69,27 @@ class SignInType extends Component {
     );
   }
 
-  setUser = (user) => {
-    this.token = user.token;
-    getUserInfo(user.id, this.enterSite)
+  setUser = (results) => {
+    const user = results.rows[0];
+    if (user) {
+      this.token = user.token;
+      getUserInfo(user.id, this.enterSite)
+    } else {
+      this.signUp(this.user)
+    }
   }
 
   signIn = (user) => {
     checkFBToken(user, this.setUser)
   }
 
+  signUp = (user) => {
+    register(user, this.setUser)
+  }
+
   render() {
 
-    const { navigations } = this.props;
+    const { navigation } = this.props;
 
     return (
       <View style={ styles.container }>
@@ -92,7 +101,7 @@ class SignInType extends Component {
             color={colors.white}
             icon={{ color: 'white', type: 'font-awesome', name: 'facebook', size: 24 }}
             large
-            title="Sign Up with Facebook"
+            title="Login with Facebook"
             onPress={this.handleSignUpWithFacebookButton}
           />
           <Button
@@ -101,7 +110,7 @@ class SignInType extends Component {
             color={colors.white}
             icon={{ color: 'white', type: 'font-awesome', name: 'google-plus', size: 24 }}
             large
-            title="Sign Up with Google"
+            title="Login with Google"
             onPress={this.handleSignUpWithFacebookButton}
           />
           <Button
@@ -110,7 +119,7 @@ class SignInType extends Component {
             color={colors.white}
             icon={{ color: 'white', type: 'font-awesome', name: 'linkedin', size: 24 }}
             large
-            title="Sign Up with LinkedIn"
+            title="Login with LinkedIn"
             onPress={this.handleSignUpWithFacebookButton}
           />
           <Button
@@ -118,7 +127,7 @@ class SignInType extends Component {
             buttonStyle={styles.button}
             color={colors.white}
             large
-            title="Sign Up with Email Address"
+            title="Login with Email Address"
             onPress={this.handleSignUpWithFacebookButton}
           />
         </FadeInView>
