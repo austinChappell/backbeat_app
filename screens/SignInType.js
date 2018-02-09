@@ -128,7 +128,7 @@ class SignInType extends Component {
             color={colors.white}
             large
             title="Login with Email Address"
-            onPress={this.handleSignUpWithFacebookButton}
+            onPress={() => navigation.navigate('SignIn')}
           />
         </FadeInView>
       </View>

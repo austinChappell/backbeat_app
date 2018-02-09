@@ -88,7 +88,7 @@ class SignIn extends Component {
               backgroundColor={'transparent'}
               color={colors.primary}
               title="Sign Up"
-              onPress={() => navigation.navigate('SignUpType')}
+              onPress={() => navigation.navigate('SignUp')}
             />
           </Card>
         </FadeInView>
