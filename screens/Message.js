@@ -4,6 +4,7 @@ import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInp
 import { Avatar, Button, FormInput, Header, Icon } from 'react-native-elements';
 import io from 'socket.io-client';
 import { colors, styles } from '../assets/styles';
+
 import GeneralAPI from '../assets/APIs/generalAPI';
 import MessageAPI from '../assets/APIs/messageAPI';
 import data from '../assets/data';
@@ -75,6 +76,7 @@ class Message extends Component {
 
   fetchPhoto = () => {
     const { currentRecipientId, token } = this.props;
+    console.log('FETCHING PHOTO WITH TOKEN', token)
     getUserPhoto(currentRecipientId, token, this.setPhoto)
   }
 
@@ -109,9 +111,9 @@ class Message extends Component {
   }
 
   setPhoto = (data) => {
-    const profileImage = data.profile_image_url 
-    ? 
-    data.profile_image_url 
+    const profileImage = data.profile_image_url
+    ?
+    data.profile_image_url
     :
     'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png'
 
@@ -144,10 +146,14 @@ class Message extends Component {
 
   render() {
 
+    console.log('this user', this.user);
+    console.log('MESSAGE STATE', this.state)
+    console.log('MESSAGE PROPS', this.props)
+
     const { messages, user } = this.props;
     const dates = []
 
-    const userTyping = this.state.userTyping ? 
+    const userTyping = this.state.userTyping ?
     <View style={{ paddingLeft: 20, paddingBottom: 10 }}>
       <Text>
         {this.state.userTyping} is typing...
@@ -192,6 +198,7 @@ class Message extends Component {
           }
         />
 
+
         <ScrollView
           onContentSizeChange={this.handleSizeChange}
           ref={(scrollView) => this.scrollView = scrollView}
@@ -202,7 +209,7 @@ class Message extends Component {
             const date = new Date(message.created_at).toDateString()
             const today = new Date().toDateString()
             const dateView = date === today ? 'Today' : date;
-            const isSender = message.sender_id === user.id ? true : false;
+            const isSender = message.sender_id == user.id ? true : false;
             let displayDate = null;
             if (!dates.includes(date)) {
               dates.push(date)
@@ -216,6 +223,7 @@ class Message extends Component {
                   marginBottom: 10,
                   marginTop: 20
                 }}>
+
                   <View style={styles.line} />
                   <Text
                     style={{
@@ -247,12 +255,12 @@ class Message extends Component {
                   {displayDate}
 
                   <View
-                    style={{ 
-                      flex: 1, 
+                    style={{
+                      flex: 1,
                       marginLeft: 10,
                       marginRight: 10,
                       marginBottom: 10,
-                      flexDirection: 'row', 
+                      flexDirection: 'row',
                       justifyContent: align
                     }}
                   >

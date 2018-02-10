@@ -21,6 +21,26 @@ class GeneralAPI {
     })
   }
 
+  searchUsers (searchValue, token, cb) {
+
+    console.log('SEARCH VALUE', searchValue)
+    console.log('TOKEN', token)
+
+    return fetch(`${api}/api/searchusernames/${searchValue}`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        token
+      }
+    }).then((response) => {
+      return response.json()
+    }).then((results) => {
+      cb(results.rows)
+    }).catch((err) => {
+      console.error('SEARCH ERROR', err)
+    })
+  }
+
 }
 
 export default GeneralAPI;

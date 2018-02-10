@@ -12,7 +12,7 @@ import { onSignIn } from '../auth';
 const api = new Api()
 const authAPI = new AuthAPI()
 const { getUserInfo } = api;
-const { checkFBToken, register } = authAPI;
+const { checkFBToken, registerFB } = authAPI;
 
 console.log('button', Button)
 
@@ -43,6 +43,7 @@ class SignInType extends Component {
                   last_name: result.last_name,
                   email: result.email,
                   city: 'Dallas, TX',
+                  oauth_id: result.id,
                   access_token: accessToken
                 }
                 this.signIn(this.user)
@@ -84,7 +85,7 @@ class SignInType extends Component {
   }
 
   signUp = (user) => {
-    register(user, this.setUser)
+    registerFB(user, this.setUser)
   }
 
   render() {

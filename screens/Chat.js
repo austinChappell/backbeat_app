@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native';
 
 import GoBackNavBar from '../components/GoBackNavBar';
 import Helpers from '../assets/helpers';
+import MemberSearch from '../components/MemberSearch';
 import Message from './Message';
 import MessageAPI from '../assets/APIs/messageAPI';
 import io from 'socket.io-client';
@@ -56,12 +57,14 @@ class Chat extends Component {
 
     messages.forEach(message => {
       const { recipient_id, recipient_name, sender_id, sender_name } = message;
-      const id = sender_id === user.id ? recipient_id : sender_id;
+      // THIS HAS TO BE DOUBLE EQUALS
+      const id = sender_id == user.id ? recipient_id : sender_id;
 
       if (!senderIds.includes(id)) {
         senderIds.push(id)
 
-        const displayName = sender_id === user.id ? recipient_name : sender_name;
+        // THIS HAS TO BE DOUBLE EQUALS
+        const displayName = sender_id == user.id ? recipient_name : sender_name;
         message.displayName = displayName;
         message.tag = id;
         const { unreadMessages } = this.props;
@@ -72,6 +75,7 @@ class Chat extends Component {
         messageHistory.push(message)
 
       }
+      console.log('SENDER IDS', senderIds)
 
     })
 
@@ -80,6 +84,7 @@ class Chat extends Component {
   }
 
   loadMessages = (tag, currentRecipientName) => {
+    console.log('LOADING MESSAGES')
     const { messages } = this.props;
     const userMessages = messages.filter(message => {
       return message.sender_id === tag || message.recipient_id === tag
@@ -100,7 +105,10 @@ class Chat extends Component {
 
   render() {
 
+    console.log('USER INFO FROM CHAT COMPONENT', this.props.user)
+
     const { navigation } = this.props;
+    console.log('CHAT STATE', this.state)
 
     const displayContent = this.state.currentRecipientId
     ?
@@ -115,9 +123,13 @@ class Chat extends Component {
     :
     <ScrollView>
       <GoBackNavBar navigation={navigation} logoutButton={false} />
+      <MemberSearch
+        loadMessages={this.loadMessages}
+        token={this.props.token}
+      />
       <List>
         {this.state.messageHistory.map((message, index) => {
-          const leftIcon = message.unread ? 
+          const leftIcon = message.unread ?
           { size: 20, name: 'dot-single', type: 'entypo', color: '#ff0000' }
           :
           null;
@@ -149,6 +161,7 @@ class Chat extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    token: state.user.token,
     messages: state.messages.messages,
     unreadMessages: state.messages.unreadMessages,
     user: state.user.user

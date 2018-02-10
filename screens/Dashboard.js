@@ -20,9 +20,13 @@ class Dashboard extends Component {
     AsyncStorage.getItem('id').then(userid => {
       getUserInfo(userid, this.setUser)
     })
+    AsyncStorage.getItem('auth_token').then((token) => {
+      this.props.setToken(token)
+    })
   }
 
   setUser = (user) => {
+    console.log('SETTING USER', user)
     this.props.setUser(user)
     this.setState({ loading: false })
   }
@@ -56,6 +60,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setUser: (user) => {
       const action = { type: 'SET_USER', user }
+      dispatch(action)
+    },
+
+    setToken: (token) => {
+      const action = { type: 'SET_TOKEN', token }
       dispatch(action)
     }
   }
