@@ -3,15 +3,27 @@ import { Button, Card, FormInput, FormLabel } from 'react-native-elements';
 import { AsyncStorage, Text, View } from 'react-native';
 import { colors, styles } from '../assets/styles';
 
+import Api from '../assets/api';
+
+const api = new Api()
+
+const { createUser } = api;
+
+console.log('CREATE USER', createUser)
+
 import FadeInView from '../components/FadeInView';
 
 class SignUp extends Component {
 
   state = {
+    email: '',
     firstName: '',
     lastName: '',
     password: '',
-    username: '',
+  }
+
+  enterSite = (results) => {
+    console.log('ENTERING SITE', results)
   }
 
   handleInputChange = (val, key) => {
@@ -21,7 +33,11 @@ class SignUp extends Component {
   }
 
   signUp = () => {
-
+    console.log('SIGN UP ROUTE')
+    const { email, firstName, lastName, password } = this.state;
+    const user = { email, firstName, lastName, password }
+    console.log('about to create user', user);
+    createUser(user, this.enterSite)
   }
 
   render() {
@@ -43,10 +59,10 @@ class SignUp extends Component {
               onChangeText={(val) => this.handleInputChange(val, 'lastName')}
               value={this.state.lastName}
             />
-            <FormLabel>Username</FormLabel>
+            <FormLabel>Email</FormLabel>
             <FormInput
-              onChangeText={(val) => this.handleInputChange(val, 'username')}
-              value={this.state.username}
+              onChangeText={(val) => this.handleInputChange(val, 'email')}
+              value={this.state.email}
             />
             <FormLabel>Password</FormLabel>
             <FormInput

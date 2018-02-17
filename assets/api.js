@@ -4,6 +4,26 @@ const api = data.apiURL;
 
 class Api {
 
+  createUser = (user, cb) => {
+
+    console.log('CREATING USER', user, api, cb);
+
+    return fetch(`${api}/signup`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify(user)
+    }).then((response) => {
+      console.log('RESPONSE OF CREATE USER FUNC', response)
+      return response.json()
+    }).then((results) => {
+      console.log('RESULTS FROM CREATE USER FUNC', results)
+      cb(results)
+    }).catch(err => console.error('PROBLEM LOGGING OUT', err))
+
+  }
+
   getProfile = (username, token, cb) => {
     return fetch(`${api}/api/profile/${username}/`, {
       credentials: 'include',
@@ -73,16 +93,19 @@ class Api {
     })
   }
 
-  logout = (cb) => {
-    return fetch(`${api}/logout`, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST'
-    }).then((response) => {
-      cb(response)
-    }).catch(err => console.error('PROBLEM LOGGING OUT', err))
-  }
+  // logout = (cb) => {
+  //   console.log('hitting the logout route');
+  //   return fetch(`${api}/logout`, {
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     method: 'POST'
+  //   }).then((response) => {
+  //     return response.json()
+  //   }).then((results) => {
+  //     cb(results)
+  //   }).catch(err => console.error('PROBLEM LOGGING OUT', err))
+  // }
 
 }
 
