@@ -74,7 +74,7 @@ class SignInType extends Component {
     const user = results.rows[0];
     if (user) {
       this.token = user.token;
-      getUserInfo(user.id, this.enterSite)
+      getUserInfo(user.id, user.token, this.enterSite)
     } else {
       this.signUp(this.user)
     }

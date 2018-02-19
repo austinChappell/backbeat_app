@@ -36,6 +36,7 @@ class SignUp extends Component {
 
   enterSite = (results) => {
     const user = results.rows[0]
+    console.log('USER RESPONSE FROM SIGNUP', user)
     AsyncStorage.setItem('id', String(user.id)).then(() => {      
       this.props.setUser(user)
       onSignIn(user.token).then(() => this.props.navigation.navigate('SignedIn'))

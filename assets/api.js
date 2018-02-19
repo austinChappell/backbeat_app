@@ -39,12 +39,12 @@ class Api {
     })
   }
 
-  getUserInfo = (userid, cb) => {
+  getUserInfo = (userid, token, cb, cbError) => {
     return fetch(`${api}/api/user/id/${userid}`, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        token: AsyncStorage.getItem('AUTH_TOKEN')
+        Authorization: `Bearer ${token}`
       }
     }).then((response) => {
       return response.json();
@@ -73,7 +73,7 @@ class Api {
       .then(() => {
         cb(user)
       })
-    })
+    }).catch(err => cbError())
   }
 
   login = (credentials, cb) => {

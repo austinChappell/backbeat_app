@@ -27,9 +27,9 @@ class SignIn extends Component {
   }
 
   getUser = (results) => {
-    const { userid, token } = results;
+    const { user, token } = results;
     this.token = token;
-    getUserInfo(userid, this.enterSite)
+    getUserInfo(user.id, token, this.enterSite)
   }
 
   handleInputChange = (val, key) => {

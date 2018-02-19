@@ -1,4 +1,6 @@
 import { AsyncStorage } from 'react-native';
+import data from './assets/data';
+const api = data.apiURL;
 
 export const AUTH_TOKEN = 'auth_token';
 
@@ -8,13 +10,28 @@ export const onSignOut = () => AsyncStorage.removeItem(AUTH_TOKEN);
 
 export const isSignedIn = () => {
   return new Promise((resolve, reject) => {
-    AsyncStorage.getItem(AUTH_TOKEN)
-      .then(res => {
-        if (res !== null) {
-          resolve(true)
-        } else {
+    AsyncStorage.getItem(AUTH_TOKEN).then(res => {
+      if (res !== null) {
+        fetch(`${api}/api/checktoken`, {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${res}`
+          }
+        }).then((response) => {
+          console.log('CHECK TOKEN RESPONSE', response)
+          if (response.ok) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        }).catch((err) => {
           resolve(false)
-        }
-      }).catch(err => reject(err))
+        })          
+      } else {
+        resolve(false)
+      }
+    }).catch(err => reject(err))
   })
 }
+    

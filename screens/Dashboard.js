@@ -4,6 +4,7 @@ import Api from '../assets/api';
 import { ActivityIndicator, AsyncStorage, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import { colors, styles } from '../assets/styles';
+import { onSignOut } from '../auth';
 
 import NavBar from '../components/NavBar';
 
@@ -20,11 +21,17 @@ class Dashboard extends Component {
     // TODO: this setstate to false is tempory
     this.setState({ loading: false })
     AsyncStorage.getItem('id').then(userid => {
-      getUserInfo(userid, this.setUser)
+      this.userid = userid;
+    }).then(() => {
+      AsyncStorage.getItem('auth_token').then((token) => {
+        this.props.setToken(token)
+        getUserInfo(this.userid, token, this.setUser, this.logout)
+      })
     })
-    AsyncStorage.getItem('auth_token').then((token) => {
-      this.props.setToken(token)
-    })
+  }
+
+  logout = () => {
+    onSignOut().then(() => this.props.navigation.navigate('SignedOut'))
   }
 
   setUser = (user) => {

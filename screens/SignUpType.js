@@ -71,7 +71,7 @@ class SignUpType extends Component {
   setUser = (results) => {
     const user = results.rows[0];
     this.token = user.token;
-    getUserInfo(user.id, this.enterSite)
+    getUserInfo(user.id, user.token, this.enterSite)
   }
 
   signUp = (user) => {

@@ -4,6 +4,20 @@ const api = data.apiURL;
 
 class GeneralAPI {
 
+  checkToken = (token) => {
+    return fetch(`${api}/api/checktoken`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authentication: `Bearer ${token}`
+      }
+    }).then((response) => {
+      console.log('CHECK TOKEN RESPONSE', response)
+    }).catch((err) => {
+      console.log('CHECK TOKEN ERROR', error)
+    })
+  }
+
   getUserPhoto (userid, token, cb) {
 
     return fetch(`${api}/api/userphoto/id/${userid}`, {
