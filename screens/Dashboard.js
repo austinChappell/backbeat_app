@@ -17,6 +17,8 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    // TODO: this setstate to false is tempory
+    this.setState({ loading: false })
     AsyncStorage.getItem('id').then(userid => {
       getUserInfo(userid, this.setUser)
     })

@@ -25,7 +25,9 @@ class AuthAPI {
     })
   }
 
-  register = (user, cb) => {
+  createUser = (user, cb, cbError) => {
+
+    console.log('CREATING USER', user, api, cb);
 
     return fetch(`${api}/signup`, {
       headers: {
@@ -34,14 +36,13 @@ class AuthAPI {
       method: 'POST',
       body: JSON.stringify(user)
     }).then((response) => {
-      console.log('REGISTER ROUTE RESPONSE', response)
+      console.log('RESPONSE OF CREATE USER FUNC', response)
       return response.json()
     }).then((results) => {
-      console.log('REGISTER ROUTE RESULTS', results)
-      cb (results)
-    }).catch((err) => {
-      console.error('REGISTER ROUTE ERROR', err)
-    })
+      console.log('RESULTS FROM CREATE USER FUNC', results)
+      cb(results)
+    }).catch(err => cbError('An account with this email already exists.', false))
+
   }
 
   registerFB = (user, cb) => {
@@ -61,6 +62,22 @@ class AuthAPI {
     }).catch((err) => {
       console.error('REGISTER ROUTE ERROR', err)
     })
+  }
+
+  validateZip = (zipCode, cb) => {
+
+    console.log('VALIDATING ZIP', zipCode, cb)
+
+    var client = new XMLHttpRequest();
+    client.open("GET", `http://api.zippopotam.us/us/${zipCode}`, true);
+    client.onreadystatechange = function () {
+      if (client.readyState == 4) {
+        cb(client.responseText)
+      };
+    };
+
+    client.send();
+
   }
 
 }

@@ -81,6 +81,17 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
   },
+  popoverContainer: {
+    backgroundColor: '#114B5F',
+    padding: 15,
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 5,
+  },
+  popoverText: {
+    color: '#E4FDE1',
+    fontSize: 20
+  },
   spinnerContainer: {
     flex: 1,
     paddingTop: '40%',

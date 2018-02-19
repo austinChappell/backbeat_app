@@ -19,7 +19,7 @@ class NavBar extends Component {
   componentDidMount() {
     AsyncStorage.getItem('auth_token').then((value) => {
       this.token = value
-      getAllMessages(this.token, this.setMessages)
+      // getAllMessages(this.token, this.setMessages)
     })
 
     this.socket = io(apiURL)

@@ -77,6 +77,7 @@ class Api {
   }
 
   login = (credentials, cb) => {
+    console.log('HITTING THE LOGIN ROUTE', credentials, cb)
     return fetch(`${api}/login`, {
       headers: {
         'Content-Type': 'application/json'
@@ -84,28 +85,29 @@ class Api {
       method: 'POST',
       body: JSON.stringify(credentials)
     }).then((response) => {
+      console.log('RESPONSE FROM LOGIN FUNC', response)
       return response.json()
     }).then((results) => {
       console.log('LOGIN RESULTS', results)
       cb(results)
     }).catch((err) => {
-      console.error('ERROR', err)
+      console.error('LOGIN ERROR', err)
     })
   }
 
-  // logout = (cb) => {
-  //   console.log('hitting the logout route');
-  //   return fetch(`${api}/logout`, {
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     method: 'POST'
-  //   }).then((response) => {
-  //     return response.json()
-  //   }).then((results) => {
-  //     cb(results)
-  //   }).catch(err => console.error('PROBLEM LOGGING OUT', err))
-  // }
+  logout = (cb) => {
+    console.log('hitting the logout route');
+    return fetch(`${api}/logout`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST'
+    }).then((response) => {
+      return response.json()
+    }).then((results) => {
+      cb(results)
+    }).catch(err => console.error('PROBLEM LOGGING OUT', err))
+  }
 
 }
 

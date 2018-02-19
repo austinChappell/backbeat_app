@@ -17,7 +17,7 @@ class SignIn extends Component {
   state = {
     loading: false,
     password: '',
-    username: '',
+    email: '',
   }
 
   enterSite = (user) => {
@@ -40,8 +40,8 @@ class SignIn extends Component {
 
   signIn = () => {
     this.setState({ loading: true }, () => {
-      const { username, password } = this.state;
-      const credentials = { username: username.toLowerCase(), password }
+      const { email, password } = this.state;
+      const credentials = { email: email.toLowerCase(), password }
       login(credentials, this.getUser)
     })
   }
@@ -60,10 +60,10 @@ class SignIn extends Component {
             Connecting musicians in a digital age.
           </Text>
           <Card>
-            <FormLabel>Username</FormLabel>
+            <FormLabel>Email</FormLabel>
             <FormInput
-              onChangeText={(val) => this.handleInputChange(val, 'username')}
-              value={this.state.username}
+              onChangeText={(val) => this.handleInputChange(val, 'email')}
+              value={this.state.email}
             />
             <FormLabel>Password</FormLabel>
             <FormInput
