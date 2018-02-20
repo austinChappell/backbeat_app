@@ -44,6 +44,8 @@ class Dashboard extends Component {
 
     const { navigation } = this.props;
 
+    console.log('NAVIGATION STATE', navigation.state)
+
     const content = this.state.loading ?
     <View style={styles.container}>
       <ActivityIndicator size="large" color={colors.secondary} />

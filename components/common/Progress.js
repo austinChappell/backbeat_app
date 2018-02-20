@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 import { colors, styles } from '../../assets/styles';
 
 class Progress extends Component {
 
   render() {
+
+    const { navigation } = this.props
 
     const barHeight = 10;
     const {progress} = this.props
@@ -23,7 +25,13 @@ class Progress extends Component {
           marginBottom: 5
         }}>
           <Text style={{ color: colors.secondaryDark }}>Profile setup ({progress}% complete)</Text>
-          <Text style={{ color: colors.secondaryDark, fontWeight: '800' }}>COMPLETE</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <Text style={{ color: colors.secondaryDark, fontWeight: '800' }}>
+              COMPLETE
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={{
           height: barHeight,

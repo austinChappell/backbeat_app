@@ -1,5 +1,5 @@
 import React from 'react';
-import { StackNavigator, TabNavigator } from 'react-navigation';
+import { DrawerNavigator, StackNavigator, TabNavigator } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 
 import { colors } from './assets/styles';
@@ -9,6 +9,7 @@ import Chat from './screens/Chat';
 import Dashboard from './screens/Dashboard';
 import Map from './screens/Map';
 import Notifications from './screens/Notifications';
+import NotificationSettings from './screens/NotificationSettings';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import SignUp from './screens/SignUp';
@@ -50,16 +51,6 @@ export const SignedOut = StackNavigator(
 
 export const SignedIn = TabNavigator(
   {
-    Settings: {
-      screen: Settings,
-      navigationOptions: {
-        tabBarIcon: ({tintColor}) => <Icon
-          name="ios-settings"
-          type="ionicon"
-          color={tintColor}
-        />
-      }
-    },
     Bands: {
       screen: Bands,
       navigationOptions: {
@@ -110,6 +101,18 @@ export const SignedIn = TabNavigator(
   }
 )
 
+const SettingsRoutes = StackNavigator({
+  Settings: {
+    screen: Settings
+  },
+  NotificationSettings: {
+    screen: NotificationSettings
+  },
+  Profile: {
+    screen: Profile
+  },
+})
+
 export const createRootNavigator = (signedIn = false) => {
   return StackNavigator(
     {
@@ -125,8 +128,8 @@ export const createRootNavigator = (signedIn = false) => {
           gesturesEnabled: false
         }
       },
-      Profile: {
-        screen: Profile,
+      Settings: {
+        screen: Settings,
         navigationOptions: {
           gesturesEnabled: false,
         }

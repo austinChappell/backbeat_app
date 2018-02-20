@@ -61,7 +61,7 @@ class NavBar extends Component {
       null;
 
     const progressBar = user.onboarding_stages_complete < 1 ? 
-      <Progress progress={50} />
+      <Progress navigation={navigation} progress={50} />
       :
       null;
         
@@ -73,7 +73,7 @@ class NavBar extends Component {
           leftComponent={
             <TouchableOpacity
               hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
-              onPress={() => navigation.navigate('Profile')}
+              onPress={() => navigation.navigate('Settings')}
             >
               <Icon
                 name="ios-person"
@@ -102,6 +102,7 @@ class NavBar extends Component {
             </TouchableOpacity>
           }
         />
+        { progressBar }
       </View>
     )
 

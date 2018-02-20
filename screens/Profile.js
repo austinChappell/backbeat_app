@@ -19,9 +19,6 @@ class Profile extends Component {
 
     const { user } = this.props;
 
-    console.log('PROPS', this.props)
-    console.log('USER', user)
-
     const { navigation } = this.props;
 
     return (
