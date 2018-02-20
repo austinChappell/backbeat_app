@@ -49,11 +49,13 @@ class Dashboard extends Component {
       <ActivityIndicator size="large" color={colors.secondary} />
     </View>
     :
-    <View>
+    <View style={{ backgroundColor: colors.white, flexGrow: 1 }}>
       <NavBar navigation={navigation} />
-      <Text>
-        Dashboard Screen
-      </Text>
+      <View>
+        <Text>
+          Dashboard Screen
+        </Text>
+      </View>
     </View>
 
 

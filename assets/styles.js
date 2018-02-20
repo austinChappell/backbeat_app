@@ -12,6 +12,7 @@ const colors = {
   white: '#ffffff',
   black: '#111111',
   bgLight: '#eee',
+  bgMedium: '#999999',
   bgDark: '#555555',
   facebook: '#3B5998',
   google: '#d34836',

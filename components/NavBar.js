@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { AsyncStorage, TouchableOpacity, View } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
-import Snackbar from 'react-native-snackbar';
 
 import { colors } from '../assets/styles';
+import Progress from './common/Progress';
 import MessageAPI from '../assets/APIs/messageAPI';
 import Helpers from '../assets/helpers';
 import io from 'socket.io-client';
@@ -60,57 +60,50 @@ class NavBar extends Component {
       :
       null;
 
-    if (user.onboarding_stages_complete < 1) {
-      Snackbar.show({
-        title: 'Hello world',
-        duration: Snackbar.LENGTH_INDEFINITE,
-        position: 'top',
-        action: {
-          title: 'UNDO',
-          color: 'green',
-          onPress: this.completeProfile,
-        },
-      });
-    }
-
-    console.log('NAVBAR PROPS', this.props)
-
+    const progressBar = user.onboarding_stages_complete < 1 ? 
+      <Progress progress={50} />
+      :
+      null;
+        
     return (
-      <Header
-        statusBarProps={{ barStyle: 'light-content' }}
-        backgroundColor={colors.primary}
-        leftComponent={
-          <TouchableOpacity
-            hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
-            onPress={() => navigation.navigate('Profile')}
-          >
-            <Icon
-              name="ios-person"
-              type="ionicon"
-              color='#fff'
-            />
-          </TouchableOpacity>
-        }
-        centerComponent={{
-          text: 'The BackBeat',
-          style: {
-            color: '#fff'
+      <View>
+        <Header
+          statusBarProps={{ barStyle: 'light-content' }}
+          backgroundColor={colors.primary}
+          leftComponent={
+            <TouchableOpacity
+              hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
+              onPress={() => navigation.navigate('Profile')}
+            >
+              <Icon
+                name="ios-person"
+                type="ionicon"
+                color='#fff'
+              />
+            </TouchableOpacity>
           }
-        }}
-        rightComponent={
-          <TouchableOpacity
-            hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
-            onPress={() => navigation.navigate('Chat')}
-          >
-            {unreadNotification}
-            <Icon
-              name="ios-chatbubbles"
-              type="ionicon"
-              color='#fff'
-            />
-          </TouchableOpacity>
-        }
-      />
+          centerComponent={{
+            text: 'The BackBeat',
+            style: {
+              color: '#fff'
+            }
+          }}
+          rightComponent={
+            <TouchableOpacity
+              hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
+              onPress={() => navigation.navigate('Chat')}
+            >
+              {unreadNotification}
+              <Icon
+                name="ios-chatbubbles"
+                type="ionicon"
+                color='#fff'
+              />
+            </TouchableOpacity>
+          }
+        />
+        { progressBar }
+      </View>
     )
 
   }
