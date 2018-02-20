@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { AsyncStorage, TouchableOpacity, View } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
+import Snackbar from 'react-native-snackbar';
+
 import { colors } from '../assets/styles';
 import MessageAPI from '../assets/APIs/messageAPI';
 import Helpers from '../assets/helpers';
@@ -33,6 +35,10 @@ class NavBar extends Component {
     this.socket.close()
   }
 
+  completeProfile = () => {
+    console.log('COMPLETING PROFILE')
+  }
+
   setMessages = (messages) => {
     this.props.setAllMessages(messages)
     const unreadMessages = findUnreadMessages(messages, this.props.user.id)
@@ -41,7 +47,7 @@ class NavBar extends Component {
 
   render() {
 
-    const { navigation, unreadMessages } = this.props;
+    const { navigation, unreadMessages, user } = this.props;
     const unreadNotification = unreadMessages.length > 0 ?
       <View style={{ position: 'absolute', top: -12, right: -4, zIndex: 10 }}>
         <Icon
@@ -53,6 +59,21 @@ class NavBar extends Component {
       </View>
       :
       null;
+
+    if (user.onboarding_stages_complete < 1) {
+      Snackbar.show({
+        title: 'Hello world',
+        duration: Snackbar.LENGTH_INDEFINITE,
+        position: 'top',
+        action: {
+          title: 'UNDO',
+          color: 'green',
+          onPress: this.completeProfile,
+        },
+      });
+    }
+
+    console.log('NAVBAR PROPS', this.props)
 
     return (
       <Header
