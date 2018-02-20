@@ -102,7 +102,6 @@ class NavBar extends Component {
             </TouchableOpacity>
           }
         />
-        { progressBar }
       </View>
     )
 
