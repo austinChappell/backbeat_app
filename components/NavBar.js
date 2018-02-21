@@ -76,7 +76,7 @@ class NavBar extends Component {
               onPress={() => navigation.navigate('Settings')}
             >
               <Icon
-                name="ios-person"
+                name="ios-settings"
                 type="ionicon"
                 color='#fff'
               />
