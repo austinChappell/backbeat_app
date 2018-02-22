@@ -120,6 +120,7 @@ class Profile extends Component {
                     <Label>Genre #{sgIndex + 1}</Label>
                     <Picker
                       selectedValue={this.state.genres[sgIndex]}
+                      style={{ marginTop: 0 }}
                       onValueChange={(val, index) =>
                         this.selectGenre(val, index, sgIndex)
                       }
