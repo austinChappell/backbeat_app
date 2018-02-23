@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Picker, Text, TextInput, View } from 'react-native';
-import { Avatar, Card } from 'react-native-elements';
-import { Form, Item, Input, Label } from 'native-base';
+import PropTypes from 'prop-types';
+import { AsyncStorage, Picker, View } from 'react-native';
+import { Avatar, Button, Card } from 'react-native-elements';
+import { Form, Label } from 'native-base';
 
-import { colors, styles } from '../../assets/styles';
+import BasicInfo from './ProfileSections/BasicInfo';
+import UserAPI from '../../assets/APIs/userAPI';
+
+const userAPI = new UserAPI();
+
+const { updateUserInfo } = userAPI;
 
 const genreOptions = [
   { label: '---', value: '' },
   { label: 'Jazz', value: 'jazz' },
   { label: 'Rock', value: 'rock' },
   { label: 'Country', value: 'country' },
-  { label: 'Blues', value: 'blues' }
+  { label: 'Blues', value: 'blues' },
 ];
 
 const instrumentOptions = [
@@ -19,17 +25,27 @@ const instrumentOptions = [
   { label: 'Drum Set', value: 'drum_set' },
   { label: 'Bass', value: 'bass' },
   { label: 'Elec. Gtr.', value: 'elec_gtr' },
-  { label: 'Piano', value: 'piano' }
+  { label: 'Piano', value: 'piano' },
 ];
+
+const propTypes = {
+  user: PropTypes.object.isRequired,
+};
 
 class Profile extends Component {
   state = {
-    email: 'austin@test.com',
-    firstName: 'Austin',
-    lastName: 'Chappell',
+    email: '',
+    firstName: '',
+    lastName: '',
     genres: ['', '', ''],
-    instruments: ['', '', '']
+    instruments: ['', '', ''],
+    notificationEmail: '',
+    zipCode: '',
   };
+
+  componentDidMount() {
+    this.loadUser();
+  }
 
   handleInputChange = (val, key) => {
     const o = {};
@@ -45,14 +61,54 @@ class Profile extends Component {
     this.setState(o);
   };
 
+  loadUser = () => {
+    const { user } = this.props;
+    const {
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      notification_email: notificationEmail,
+      zip_code: zipCode,
+    } = user;
+    this.setState({
+      email,
+      firstName,
+      lastName,
+      notificationEmail,
+      zipCode,
+    });
+  };
+
   selectGenre = (val, index, genreIndex) => {
     const { genres } = this.state;
     genres[genreIndex] = val;
     this.setState({ genres });
   };
 
+  updateResponse = (res) => {
+    console.log('UPDATED USER', res);
+  };
+
+  updateUser = () => {
+    const {
+      firstName, lastName, notificationEmail, zipCode,
+    } = this.state;
+    const body = {
+      firstName,
+      lastName,
+      notificationEmail,
+      zipCode,
+    };
+    AsyncStorage.getItem('auth_token').then((token) => {
+      updateUserInfo(token, body, this.updateResponse);
+    });
+  };
+
   render() {
-    console.log('PROFILE STATE', this.state);
+    const {
+      firstName, lastName, notificationEmail, email, zipCode,
+    } = this.state;
+
     return (
       <View contentContainerStyle={{ flex: 0 }}>
         <View style={{ alignItems: 'center', marginTop: 20 }}>
@@ -60,142 +116,75 @@ class Profile extends Component {
             large
             rounded
             source={{
-              uri:
-                'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
+              uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg',
             }}
             onPress={() => console.log('Works!')}
             activeOpacity={0.7}
           />
+          <Button title="Save" onPress={this.updateUser} />
         </View>
 
-        <View>
-          <Card title="Basic Info">
-            <Form>
-              <Item floatingLabel>
-                <Label>First Name</Label>
-                <Input
-                  onChangeText={text =>
-                    this.handleInputChange(text, 'firstName')
-                  }
-                  value={this.state.firstName}
-                />
-              </Item>
-
-              <Item floatingLabel>
-                <Label>Last Name</Label>
-                <Input
-                  onChangeText={text =>
-                    this.handleInputChange(text, 'lastName')
-                  }
-                  value={this.state.lastName}
-                />
-              </Item>
-
-              <Item floatingLabel last>
-                <Label>Notification Email</Label>
-                <Input
-                  onChangeText={text => this.handleInputChange(text, 'email')}
-                  value={this.state.email}
-                />
-              </Item>
-
-              <Item floatingLabel last>
-                <Label>Login Email</Label>
-                <Input
-                  style={{ color: colors.disabled }}
-                  disabled
-                  value={this.state.email}
-                />
-              </Item>
-            </Form>
-          </Card>
-        </View>
+        <BasicInfo
+          firstName={firstName}
+          handleInputChange={this.handleInputChange}
+          lastName={lastName}
+          notificationEmail={notificationEmail}
+          email={email}
+          zipCode={zipCode}
+        />
 
         <View>
           <Card title="Genres of Interest">
             <Form>
-              {this.state.genres.map((stateGenre, sgIndex) => {
-                return (
-                  <View key={sgIndex}>
-                    <Label>Genre #{sgIndex + 1}</Label>
-                    <Picker
-                      selectedValue={this.state.genres[sgIndex]}
-                      style={{ marginTop: 0 }}
-                      onValueChange={(val, index) =>
-                        this.selectGenre(val, index, sgIndex)
+              {this.state.genres.map((stateGenre, sgIndex) => (
+                <View key={sgIndex}>
+                  <Label>Genre #{sgIndex + 1}</Label>
+                  <Picker
+                    selectedValue={this.state.genres[sgIndex]}
+                    style={{ marginTop: 0 }}
+                    onValueChange={(val, index) => this.selectGenre(val, index, sgIndex)}
+                  >
+                    {genreOptions.map((genre, index) => {
+                      const selectionIndex = this.state.genres.findIndex(option => option === genre.value);
+                      if (selectionIndex < 0 || selectionIndex === sgIndex || index === 0) {
+                        return <Picker.Item key={index} label={genre.label} value={genre.value} />;
                       }
-                    >
-                      {genreOptions.map((genre, index) => {
-                        const selectionIndex = this.state.genres.findIndex(
-                          option => option === genre.value
-                        );
-                        if (
-                          selectionIndex < 0 ||
-                          selectionIndex === sgIndex ||
-                          index === 0
-                        ) {
-                          return (
-                            <Picker.Item
-                              key={index}
-                              label={genre.label}
-                              value={genre.value}
-                            />
-                          );
-                        }
-                      })}
-                    </Picker>
-                  </View>
-                );
-              })}
+                    })}
+                  </Picker>
+                </View>
+              ))}
             </Form>
           </Card>
         </View>
 
         <View style={{ marginBottom: 20 }}>
-          <Card title="Instrument">
+          <Card title="Instruments">
             <Form>
-              {this.state.instruments.map((stateInstrument, instIndex) => {
-                return (
-                  <View key={instIndex}>
-                    <Label>Instrument #{instIndex + 1}</Label>
-                    <Picker
-                      selectedValue={stateInstrument}
-                      onValueChange={(val, index) =>
-                        this.handlePickerChange(
-                          val,
-                          index,
-                          'instruments',
-                          instIndex
-                        )
+              {this.state.instruments.map((stateInstrument, instIndex) => (
+                <View key={instIndex}>
+                  <Label>Instrument #{instIndex + 1}</Label>
+                  <Picker
+                    selectedValue={stateInstrument}
+                    onValueChange={(val, index) =>
+                      this.handlePickerChange(val, index, 'instruments', instIndex)
+                    }
+                  >
+                    {instrumentOptions.map((instrument, index) => {
+                      const selectionIndex = this.state.instruments.findIndex(option => option === instrument.value);
+                      console.log('SELECTION INDEX', instrument, selectionIndex);
+                      if (selectionIndex < 0 || selectionIndex === instIndex || index === 0) {
+                        return (
+                          <Picker.Item
+                            key={index}
+                            label={instrument.label}
+                            value={instrument.value}
+                          />
+                        );
                       }
-                    >
-                      {instrumentOptions.map((instrument, index) => {
-                        const selectionIndex = this.state.instruments.findIndex(
-                          option => option === instrument.value
-                        );
-                        console.log(
-                          'SELECTION INDEX',
-                          instrument,
-                          selectionIndex
-                        );
-                        if (
-                          selectionIndex < 0 ||
-                          selectionIndex === instIndex ||
-                          index === 0
-                        ) {
-                          return (
-                            <Picker.Item
-                              key={index}
-                              label={instrument.label}
-                              value={instrument.value}
-                            />
-                          );
-                        }
-                      })}
-                    </Picker>
-                  </View>
-                );
-              })}
+                    })}
+                  </Picker>
+                </View>
+              ))}
             </Form>
           </Card>
         </View>
@@ -204,10 +193,10 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    user: state.user.user
-  };
-};
+const mapStateToProps = state => ({
+  user: state.user.user,
+});
+
+Profile.propTypes = propTypes;
 
 export default connect(mapStateToProps)(Profile);
