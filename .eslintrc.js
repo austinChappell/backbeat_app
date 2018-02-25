@@ -13,6 +13,7 @@ module.exports = {
     'react/no-array-index-key': 0,
     'react/sort-comp': 0,
     'no-unneeded-ternary': 0,
+    eqeqeq: 0,
   },
   globals: {
     document: true,

@@ -24,6 +24,10 @@ const { findUnreadMessages } = helpers;
 const { getAllMessages } = messageAPI;
 
 class NavBar extends Component {
+  state = {
+    onboardingPercent: 0,
+  };
+
   componentDidMount() {
     AsyncStorage.getItem('id')
       .then((userid) => {
@@ -51,19 +55,28 @@ class NavBar extends Component {
     this.socket.close();
   }
 
-  completeProfile = () => {
-    console.log('COMPLETING PROFILE');
-  };
-
   setMessages = (messages) => {
     this.props.setAllMessages(messages);
     const unreadMessages = findUnreadMessages(messages, this.props.user.id);
     this.props.setUnreadMessages(unreadMessages);
   };
 
+  setOnboardingPercent = (user) => {
+    const hasName = user.first_name != false && user.last_name != false;
+    const hasAvatar = user.avatar != false;
+    const hasInstrument = user.instrument_one != null;
+    const hasGenre = user.genre_one != null;
+    const profileProps = [hasName, hasAvatar, hasInstrument, hasGenre];
+    const trueProps = profileProps.filter(item => item);
+    console.log('TRUE PROPS', trueProps, 'ALL PROPS', profileProps);
+    const onboardingPercent = trueProps.length / profileProps.length * 100;
+    this.setState({ onboardingPercent });
+  };
+
   setUser = (user) => {
     this.props.setUser(user);
     this.setState({ loading: false });
+    this.setOnboardingPercent(user);
   };
 
   render() {
@@ -84,7 +97,7 @@ class NavBar extends Component {
 
     const progressBar =
       user.onboarding_stages_complete < 1 ? (
-        <Progress navigation={navigation} progress={50} />
+        <Progress navigation={navigation} progress={this.state.onboardingPercent} />
       ) : null;
 
     return (

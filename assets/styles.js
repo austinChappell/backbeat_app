@@ -17,6 +17,7 @@ const colors = {
   facebook: '#3B5998',
   google: '#d34836',
   linkedin: '#0077b5',
+  failure: '#ff5555',
 };
 
 const styles = StyleSheet.create({

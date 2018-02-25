@@ -98,10 +98,38 @@ class Profile extends Component {
       notificationEmail,
       zipCode,
     };
-    AsyncStorage.getItem('auth_token').then((token) => {
-      update('users', token, user, this.updateResponse);
-    });
+    if (this.validUser()) {
+      AsyncStorage.getItem('auth_token').then((token) => {
+        update('users', token, user, this.updateResponse);
+      });
+    }
   };
+
+  validUser = () => {
+    let valid = true;
+    let message;
+    const {
+      firstName, lastName, notificationEmail, zipCode,
+    } = this.state;
+    if (firstName.trim().length < 3 || lastName.trim().length < 3) {
+      valid = false;
+      message = 'Use at least three letters.';
+    } else if (notificationEmail.indexOf('@') < 1 || notificationEmail.indexOf('.') < 3) {
+      valid = false;
+      message = 'Invalid email';
+    } else if (zipCode.length !== 5 || !Number.isInteger(Number(zipCode))) {
+      valid = false;
+      message = 'Invalid zip code';
+    }
+    if (!valid) {
+      Snackbar.show({
+        title: message,
+        duration: Snackbar.LENGTH_LONG,
+        backgroundColor: colors.failure,
+      });
+    }
+    return valid;
+  }
 
   render() {
     const {
