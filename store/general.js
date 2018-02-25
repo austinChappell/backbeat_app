@@ -1,7 +1,7 @@
 const initialState = {
   allInstruments: [],
   attemptedLogin: false,
-  authToken: 'noToken',
+  authToken: null,
   authorized: false,
   bandInstruments: [],
   numOfUnreadMessages: 0,
@@ -11,13 +11,13 @@ const initialState = {
   skillLevels: ['Professional', 'Semi-Professional', 'Amateur', 'Novice'],
   onboardingMaxStage: 3,
   onboardingReqMaxStage: 1,
-}
+};
 
 const reducer = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

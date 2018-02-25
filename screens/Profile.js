@@ -6,7 +6,7 @@ import { AsyncStorage, View } from 'react-native';
 import GoBackNavBar from '../components/GoBackNavBar';
 import Api from '../assets/api';
 
-const api = new Api()
+const api = new Api();
 const { getProfile } = api;
 // const user = {}
 //
@@ -14,29 +14,24 @@ const { getProfile } = api;
 // AsyncStorage.getItem('lastName').then(value => user.lastName = value)
 
 class Profile extends Component {
-
   render() {
-
     const { user } = this.props;
 
     const { navigation } = this.props;
 
     return (
       <View>
-        <GoBackNavBar navigation={navigation} logoutButton={true} />
+        <GoBackNavBar navigation={navigation} logoutButton />
         <Text>
           Hello, {user.first_name} {user.last_name}
         </Text>
       </View>
-    )
-
+    );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user.user
-  }
-}
+const mapStateToProps = state => ({
+  user: state.userReducer.user,
+});
 
 export default connect(mapStateToProps)(Profile);

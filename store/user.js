@@ -10,7 +10,7 @@ const initialState = {
     email: '',
     username: '',
     city: '',
-    skill_level: ''
+    skill_level: '',
   },
   currentUserInstruments: [],
   currentUserVids: [],
@@ -34,27 +34,28 @@ const initialState = {
   userStyleIds: [],
   token: null,
   onboardingStage: 0,
-}
+};
 
 const reducer = (state = initialState, action) => {
-  console.log('USER REDUCER RUNNING', action)
-  switch(action.type) {
+  console.log('USER REDUCER RUNNING', action);
+  switch (action.type) {
     case constants.HANDLE_FORM_INPUT_CHANGE: {
-      let updateObject = {};
+      const updateObject = {};
       const inputName = action.input;
       updateObject[inputName] = action.value;
-      let newUserInfo = Object.assign({}, state.userInfo, updateObject);
+      const newUserInfo = Object.assign({}, state.userInfo, updateObject);
       return Object.assign({}, state, { userInfo: newUserInfo });
     }
     case constants.SET_TOKEN: {
       return Object.assign({}, state, { token: action.token });
     }
     case constants.SET_USER: {
+      const { user } = action;
       return Object.assign({}, state, { user: action.user });
     }
     default:
       return state;
   }
-}
+};
 
 export default reducer;

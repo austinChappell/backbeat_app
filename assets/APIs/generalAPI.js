@@ -1,24 +1,30 @@
 import data from '../data';
 
-const api = data.apiURL;
+const { apiURL } = data;
 
 class GeneralAPI {
-  checkToken = token => fetch(`${api}/api/checktoken`, {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      Authentication: `Bearer ${token}`,
-    },
-  })
-    .then((response) => {
-      console.log('CHECK TOKEN RESPONSE', response);
+  getAll = (resource, token, cb) => {
+    const url = `${apiURL}/api/${resource}`;
+    return fetch(url, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .catch((err) => {
-      console.log('CHECK TOKEN ERROR', error);
-    });
+      .then(response => response.json())
+      .then((results) => {
+        const { rows } = results;
+        cb(rows);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
 
-  getUserPhoto(userid, token, cb) {
-    return fetch(`${api}/api/userphoto/id/${userid}`, {
+  getUserPhoto = (userid, token, cb) => {
+    const url = `${apiURL}/api/userphoto/id/${userid}`;
+    return fetch(url, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -32,13 +38,11 @@ class GeneralAPI {
       .catch((err) => {
         console.error('ERROR FETCHING PHOTO', err);
       });
-  }
+  };
 
-  searchUsers(searchValue, token, cb) {
-    console.log('SEARCH VALUE', searchValue);
-    console.log('TOKEN', token);
-
-    return fetch(`${api}/api/searchusernames/${searchValue}`, {
+  searchUsers = (searchValue, token, cb) => {
+    const url = `${apiURL}/api/searchusernames/${searchValue}`;
+    return fetch(url, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
@@ -52,7 +56,27 @@ class GeneralAPI {
       .catch((err) => {
         console.error('SEARCH ERROR', err);
       });
-  }
+  };
+
+  update = (resource, token, body, cb) => {
+    const url = `${apiURL}/api/${resource}/`;
+    return fetch(url, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'PUT',
+      body: JSON.stringify(body),
+    })
+      .then(response => response.json())
+      .then((results) => {
+        cb(results.rows);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
 }
 
 export default GeneralAPI;

@@ -1,25 +1,23 @@
 import { AsyncStorage } from 'react-native';
 import data from '../data';
+
 const api = data.apiURL;
 
 class MessageAPI {
-
-  getAllMessages = (token, cb) => {
-
-    return fetch(`${api}/messages/all`, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        token
-      }
-    }).then((response) => {
-      return response.json();
-    }).then((results) => {
+  getAllMessages = (token, cb) => fetch(`${api}/messages/all`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      token,
+    },
+  })
+    .then(response => response.json())
+    .then((results) => {
       cb(results.rows);
-    }).catch((err) => {
-      console.error('ERROR FETCHING MESSAGES', err)
     })
-  }
+    .catch((err) => {
+      console.error('ERROR FETCHING MESSAGES', err);
+    });
 
   // getUserMessages = (userid, token, cb) => {
   //   return fetch(`${api}/messages/${userid}`, {
@@ -37,22 +35,21 @@ class MessageAPI {
   //   })
   // }
 
-  markAsRead = (token, messageId, cb) => {
-    return fetch(`${api}/message/${messageId}/markasread`, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        token
-      },
-      method: 'PUT',
-    }).then((response) => {
-      return response.json()
-    }).then((results) => {
-      cb(results.rows[0])
-    }).catch((err) => {
-      console.error('MARK AS READ ERROR', err)
+  markAsRead = (token, messageId, cb) => fetch(`${api}/message/${messageId}/markasread`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+      token,
+    },
+    method: 'PUT',
+  })
+    .then(response => response.json())
+    .then((results) => {
+      cb(results.rows[0]);
     })
-  }
+    .catch((err) => {
+      console.error('MARK AS READ ERROR', err);
+    });
 
   sendMessage = (token, recipientId, message, sender, recipient, cb) => {
     const body = {
@@ -60,26 +57,26 @@ class MessageAPI {
       message,
       recipientId,
       sender,
-      recipient
-    }
+      recipient,
+    };
 
     return fetch(`${api}/message/send`, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        token
+        token,
       },
       method: 'POST',
-      body: JSON.stringify(body)
-    }).then((response) => {
-      return response.json()
-    }).then((results) => {
-      cb(results.rows)
-    }).catch((err) => {
-      console.error('ERROR SENDING MESSAGE', err)
+      body: JSON.stringify(body),
     })
-  }
-
+      .then(response => response.json())
+      .then((results) => {
+        cb(results.rows);
+      })
+      .catch((err) => {
+        console.error('ERROR SENDING MESSAGE', err);
+      });
+  };
 }
 
 export default MessageAPI;

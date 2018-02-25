@@ -332,7 +332,7 @@ class Message extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user.user
+    user: state.userReducer.user
   }
 }
 

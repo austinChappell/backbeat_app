@@ -16,8 +16,8 @@ const colors = {
   bgDark: '#555555',
   facebook: '#3B5998',
   google: '#d34836',
-  linkedin: '#0077b5'
-}
+  linkedin: '#0077b5',
+};
 
 const styles = StyleSheet.create({
   button: {
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: '100%',
     borderRadius: 4,
-    padding: 20
+    padding: 20,
   },
   container: {
     flex: 1,
@@ -55,17 +55,17 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: '700',
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   headerLight: {
     color: colors.white,
     fontSize: 36,
     fontWeight: '700',
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   hide: {
-    display: 'none'
+    display: 'none',
   },
   input: {
     borderColor: '#000000',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   popoverText: {
     color: '#E4FDE1',
-    fontSize: 20
+    fontSize: 20,
   },
   spinnerContainer: {
     flex: 1,
@@ -101,19 +101,19 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)'
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   subHeader: {
     color: '#0d47a1',
     fontSize: 26,
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   subHeaderLight: {
     color: colors.white,
     fontSize: 26,
     marginBottom: 20,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   tabBar: {
     backgroundColor: colors.bgLight,
@@ -124,8 +124,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingTop: 10,
-    paddingBottom: 10
-  }
-})
+    paddingBottom: 10,
+  },
+});
 
 export { colors, styles };

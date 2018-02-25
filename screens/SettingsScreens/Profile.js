@@ -2,33 +2,21 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { AsyncStorage, Picker, View } from 'react-native';
-import { Avatar, Button, Card } from 'react-native-elements';
+import { Avatar, Card } from 'react-native-elements';
 import { Form, Label } from 'native-base';
+import Snackbar from 'react-native-snackbar';
 
 import BasicInfo from './ProfileSections/BasicInfo';
-import UserAPI from '../../assets/APIs/userAPI';
+import GeneralAPI from '../../assets/APIs/generalAPI';
+import { colors } from '../../assets/styles';
 
-const userAPI = new UserAPI();
+const generalAPI = new GeneralAPI();
 
-const { updateUserInfo } = userAPI;
-
-const genreOptions = [
-  { label: '---', value: '' },
-  { label: 'Jazz', value: 'jazz' },
-  { label: 'Rock', value: 'rock' },
-  { label: 'Country', value: 'country' },
-  { label: 'Blues', value: 'blues' },
-];
-
-const instrumentOptions = [
-  { label: '---', value: '' },
-  { label: 'Drum Set', value: 'drum_set' },
-  { label: 'Bass', value: 'bass' },
-  { label: 'Elec. Gtr.', value: 'elec_gtr' },
-  { label: 'Piano', value: 'piano' },
-];
+const { update } = generalAPI;
 
 const propTypes = {
+  genres: PropTypes.array.isRequired,
+  instruments: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
 };
 
@@ -37,8 +25,8 @@ class Profile extends Component {
     email: '',
     firstName: '',
     lastName: '',
-    genres: ['', '', ''],
-    instruments: ['', '', ''],
+    genres: [null, null, null],
+    instruments: [null, null, null],
     notificationEmail: '',
     zipCode: '',
   };
@@ -48,9 +36,14 @@ class Profile extends Component {
   }
 
   handleInputChange = (val, key) => {
+    clearTimeout(this.stopUpdate);
     const o = {};
     o[key] = val;
-    this.setState(o);
+    this.setState(o, () => {
+      this.stopUpdate = setTimeout(() => {
+        this.updateUser();
+      }, 1000);
+    });
   };
 
   handlePickerChange = (val, index, key, stateItemIndex) => {
@@ -85,22 +78,28 @@ class Profile extends Component {
     this.setState({ genres });
   };
 
-  updateResponse = (res) => {
-    console.log('UPDATED USER', res);
+  updateResponse = (results) => {
+    const user = results[0];
+    Snackbar.show({
+      title: 'Changes Saved',
+      duration: Snackbar.LENGTH_SHORT,
+      backgroundColor: colors.primary,
+    });
+    this.props.setUser(user);
   };
 
   updateUser = () => {
     const {
       firstName, lastName, notificationEmail, zipCode,
     } = this.state;
-    const body = {
+    const user = {
       firstName,
       lastName,
       notificationEmail,
       zipCode,
     };
     AsyncStorage.getItem('auth_token').then((token) => {
-      updateUserInfo(token, body, this.updateResponse);
+      update('users', token, user, this.updateResponse);
     });
   };
 
@@ -121,7 +120,6 @@ class Profile extends Component {
             onPress={() => console.log('Works!')}
             activeOpacity={0.7}
           />
-          <Button title="Save" onPress={this.updateUser} />
         </View>
 
         <BasicInfo
@@ -144,10 +142,11 @@ class Profile extends Component {
                     style={{ marginTop: 0 }}
                     onValueChange={(val, index) => this.selectGenre(val, index, sgIndex)}
                   >
-                    {genreOptions.map((genre, index) => {
-                      const selectionIndex = this.state.genres.findIndex(option => option === genre.value);
-                      if (selectionIndex < 0 || selectionIndex === sgIndex || index === 0) {
-                        return <Picker.Item key={index} label={genre.label} value={genre.value} />;
+                    <Picker.Item label="---" value={null} />
+                    {this.props.genres.map((genre, index) => {
+                      const selectionIndex = this.state.genres.findIndex(option => option === genre.id);
+                      if (selectionIndex < 0 || selectionIndex === sgIndex) {
+                        return <Picker.Item key={index} label={genre.label} value={genre.id} />;
                       }
                     })}
                   </Picker>
@@ -169,16 +168,12 @@ class Profile extends Component {
                       this.handlePickerChange(val, index, 'instruments', instIndex)
                     }
                   >
-                    {instrumentOptions.map((instrument, index) => {
-                      const selectionIndex = this.state.instruments.findIndex(option => option === instrument.value);
-                      console.log('SELECTION INDEX', instrument, selectionIndex);
-                      if (selectionIndex < 0 || selectionIndex === instIndex || index === 0) {
+                    <Picker.Item label="---" value={null} />
+                    {this.props.instruments.map((instrument, index) => {
+                      const selectionIndex = this.state.instruments.findIndex(option => option === instrument.id);
+                      if (selectionIndex < 0 || selectionIndex === instIndex) {
                         return (
-                          <Picker.Item
-                            key={index}
-                            label={instrument.label}
-                            value={instrument.value}
-                          />
+                          <Picker.Item key={index} label={instrument.label} value={instrument.id} />
                         );
                       }
                     })}
@@ -194,9 +189,18 @@ class Profile extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user.user,
+  genres: state.genresReducer.genres,
+  instruments: state.instrumentsReducer.instruments,
+  user: state.userReducer.user,
+});
+
+const mapDispatchToProps = dispatch => ({
+  setUser: (user) => {
+    const action = { type: 'SET_USER', user };
+    dispatch(action);
+  },
 });
 
 Profile.propTypes = propTypes;
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

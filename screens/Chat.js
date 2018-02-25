@@ -154,7 +154,7 @@ const mapStateToProps = state => ({
   token: state.user.token,
   messages: state.messages.messages,
   unreadMessages: state.messages.unreadMessages,
-  user: state.user.user,
+  user: state.userReducer.user,
 });
 
 const mapDispatchToProps = dispatch => ({
