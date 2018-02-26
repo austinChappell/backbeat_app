@@ -26,9 +26,11 @@ const { getAllMessages } = messageAPI;
 class NavBar extends Component {
   state = {
     onboardingPercent: 0,
+    userLoaded: false,
   };
 
   componentDidMount() {
+    console.log('NAVBAR COMPONENT MOUNTED');
     AsyncStorage.getItem('id')
       .then((userid) => {
         this.userid = userid;
@@ -62,25 +64,36 @@ class NavBar extends Component {
   };
 
   setOnboardingPercent = (user) => {
-    const hasName = user.first_name != false && user.last_name != false;
-    const hasAvatar = user.avatar != false;
-    const hasInstrument = user.instrument_one != null;
-    const hasGenre = user.genre_one != null;
+    const {
+      first_name: firstName,
+      last_name: lastName,
+      avatar,
+      instrument_one: instOne,
+      instrument_two: instTwo,
+      instrument_three: instThree,
+      genre_one: genreOne,
+      genre_two: genreTwo,
+      genre_three: genreThree,
+    } = user;
+    const hasName = firstName != false && lastName != false;
+    const hasAvatar = avatar != false;
+    const hasInstrument = instOne !== null || instTwo !== null || instThree !== null;
+    const hasGenre = genreOne !== null || genreTwo !== null || genreThree !== null;
     const profileProps = [hasName, hasAvatar, hasInstrument, hasGenre];
     const trueProps = profileProps.filter(item => item);
-    console.log('TRUE PROPS', trueProps, 'ALL PROPS', profileProps);
-    const onboardingPercent = trueProps.length / profileProps.length * 100;
-    this.setState({ onboardingPercent });
+    const onboardingDecimal = trueProps.length / profileProps.length;
+    const onboardingPercent = onboardingDecimal * 100;
+    this.setState({ onboardingPercent, userLoaded: true });
   };
 
   setUser = (user) => {
     this.props.setUser(user);
-    this.setState({ loading: false });
     this.setOnboardingPercent(user);
   };
 
   render() {
     const { navigation, unreadMessages, user } = this.props;
+    const { onboardingPercent, userLoaded } = this.state;
     const unreadNotification =
       unreadMessages.length > 0 ? (
         <View
@@ -96,8 +109,8 @@ class NavBar extends Component {
       ) : null;
 
     const progressBar =
-      user.onboarding_stages_complete < 1 ? (
-        <Progress navigation={navigation} progress={this.state.onboardingPercent} />
+      onboardingPercent < 100 && userLoaded ? (
+        <Progress navigation={navigation} progress={onboardingPercent} />
       ) : null;
 
     return (

@@ -47,11 +47,16 @@ class Profile extends Component {
   };
 
   handlePickerChange = (val, index, key, stateItemIndex) => {
+    clearTimeout(this.stopUpdate);
     const options = this.state[key];
     options[stateItemIndex] = val;
     const o = {};
     o[key] = options;
-    this.setState(o, this.updateUser());
+    this.setState(o, () => {
+      this.stopUpdate = setTimeout(() => {
+        this.updateUser();
+      }, 1000);
+    });
   };
 
   loadUser = () => {

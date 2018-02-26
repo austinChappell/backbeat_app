@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { ActivityIndicator, View } from 'react-native';
 import { Text } from 'react-native-elements';
 
@@ -13,8 +14,20 @@ class Dashboard extends Component {
 
   componentDidMount() {
     // TODO: this setstate to false is tempory
-    this.setState({ loading: false });
+    if (this.props.user.id) {
+      this.stopLoading();
+    }
   }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.user.id !== this.props.user.id) {
+      this.stopLoading();
+    }
+  }
+
+  stopLoading = () => {
+    this.setState({ loading: false });
+  };
 
   render() {
     const { navigation } = this.props;
@@ -36,4 +49,8 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+const mapStateToProps = state => ({
+  user: state.userReducer.user,
+});
+
+export default connect(mapStateToProps)(Dashboard);
