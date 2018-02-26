@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import { AsyncStorage, Text, View } from 'react-native';
 import { colors, styles } from '../assets/styles';
-import FBSDK, { GraphRequest, GraphRequestManager, LoginButton, LoginManager, AccessToken } from 'react-native-fbsdk';
+// import FBSDK, { GraphRequest, GraphRequestManager, LoginButton, LoginManager, AccessToken } from 'react-native-fbsdk';
 import FadeInView from '../components/FadeInView';
 import AuthAPI from '../assets/APIs/authAPI';
 import Api from '../assets/api';
@@ -23,52 +23,52 @@ class SignInType extends Component {
     onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'))
   }
 
-  handleSignUpWithFacebookButton = () => {
-    // Attempt a login using the Facebook login dialog asking for default permissions.
-    LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
-      (result) => {
-        if (result.isCancelled) {
-          console.log('Login with facebook was cancelled');
-        } else {
-          AccessToken.getCurrentAccessToken().then((data) => {
-            const { accessToken } = data;
+  // handleSignUpWithFacebookButton = () => {
+  //   // Attempt a login using the Facebook login dialog asking for default permissions.
+  //   LoginManager.logInWithReadPermissions(['public_profile', 'email']).then(
+  //     (result) => {
+  //       if (result.isCancelled) {
+  //         console.log('Login with facebook was cancelled');
+  //       } else {
+  //         AccessToken.getCurrentAccessToken().then((data) => {
+  //           const { accessToken } = data;
 
-            const responseInfoCallback = (err, result) => {
-              if (err) {
-                console.error(err)
-                alert(`Error logging in ${error.toString()}`)
-              } else {
-                this.user = {
-                  first_name: result.first_name,
-                  last_name: result.last_name,
-                  email: result.email,
-                  city: 'Dallas, TX',
-                  oauth_id: result.id,
-                  access_token: accessToken
-                }
-                this.signIn(this.user)
-              }
-            }
+  //           const responseInfoCallback = (err, result) => {
+  //             if (err) {
+  //               console.error(err)
+  //               alert(`Error logging in ${error.toString()}`)
+  //             } else {
+  //               this.user = {
+  //                 first_name: result.first_name,
+  //                 last_name: result.last_name,
+  //                 email: result.email,
+  //                 city: 'Dallas, TX',
+  //                 oauth_id: result.id,
+  //                 access_token: accessToken
+  //               }
+  //               this.signIn(this.user)
+  //             }
+  //           }
 
-            const infoRequest = new GraphRequest('/me', {
-              accessToken,
-              parameters: {
-                fields: {
-                  string: 'email,name,first_name,last_name,id'
-                }
-              }
-            }, responseInfoCallback)
+  //           const infoRequest = new GraphRequest('/me', {
+  //             accessToken,
+  //             parameters: {
+  //               fields: {
+  //                 string: 'email,name,first_name,last_name,id'
+  //               }
+  //             }
+  //           }, responseInfoCallback)
 
-            new GraphRequestManager().addRequest(infoRequest).start()
+  //           new GraphRequestManager().addRequest(infoRequest).start()
 
-          });
-        }
-      },
-      (error) => {
-        console.log(`Login fail with error: ${error}`);
-      },
-    );
-  }
+  //         });
+  //       }
+  //     },
+  //     (error) => {
+  //       console.log(`Login fail with error: ${error}`);
+  //     },
+  //   );
+  // }
 
   setUser = (results) => {
     const user = results.rows[0];
@@ -96,7 +96,7 @@ class SignInType extends Component {
       <View style={ styles.container }>
         <FadeInView>
           <Text style={ styles.header }>The Back Beat</Text>
-          <Button
+          {/* <Button
             backgroundColor={colors.facebook}
             buttonStyle={styles.button}
             color={colors.white}
@@ -104,7 +104,7 @@ class SignInType extends Component {
             large
             title="Login with Facebook"
             onPress={this.handleSignUpWithFacebookButton}
-          />
+          /> */}
           <Button
             backgroundColor={colors.google}
             buttonStyle={styles.button}

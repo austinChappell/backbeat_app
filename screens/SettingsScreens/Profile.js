@@ -51,7 +51,7 @@ class Profile extends Component {
     options[stateItemIndex] = val;
     const o = {};
     o[key] = options;
-    this.setState(o);
+    this.setState(o, this.updateUser());
   };
 
   loadUser = () => {
@@ -62,6 +62,12 @@ class Profile extends Component {
       last_name: lastName,
       notification_email: notificationEmail,
       zip_code: zipCode,
+      instrument_one: instOne,
+      instrument_two: instTwo,
+      instrument_three: instThree,
+      genre_one: genreOne,
+      genre_two: genreTwo,
+      genre_three: genreThree,
     } = user;
     this.setState({
       email,
@@ -69,13 +75,9 @@ class Profile extends Component {
       lastName,
       notificationEmail,
       zipCode,
+      instruments: [instOne, instTwo, instThree],
+      genres: [genreOne, genreTwo, genreThree],
     });
-  };
-
-  selectGenre = (val, index, genreIndex) => {
-    const { genres } = this.state;
-    genres[genreIndex] = val;
-    this.setState({ genres });
   };
 
   updateResponse = (results) => {
@@ -90,13 +92,19 @@ class Profile extends Component {
 
   updateUser = () => {
     const {
-      firstName, lastName, notificationEmail, zipCode,
+      firstName, lastName, notificationEmail, zipCode, genres, instruments,
     } = this.state;
     const user = {
       firstName,
       lastName,
       notificationEmail,
       zipCode,
+      instOne: instruments[0],
+      instTwo: instruments[1],
+      instThree: instruments[2],
+      genreOne: genres[0],
+      genreTwo: genres[1],
+      genreThree: genres[2],
     };
     if (this.validUser()) {
       AsyncStorage.getItem('auth_token').then((token) => {
@@ -129,9 +137,10 @@ class Profile extends Component {
       });
     }
     return valid;
-  }
+  };
 
   render() {
+    console.log('PROFILE STATE', this.state);
     const {
       firstName, lastName, notificationEmail, email, zipCode,
     } = this.state;
@@ -168,7 +177,9 @@ class Profile extends Component {
                   <Picker
                     selectedValue={this.state.genres[sgIndex]}
                     style={{ marginTop: 0 }}
-                    onValueChange={(val, index) => this.selectGenre(val, index, sgIndex)}
+                    onValueChange={(val, index) =>
+                      this.handlePickerChange(val, index, 'genres', sgIndex)
+                    }
                   >
                     <Picker.Item label="---" value={null} />
                     {this.props.genres.map((genre, index) => {
