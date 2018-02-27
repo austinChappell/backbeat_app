@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { AsyncStorage, Picker, View } from 'react-native';
+import { AsyncStorage, ImagePickerIOS, Picker, View } from 'react-native';
 import { Avatar, Card } from 'react-native-elements';
 import { Form, Label } from 'native-base';
+import ImagePicker from 'react-native-image-crop-picker';
 import Snackbar from 'react-native-snackbar';
 
 import BasicInfo from './ProfileSections/BasicInfo';
 import GeneralAPI from '../../assets/APIs/generalAPI';
+import UserAPI from '../../assets/APIs/userAPI';
 import { colors } from '../../assets/styles';
 
 const generalAPI = new GeneralAPI();
+const userAPI = new UserAPI();
 
 const { update } = generalAPI;
+const { uploadAvatar } = userAPI;
+
+console.log('PICKER', Picker);
 
 const propTypes = {
   genres: PropTypes.array.isRequired,
@@ -22,11 +28,12 @@ const propTypes = {
 
 class Profile extends Component {
   state = {
+    avatar: 'empty-string',
     email: '',
     firstName: '',
     lastName: '',
-    genres: [null, null, null],
-    instruments: [null, null, null],
+    genres: [1, 2, 3],
+    instruments: [1, 2, 3],
     notificationEmail: '',
     zipCode: '',
   };
@@ -34,6 +41,12 @@ class Profile extends Component {
   componentDidMount() {
     this.loadUser();
   }
+
+  setInitialImage = () => {
+    this.setState({
+      avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg',
+    });
+  };
 
   handleInputChange = (val, key) => {
     clearTimeout(this.stopUpdate);
@@ -62,6 +75,7 @@ class Profile extends Component {
   loadUser = () => {
     const { user } = this.props;
     const {
+      avatar,
       email,
       first_name: firstName,
       last_name: lastName,
@@ -75,6 +89,7 @@ class Profile extends Component {
       genre_three: genreThree,
     } = user;
     this.setState({
+      avatar,
       email,
       firstName,
       lastName,
@@ -83,6 +98,39 @@ class Profile extends Component {
       instruments: [instOne, instTwo, instThree],
       genres: [genreOne, genreTwo, genreThree],
     });
+  };
+
+  pickImage = () => {
+    // ImagePickerIOS.openSelectDialog(
+    //   {},
+    //   (avatar) => {
+    //     console.log('avatar', avatar)
+    //     // this.setState({ avatar });
+    //   },
+    //   err => console.error(err),
+    // );
+    ImagePicker.openPicker({
+      width: 300,
+      height: 300,
+      cropping: true,
+      writeTempFile: false,
+      includeBase64: true,
+    }).then((avatar) => {
+      const { user, token } = this.props;
+      const body = {
+        image: avatar.data,
+        userId: user.id,
+      };
+      uploadAvatar(body, token, this.updateAvatar);
+      // this.setState({ avatar });
+    });
+  };
+
+  updateAvatar = (results) => {
+    const { avatar } = results.rows[0];
+    const { user } = this.props;
+    user.avatar = avatar;
+    this.setState({ avatar });
   };
 
   updateResponse = (results) => {
@@ -156,32 +204,30 @@ class Profile extends Component {
           <Avatar
             large
             rounded
-            source={{
-              uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg',
-            }}
-            onPress={() => console.log('Works!')}
+            source={{ uri: this.state.avatar }}
+            onPress={this.pickImage}
             activeOpacity={0.7}
           />
         </View>
-
         <BasicInfo
+          email={email}
           firstName={firstName}
           handleInputChange={this.handleInputChange}
           lastName={lastName}
           notificationEmail={notificationEmail}
-          email={email}
           zipCode={zipCode}
         />
-
         <View>
           <Card title="Genres of Interest">
             <Form>
               {this.state.genres.map((stateGenre, sgIndex) => (
                 <View key={sgIndex}>
-                  <Label>Genre #{sgIndex + 1}</Label>
+                  <Label> Genre# {sgIndex + 1}</Label>
                   <Picker
                     selectedValue={this.state.genres[sgIndex]}
-                    style={{ marginTop: 0 }}
+                    style={{
+                      marginTop: 0,
+                    }}
                     onValueChange={(val, index) =>
                       this.handlePickerChange(val, index, 'genres', sgIndex)
                     }
@@ -199,13 +245,16 @@ class Profile extends Component {
             </Form>
           </Card>
         </View>
-
-        <View style={{ marginBottom: 20 }}>
+        <View
+          style={{
+            marginBottom: 20,
+          }}
+        >
           <Card title="Instruments">
             <Form>
               {this.state.instruments.map((stateInstrument, instIndex) => (
                 <View key={instIndex}>
-                  <Label>Instrument #{instIndex + 1}</Label>
+                  <Label> Instrument# {instIndex + 1}</Label>
                   <Picker
                     selectedValue={stateInstrument}
                     onValueChange={(val, index) =>
@@ -235,12 +284,16 @@ class Profile extends Component {
 const mapStateToProps = state => ({
   genres: state.genresReducer.genres,
   instruments: state.instrumentsReducer.instruments,
+  token: state.userReducer.token,
   user: state.userReducer.user,
 });
 
 const mapDispatchToProps = dispatch => ({
   setUser: (user) => {
-    const action = { type: 'SET_USER', user };
+    const action = {
+      type: 'SET_USER',
+      user,
+    };
     dispatch(action);
   },
 });
