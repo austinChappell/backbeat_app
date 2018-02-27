@@ -52,20 +52,22 @@ class SignUp extends Component {
 
   receiveCoordinates = (results) => {
     console.log('RECEIVING COORDINATES', results);
-    const data = JSON.parse(results);
-    console.log('RECEIVING DATA', data);
-    if (data.places) {
-      const { latitude, longitude } = data.places[0];
-      const zipCity = data.places[0]['place name'];
+    const geoData = JSON.parse(results);
+    console.log('RECEIVING DATA', geoData);
+    if (geoData.places) {
+      const { latitude, longitude } = geoData.places[0];
+      const zipCity = geoData.places[0]['place name'];
       const {
         maxLat, minLat, maxLong, minLong,
       } = dfwCoords;
       const latApproved = latitude <= maxLat && latitude >= minLat;
       const longApproved = longitude <= maxLong && longitude >= minLong;
       if (latApproved && longApproved) {
-        this.signUp();
+        this.setState({ latitude: Number(latitude), longitude: Number(longitude) }, () => {
+          this.signUp();
+        });
       } else {
-        this.setState({ latitude, longitude, zipCity });
+        this.setState({ zipCity });
         this.setError('This zip code is not supported', true);
       }
     } else {
@@ -84,6 +86,7 @@ class SignUp extends Component {
     const user = {
       email, firstName, lastName, latitude, longitude, password, zipCode,
     };
+    console.log('USER BEFORE CREATING', user);
     createUser(user, this.enterSite, this.setError);
   };
 
