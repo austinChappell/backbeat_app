@@ -237,7 +237,7 @@ class Message extends Component {
                 );
               }
               if (index >= this.props.messages.length - this.state.numOfMessages) {
-                const { message_id, read } = message;
+                const { id, read } = message;
                 const bg = isSender ? colors.secondary : colors.bgLight;
                 const color = isSender ? colors.white : colors.black;
                 const align = isSender ? 'flex-end' : 'flex-start';
@@ -247,7 +247,7 @@ class Message extends Component {
                   padding: 10,
                 };
                 if (!read && !isSender) {
-                  markAsRead(this.props.token, message_id, this.readMessage);
+                  markAsRead(this.props.token, id, this.readMessage);
                 }
                 return (
                   <View key={index}>
