@@ -40,8 +40,8 @@ class Message extends Component {
 
     this.socket = io(apiURL);
 
-    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
-      this.addMessage(data[0]);
+    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (results) => {
+      this.addMessage(results[0]);
     });
 
     this.socket.on('NOTIFY_TYPING', (user) => {

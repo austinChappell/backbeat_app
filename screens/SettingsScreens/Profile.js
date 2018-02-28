@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { AsyncStorage, ImagePickerIOS, Picker, View } from 'react-native';
 import { Avatar, Card } from 'react-native-elements';
-import { Form, Label } from 'native-base';
+import { Form, Item, Input, Label } from 'native-base';
 import ImagePicker from 'react-native-image-crop-picker';
 import Snackbar from 'react-native-snackbar';
 
@@ -29,6 +29,7 @@ const propTypes = {
 class Profile extends Component {
   state = {
     avatar: 'empty-string',
+    bio: '',
     email: '',
     firstName: '',
     lastName: '',
@@ -76,6 +77,7 @@ class Profile extends Component {
     const { user } = this.props;
     const {
       avatar,
+      bio,
       email,
       first_name: firstName,
       last_name: lastName,
@@ -90,6 +92,7 @@ class Profile extends Component {
     } = user;
     this.setState({
       avatar,
+      bio,
       email,
       firstName,
       lastName,
@@ -145,13 +148,14 @@ class Profile extends Component {
 
   updateUser = () => {
     const {
-      firstName, lastName, notificationEmail, zipCode, genres, instruments,
+      firstName, lastName, notificationEmail, zipCode, genres, instruments, bio,
     } = this.state;
     const user = {
       firstName,
       lastName,
       notificationEmail,
       zipCode,
+      bio,
       instOne: instruments[0],
       instTwo: instruments[1],
       instThree: instruments[2],
@@ -175,7 +179,7 @@ class Profile extends Component {
     if (firstName.trim().length < 3 || lastName.trim().length < 3) {
       valid = false;
       message = 'Use at least three letters.';
-    } else if (notificationEmail.indexOf('@') < 1 || notificationEmail.indexOf('.') < 3) {
+    } else if (notificationEmail && (notificationEmail.indexOf('@') < 1 || notificationEmail.indexOf('.') < 3)) {
       valid = false;
       message = 'Invalid email';
     } else if (zipCode.length !== 5 || !Number.isInteger(Number(zipCode))) {
@@ -217,6 +221,20 @@ class Profile extends Component {
           notificationEmail={notificationEmail}
           zipCode={zipCode}
         />
+        <View>
+          <Card title="Bio">
+            <View>
+              <Input
+                autoGrow
+                maxLength={500}
+                multiline
+                numberOfLines={8}
+                onChangeText={text => this.handleInputChange(text, 'bio')}
+                value={this.state.bio}
+              />
+            </View>
+          </Card>
+        </View>
         <View>
           <Card title="Genres of Interest">
             <Form>

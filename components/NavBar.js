@@ -68,6 +68,7 @@ class NavBar extends Component {
       first_name: firstName,
       last_name: lastName,
       avatar,
+      bio,
       instrument_one: instOne,
       instrument_two: instTwo,
       instrument_three: instThree,
@@ -79,7 +80,8 @@ class NavBar extends Component {
     const hasAvatar = avatar != false;
     const hasInstrument = instOne !== null || instTwo !== null || instThree !== null;
     const hasGenre = genreOne !== null || genreTwo !== null || genreThree !== null;
-    const profileProps = [hasName, hasAvatar, hasInstrument, hasGenre];
+    const hasBio = bio !== null && bio != false;
+    const profileProps = [hasName, hasAvatar, hasInstrument, hasGenre, hasBio];
     const trueProps = profileProps.filter(item => item);
     const onboardingDecimal = trueProps.length / profileProps.length;
     const onboardingPercent = onboardingDecimal * 100;
