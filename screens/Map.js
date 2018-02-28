@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { StyleSheet, View } from "react-native";
-import MapView from "react-native-maps";
-import NavBar from "../components/NavBar";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { StyleSheet, View } from 'react-native';
+import MapView from 'react-native-maps';
+import NavBar from '../components/NavBar';
 
 class Map extends Component {
   state = {
@@ -10,7 +10,7 @@ class Map extends Component {
     latitude: 32.777,
     longitude: -96.797,
     latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421
+    longitudeDelta: 0.0421,
   };
 
   componentDidMount() {
@@ -28,7 +28,7 @@ class Map extends Component {
 
   getLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log("POSITION", position);
+      console.log('POSITION', position);
       if (position) {
         const { latitude, longitude } = position.coords;
         this.setState({ latitude, longitude, hasCurrentPosition: true });
@@ -39,21 +39,23 @@ class Map extends Component {
   updateRegion = (latitude, longitude) => {
     this.setState({
       latitude,
-      longitude
+      longitude,
     });
   };
 
   render() {
-    console.log("USER", this.props.user);
+    console.log('USER', this.props.user);
     const { navigation, user } = this.props;
-    const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state;
+    const {
+      latitude, longitude, latitudeDelta, longitudeDelta,
+    } = this.state;
     const markers = [
       {
         latitude: 37.78825,
         longitude: -122.4324,
-        title: "Foo Place",
-        subtitle: "1234 Foo Drive"
-      }
+        title: 'Foo Place',
+        subtitle: '1234 Foo Drive',
+      },
     ];
 
     return (
@@ -68,19 +70,19 @@ class Map extends Component {
             latitude: 32.777,
             longitude: -96.797,
             latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421
+            longitudeDelta: 0.0421,
           }}
           region={{
             latitude,
             longitude,
             latitudeDelta,
-            longitudeDelta
+            longitudeDelta,
           }}
         >
           <MapView.Marker
             coordinate={{
               latitude: 32.777,
-              longitude: -96.797
+              longitude: -96.797,
             }}
             title="A Gig"
             description="House of Blues"
@@ -93,12 +95,12 @@ class Map extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  }
+    flex: 1,
+  },
 });
 
 const mapStateToProps = state => ({
-  user: state.userReducer.user
+  user: state.userReducer.user,
 });
 
 export default connect(mapStateToProps)(Map);
