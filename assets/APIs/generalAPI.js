@@ -41,12 +41,13 @@ class GeneralAPI {
   };
 
   searchUsers = (searchValue, token, cb) => {
-    const url = `${apiURL}/api/searchusernames/${searchValue}`;
+    const url = `${apiURL}/api/users/all/name/${searchValue}`;
+    console.log('THE URL', url);
     return fetch(url, {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        token,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then(response => response.json())

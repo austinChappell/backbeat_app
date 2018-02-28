@@ -151,7 +151,7 @@ class Chat extends Component {
 }
 
 const mapStateToProps = state => ({
-  token: state.user.token,
+  token: state.userReducer.token,
   messages: state.messages.messages,
   unreadMessages: state.messages.unreadMessages,
   user: state.userReducer.user,

@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { AsyncStorage, Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  AsyncStorage,
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Avatar, Button, FormInput, Header, Icon } from 'react-native-elements';
 import io from 'socket.io-client';
 import { colors, styles } from '../assets/styles';
@@ -16,118 +25,116 @@ const { getUserPhoto } = generalAPI;
 const { markAsRead, sendMessage } = messageAPI;
 
 class Message extends Component {
-
   constructor() {
-    super()
+    super();
 
     this.state = {
       isTyping: false,
       loaded: false,
       message: '',
       numOfMessages: 20,
-      profileImage: 'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png',
+      profileImage:
+        'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png',
       userTyping: null,
-    }
+    };
 
-    this.socket = io(apiURL)
+    this.socket = io(apiURL);
 
     this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
-      this.addMessage(data[0])
-    })
+      this.addMessage(data[0]);
+    });
 
     this.socket.on('NOTIFY_TYPING', (user) => {
       if (user.id !== this.props.user.id) {
-        this.setUserTyping(user)
+        this.setUserTyping(user);
       }
-    })
+    });
 
     this.socket.on('REMOVE_TYPING_USER', (user) => {
       if (user.id !== this.props.user.id) {
-        this.clearUserTyping()
+        this.clearUserTyping();
       }
-    })
-
+    });
   }
 
   componentDidMount() {
-    this.user = {}
-    AsyncStorage.getItem('firstName').then(firstName => this.user.firstName = firstName)
-    AsyncStorage.getItem('lastName').then(lastName => this.user.lastName = lastName)
-    this.fetchPhoto()
+    this.user = {};
+    AsyncStorage.getItem('firstName').then(firstName => (this.user.firstName = firstName));
+    AsyncStorage.getItem('lastName').then(lastName => (this.user.lastName = lastName));
+    this.fetchPhoto();
   }
 
   componentWillUnmount() {
-    this.socket.close()
+    this.socket.close();
   }
 
   addMessage = (message) => {
-    this.props.messages.unshift(message)
-    Keyboard.dismiss()
+    this.props.messages.unshift(message);
+    Keyboard.dismiss();
     this.setState({ message: '' }, () => {
       setTimeout(() => {
-        this.scrollView.scrollToEnd()
-      }, 0)
-    })
-  }
+        this.scrollView.scrollToEnd();
+      }, 0);
+    });
+  };
 
   clearUserTyping = () => {
-    this.setState({ userTyping: null }, () => this.scrollDown(true))
-  }
+    this.setState({ userTyping: null }, () => this.scrollDown(true));
+  };
 
   fetchPhoto = () => {
     const { currentRecipientId, token } = this.props;
-    console.log('FETCHING PHOTO WITH TOKEN', token)
-    getUserPhoto(currentRecipientId, token, this.setPhoto)
-  }
+    console.log('FETCHING PHOTO WITH TOKEN', token);
+    getUserPhoto(currentRecipientId, token, this.setPhoto);
+  };
 
   handleMessageChange = (message) => {
-    clearTimeout(this.stopTyping)
+    clearTimeout(this.stopTyping);
     if (!this.state.isTyping) {
-      this.socket.emit('MESSAGE_TYPING', this.props.user)
+      this.socket.emit('MESSAGE_TYPING', this.props.user);
     }
     this.setState({ message, isTyping: true }, () => {
       this.stopTyping = setTimeout(() => {
-        this.socket.emit('STOP_TYPING', this.props.user)
-        this.setState({ isTyping: false })
-      }, 2000)
-    })
-  }
+        this.socket.emit('STOP_TYPING', this.props.user);
+        this.setState({ isTyping: false });
+      }, 2000);
+    });
+  };
 
   handleSizeChange = (width, height) => {
     if (!this.state.loaded) {
-      this.scrollDown(false)
-      this.setState({ loaded: true })
+      this.scrollDown(false);
+      this.setState({ loaded: true });
     }
-  }
+  };
 
   readMessage = (message) => {
     message.read = false;
-  }
+  };
 
   scrollDown = (animated) => {
     setTimeout(() => {
-      this.scrollView.scrollToEnd({ animated })
-    }, 0)
-  }
+      this.scrollView.scrollToEnd({ animated });
+    }, 0);
+  };
 
   setPhoto = (data) => {
     const profileImage = data.profile_image_url
-    ?
-    data.profile_image_url
-    :
-    'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png'
+      ? data.profile_image_url
+      : 'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png';
 
-    this.setState({ profileImage })
-  }
+    this.setState({ profileImage });
+  };
 
   setUserTyping = (user) => {
-    this.setState({ userTyping: user.first_name }, this.scrollDown(true))
-  }
+    this.setState({ userTyping: user.first_name }, this.scrollDown(true));
+  };
 
   submit = () => {
     const { message } = this.state;
     const { currentRecipientId, currentRecipientName, token } = this.props;
     const { user } = this;
+    console.log('TOKEN', token);
     const sender = `${user.firstName} ${user.lastName}`;
     sendMessage(
       token,
@@ -135,156 +142,143 @@ class Message extends Component {
       message,
       sender,
       currentRecipientName,
-      this.updateMessages
-    )
-  }
+      this.updateMessages,
+    );
+  };
 
   updateMessages = (results) => {
-    this.socket.emit('SEND_INDIVIDUAL_MESSAGE', results)
-    this.socket.emit('STOP_TYPING', this.props.user)
-  }
+    this.socket.emit('SEND_INDIVIDUAL_MESSAGE', results);
+    this.socket.emit('STOP_TYPING', this.props.user);
+  };
 
   render() {
-
     console.log('this user', this.user);
-    console.log('MESSAGE STATE', this.state)
-    console.log('MESSAGE PROPS', this.props)
+    console.log('MESSAGE STATE', this.state);
+    console.log('MESSAGE PROPS', this.props);
 
     const { messages, user } = this.props;
-    const dates = []
+    const dates = [];
 
-    const userTyping = this.state.userTyping ?
-    <View style={{ paddingLeft: 20, paddingBottom: 10 }}>
-      <Text>
-        {this.state.userTyping} is typing...
-      </Text>
-    </View>
-    : null;
+    const userTyping = this.state.userTyping ? (
+      <View style={{ paddingLeft: 20, paddingBottom: 10 }}>
+        <Text>{this.state.userTyping} is typing...</Text>
+      </View>
+    ) : null;
 
     return (
-
-      <KeyboardAvoidingView
-        behavior="padding"
-        style={styles.containerTop}
-      >
+      <KeyboardAvoidingView behavior="padding" style={styles.containerTop}>
         <Header
           backgroundColor={colors.bgLight}
           statusBarProps={{ barStyle: 'dark-content' }}
           leftComponent={
             <TouchableOpacity
-              hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
+              hitSlop={{
+                top: 20,
+                bottom: 20,
+                left: 50,
+                right: 50,
+              }}
               onPress={this.props.goBack}
             >
-              <Icon
-                color={colors.primary}
-                name="ios-arrow-dropleft"
-                type="ionicon"
-              />
+              <Icon color={colors.primary} name="ios-arrow-dropleft" type="ionicon" />
             </TouchableOpacity>
           }
           centerComponent={
-            <Text
-              style={{ color: colors.primary, fontSize: 24, fontWeight: '900' }}
-            >
+            <Text style={{ color: colors.primary, fontSize: 24, fontWeight: '900' }}>
               {this.props.currentRecipientName}
             </Text>
           }
-          rightComponent={
-            <Avatar
-              small
-              rounded
-              source={{ uri: this.state.profileImage }}
-            />
-          }
+          rightComponent={<Avatar small rounded source={{ uri: this.state.profileImage }} />}
         />
-
 
         <ScrollView
           onContentSizeChange={this.handleSizeChange}
-          ref={(scrollView) => this.scrollView = scrollView}
+          ref={scrollView => (this.scrollView = scrollView)}
           style={{ padding: 10 }}
-          >
-
-          {this.props.messages.slice().reverse().map((message, index) => {
-            const date = new Date(message.created_at).toDateString()
-            const today = new Date().toDateString()
-            const dateView = date === today ? 'Today' : date;
-            const isSender = message.sender_id == user.id ? true : false;
-            let displayDate = null;
-            if (!dates.includes(date)) {
-              dates.push(date)
-              displayDate = <View>
-                <View style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginLeft: 10,
-                  marginRight: 10,
-                  marginBottom: 10,
-                  marginTop: 20
-                }}>
-
-                  <View style={styles.line} />
-                  <Text
-                    style={{
-                      textAlign: 'center', fontSize: 16, color: colors.secondary, fontWeight: '700'
-                    }}
-                    >
-                      {dateView}
-                    </Text>
-                  <View style={styles.line} />
-                </View>
-              </View>;
-            }
-            if (index >= this.props.messages.length - this.state.numOfMessages) {
-              const { message_id, read } = message;
-              const bg = isSender ? colors.secondary : colors.bgLight;
-              const color = isSender ? colors.white : colors.black;
-              const align = isSender ? 'flex-end' : 'flex-start';
-              const messageStyle = {
-                color,
-                fontSize: 16,
-                padding: 10,
-              }
-              if (!read && !isSender) {
-                markAsRead(this.props.token, message_id, this.readMessage)
-              }
-              return (
-                <View key={index}>
-
-                  {displayDate}
-
-                  <View
-                    style={{
-                      flex: 1,
-                      marginLeft: 10,
-                      marginRight: 10,
-                      marginBottom: 10,
-                      flexDirection: 'row',
-                      justifyContent: align
-                    }}
-                  >
+        >
+          {this.props.messages
+            .slice()
+            .reverse()
+            .map((message, index) => {
+              const date = new Date(message.created_at).toDateString();
+              const today = new Date().toDateString();
+              const dateView = date === today ? 'Today' : date;
+              const isSender = message.sender_id == user.id ? true : false;
+              let displayDate = null;
+              if (!dates.includes(date)) {
+                dates.push(date);
+                displayDate = (
+                  <View>
                     <View
                       style={{
-                        borderRadius: 10,
-                        backgroundColor: bg,
-                        maxWidth: '70%'
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginLeft: 10,
+                        marginRight: 10,
+                        marginBottom: 10,
+                        marginTop: 20,
                       }}
                     >
+                      <View style={styles.line} />
                       <Text
-                        style={messageStyle}
+                        style={{
+                          textAlign: 'center',
+                          fontSize: 16,
+                          color: colors.secondary,
+                          fontWeight: '700',
+                        }}
                       >
-                        {message.content}
+                        {dateView}
                       </Text>
+                      <View style={styles.line} />
                     </View>
                   </View>
-                </View>
-              )
-            }
-          })}
+                );
+              }
+              if (index >= this.props.messages.length - this.state.numOfMessages) {
+                const { message_id, read } = message;
+                const bg = isSender ? colors.secondary : colors.bgLight;
+                const color = isSender ? colors.white : colors.black;
+                const align = isSender ? 'flex-end' : 'flex-start';
+                const messageStyle = {
+                  color,
+                  fontSize: 16,
+                  padding: 10,
+                };
+                if (!read && !isSender) {
+                  markAsRead(this.props.token, message_id, this.readMessage);
+                }
+                return (
+                  <View key={index}>
+                    {displayDate}
+
+                    <View
+                      style={{
+                        flex: 1,
+                        marginLeft: 10,
+                        marginRight: 10,
+                        marginBottom: 10,
+                        flexDirection: 'row',
+                        justifyContent: align,
+                      }}
+                    >
+                      <View
+                        style={{
+                          borderRadius: 10,
+                          backgroundColor: bg,
+                          maxWidth: '70%',
+                        }}
+                      >
+                        <Text style={messageStyle}>{message.content}</Text>
+                      </View>
+                    </View>
+                  </View>
+                );
+              }
+            })}
 
           {userTyping}
-
         </ScrollView>
 
         <View
@@ -299,7 +293,7 @@ class Message extends Component {
           }}
         >
           <TextInput
-            multiline={true}
+            multiline
             onChangeText={this.handleMessageChange}
             onFocus={() => setTimeout(() => this.scrollDown(true), 250)}
             style={{
@@ -321,19 +315,13 @@ class Message extends Component {
             type="ionicon"
           />
         </View>
-
       </KeyboardAvoidingView>
-
-    )
-
-  }
-
-}
-
-const mapStateToProps = (state) => {
-  return {
-    user: state.userReducer.user
+    );
   }
 }
+
+const mapStateToProps = state => ({
+  user: state.userReducer.user,
+});
 
 export default connect(mapStateToProps)(Message);

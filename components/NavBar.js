@@ -38,7 +38,7 @@ class NavBar extends Component {
       .then(() => {
         AsyncStorage.getItem('auth_token').then((token) => {
           this.token = token;
-          // getAllMessages(this.token, this.setMessages)
+          getAllMessages(this.token, this.setMessages);
           this.props.setToken(token);
           getUserInfo(this.userid, token, this.setUser, this.logout);
           getAll('genres', token, this.props.setGenres);

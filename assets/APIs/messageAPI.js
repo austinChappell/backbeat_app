@@ -4,20 +4,21 @@ import data from '../data';
 const api = data.apiURL;
 
 class MessageAPI {
-  getAllMessages = (token, cb) => fetch(`${api}/messages/all`, {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      token,
-    },
-  })
-    .then(response => response.json())
-    .then((results) => {
-      cb(results.rows);
+  getAllMessages = (token, cb) =>
+    fetch(`${api}/messages/all`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .catch((err) => {
-      console.error('ERROR FETCHING MESSAGES', err);
-    });
+      .then(response => response.json())
+      .then((results) => {
+        cb(results.rows);
+      })
+      .catch((err) => {
+        console.error('ERROR FETCHING MESSAGES', err);
+      });
 
   // getUserMessages = (userid, token, cb) => {
   //   return fetch(`${api}/messages/${userid}`, {
@@ -35,21 +36,22 @@ class MessageAPI {
   //   })
   // }
 
-  markAsRead = (token, messageId, cb) => fetch(`${api}/message/${messageId}/markasread`, {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      token,
-    },
-    method: 'PUT',
-  })
-    .then(response => response.json())
-    .then((results) => {
-      cb(results.rows[0]);
+  markAsRead = (token, messageId, cb) =>
+    fetch(`${api}/message/${messageId}/markasread`, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'PUT',
     })
-    .catch((err) => {
-      console.error('MARK AS READ ERROR', err);
-    });
+      .then(response => response.json())
+      .then((results) => {
+        cb(results.rows[0]);
+      })
+      .catch((err) => {
+        console.error('MARK AS READ ERROR', err);
+      });
 
   sendMessage = (token, recipientId, message, sender, recipient, cb) => {
     const body = {
@@ -64,7 +66,7 @@ class MessageAPI {
       credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        token,
+        Authorization: `Bearer ${token}`,
       },
       method: 'POST',
       body: JSON.stringify(body),
