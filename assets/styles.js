@@ -18,6 +18,24 @@ const colors = {
   google: '#d34836',
   linkedin: '#0077b5',
   failure: '#ff5555',
+  materialColors: [
+    'rgb(209, 49, 53)',
+    'rgb(60, 141, 64)',
+    'rgb(192, 30, 92)',
+    'rgb(122, 40, 160)',
+    'rgb(105, 158, 63)',
+    'rgb(175, 179, 57)',
+    'rgb(81, 51, 165)',
+    'rgb(250, 191, 64)',
+    'rgb(22, 137, 207)',
+    'rgb(253, 159, 40)',
+    'rgb(22, 151, 166)',
+    'rgb(50, 66, 156)',
+    'rgb(243, 123, 34)',
+    'rgb(14, 120, 106)',
+    'rgb(34, 120, 207)',
+    'rgb(228, 75, 39)',
+  ],
 };
 
 const styles = StyleSheet.create({
@@ -55,12 +73,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 20,
   },
   gridItem: {
+    flex: 1,
+    flexBasis: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderWidth: 1,
     height: 100,
-    width: '50%',
     borderColor: colors.primary,
   },
   header: {

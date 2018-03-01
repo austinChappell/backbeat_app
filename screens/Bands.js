@@ -17,6 +17,7 @@ class Bands extends Component {
     description: '',
     genre: null,
     name: '',
+    style: null,
     step: 1,
   };
 
@@ -30,13 +31,20 @@ class Bands extends Component {
       case 1:
         return (
           <Step1
+            advanceStep={this.advanceStep}
             description={this.state.description}
             name={this.state.name}
             handleInputChange={this.handleInputChange}
           />
         );
       case 2:
-        return <Step2 genre={this.state.genre} handlePickerChange={this.handlePickerChange} />;
+        return (
+          <Step2
+            genre={this.state.genre}
+            handlePickerChange={this.handlePickerChange}
+            selectStyle={this.selectStyle}
+          />
+        );
       default:
         return null;
     }
@@ -54,6 +62,12 @@ class Bands extends Component {
     this.setState(o);
   };
 
+  selectStyle = (style) => {
+    this.setState({ style }, () => {
+      this.advanceStep();
+    });
+  };
+
   toggleModal = () => {
     const { createFormVisible } = this.state;
     this.setState({ createFormVisible: !createFormVisible });
@@ -65,14 +79,8 @@ class Bands extends Component {
       <View>
         <NavBar navigation={navigation} />
         <Modal visible={this.state.createFormVisible}>
-          <ScrollView style={{ flex: 1, padding: 20 }}>
+          <ScrollView style={{ flex: 1 }}>
             {this.findStep()}
-            <Button
-              backgroundColor={colors.primary}
-              onPress={this.advanceStep}
-              title="Next"
-              style={styles.button}
-            />
             {/* <View>
             </View>
             <View>

@@ -1,6 +1,9 @@
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { Item, Input, Label } from 'native-base';
+import { Button } from 'react-native-elements';
+
+import { colors, styles } from '../../assets/styles';
 
 function Step1(props) {
   const { description, handleInputChange, name } = props;
@@ -23,6 +26,12 @@ function Step1(props) {
           value={description}
         />
       </View>
+      <Button
+        backgroundColor={colors.primary}
+        onPress={props.advanceStep}
+        title="Next"
+        style={styles.button}
+      />
     </View>
   );
 }
