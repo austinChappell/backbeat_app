@@ -51,6 +51,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  gridContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 20,
+  },
+  gridItem: {
+    borderWidth: 1,
+    height: 100,
+    width: '50%',
+    borderColor: colors.primary,
+  },
   header: {
     color: colors.primary,
     fontSize: 36,

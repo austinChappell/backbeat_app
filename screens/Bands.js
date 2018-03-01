@@ -1,15 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Picker, View } from 'react-native';
+import { Modal, Picker, ScrollView, TextInput, View } from 'react-native';
 import { Button, Card } from 'react-native-elements';
 import { Item, Input, Label } from 'native-base';
+
+import { colors, styles } from '../assets/styles';
+
+import Step1 from './BandForm/Step1';
+import Step2 from './BandForm/Step2';
+import Grid from '../components/common/Grid';
 import NavBar from '../components/NavBar';
 
 class Bands extends Component {
   state = {
     createFormVisible: false,
+    description: '',
     genre: null,
     name: '',
+    step: 1,
+  };
+
+  advanceStep = () => {
+    const { step } = this.state;
+    this.setState({ step: step + 1 });
+  };
+
+  findStep = () => {
+    switch (this.state.step) {
+      case 1:
+        return (
+          <Step1
+            description={this.state.description}
+            name={this.state.name}
+            handleInputChange={this.handleInputChange}
+          />
+        );
+      case 2:
+        return <Step2 genre={this.state.genre} handlePickerChange={this.handlePickerChange} />;
+      default:
+        return null;
+    }
   };
 
   handleInputChange = (text, key) => {
@@ -35,33 +65,33 @@ class Bands extends Component {
       <View>
         <NavBar navigation={navigation} />
         <Modal visible={this.state.createFormVisible}>
-          <View>
-            <Card title="Start A Band">
-              <Item floatingLabel>
-                <Label>Band Name</Label>
-                <Input
-                  onChangeText={text => this.handleInputChange(text, 'name')}
-                  value={this.state.name}
-                />
-              </Item>
-              <View>
-                <Label>Genre</Label>
-                <Picker
-                  selectedValue={this.state.genre}
-                  style={{
-                    marginTop: 0,
-                  }}
-                  onValueChange={val => this.handlePickerChange(val, 'genre')}
-                >
-                  <Picker.Item label="---" value={null} />
-                  {this.props.genres.map((genre, index) => {
-                    const selectionIndex = this.state.genre === genre.id;
-                    return <Picker.Item key={index} label={genre.label} value={genre.id} />;
-                  })}
-                </Picker>
-              </View>
-            </Card>
-          </View>
+          <ScrollView style={{ flex: 1, padding: 20 }}>
+            {this.findStep()}
+            <Button
+              backgroundColor={colors.primary}
+              onPress={this.advanceStep}
+              title="Next"
+              style={styles.button}
+            />
+            {/* <View>
+            </View>
+            <View>
+              <Label>Genre</Label>
+              <Picker
+                selectedValue={this.state.genre}
+                style={{
+                  marginTop: 0,
+                }}
+                onValueChange={val => this.handlePickerChange(val, 'genre')}
+              >
+                <Picker.Item label="---" value={null} />
+                {this.props.genres.map((genre, index) => {
+                  const selectionIndex = this.state.genre === genre.id;
+                  return <Picker.Item key={index} label={genre.label} value={genre.id} />;
+                })}
+              </Picker>
+            </View> */}
+          </ScrollView>
         </Modal>
         <View>
           <Button title="Create Your Own" onPress={this.toggleModal} />
