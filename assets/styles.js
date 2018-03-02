@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 const colors = {
+  border: '#bbbbbb',
   disabled: '#aaaaaa',
   primary: '#7b1fa2',
   primaryDark: '#4a0072',
@@ -40,8 +41,6 @@ const colors = {
 
 const styles = StyleSheet.create({
   button: {
-    marginBottom: 20,
-    marginTop: 20,
     width: '100%',
     borderRadius: 4,
     padding: 20,
@@ -76,7 +75,6 @@ const styles = StyleSheet.create({
     // minHeight: '100%',
     // TODO this margin bottom is a temporary hack
     // fix before release
-    marginBottom: -100,
   },
   gridContainerFUll: {
     flex: 1,

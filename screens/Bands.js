@@ -4,23 +4,44 @@ import { Modal, Picker, ScrollView, Text, TextInput, View } from 'react-native';
 import { Button, Card } from 'react-native-elements';
 import { Item, Input, Label } from 'native-base';
 
-import { colors, styles } from '../assets/styles';
-
+import Grid from '../components/common/Grid';
 import Step1 from './BandForm/Step1';
 import Step2 from './BandForm/Step2';
 import Step3 from './BandForm/Step3';
 import Step4 from './BandForm/Step4';
 import NavBar from '../components/NavBar';
 
+import { colors, styles } from '../assets/styles';
+import BandAPI from '../assets/APIs/bandAPI';
+
+const bandAPI = new BandAPI();
+
+const { addMember, createBand, getMyBands } = bandAPI;
+
 class Bands extends Component {
   state = {
+    bands: [],
     createFormVisible: false,
     description: '',
     genre: null,
     name: '',
+    saving: false,
     skill: null,
     step: 1,
   };
+
+  componentDidMount() {
+    const { token } = this.props;
+    if (token !== null) {
+      getMyBands(token, this.loadBands);
+    }
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.token !== this.props.token) {
+      getMyBands(newProps.token, this.loadBands);
+    }
+  }
 
   advanceStep = () => {
     const { step } = this.state;
@@ -36,6 +57,7 @@ class Bands extends Component {
             description={this.state.description}
             name={this.state.name}
             handleInputChange={this.handleInputChange}
+            cancel={this.toggleModal}
           />
         );
       case 2:
@@ -60,6 +82,7 @@ class Bands extends Component {
             name={this.state.name}
             description={this.state.description}
             genre={this.state.genre}
+            saving={this.state.saving}
             skill={this.state.skill}
             submit={this.submit}
           />
@@ -82,6 +105,11 @@ class Bands extends Component {
     }
   };
 
+  handleAddMemberRes = (results) => {
+    this.toggleModal();
+    this.setState({ saving: false });
+  };
+
   handleInputChange = (text, key) => {
     const o = {};
     o[key] = text;
@@ -92,6 +120,17 @@ class Bands extends Component {
     const o = {};
     o[key] = val;
     this.setState(o);
+  };
+
+  handleRes = (results) => {
+    const band = results[0];
+    const { token, user } = this.props;
+    addMember(token, band.id, user.id, this.handleAddMemberRes);
+  };
+
+  loadBands = (bands) => {
+    console.log('MY BANDS', bands);
+    this.setState({ bands });
   };
 
   selectGenre = (genre) => {
@@ -108,6 +147,20 @@ class Bands extends Component {
 
   submit = () => {
     // This is where the API call happens
+    this.setState({ saving: true }, () => {
+      const {
+        name, description, skill, genre,
+      } = this.state;
+      const { token, user } = this.props;
+      const body = {
+        name,
+        description,
+        skill: skill.id,
+        genre: genre.id,
+        city: user.hub,
+      };
+      createBand(token, body, this.handleRes);
+    });
   };
 
   toggleModal = () => {
@@ -118,6 +171,8 @@ class Bands extends Component {
   render() {
     console.log('BAND STATE', this.state);
     const { navigation } = this.props;
+    const { materialColors } = colors;
+    let colorIndex = 0;
     return (
       <View>
         <NavBar navigation={navigation} />
@@ -126,7 +181,7 @@ class Bands extends Component {
             style={{
               textAlign: 'center',
               fontSize: 20,
-              backgroundColor: colors.secondary,
+              backgroundColor: colors.primary,
               color: colors.white,
               padding: 20,
             }}
@@ -138,6 +193,27 @@ class Bands extends Component {
         <View>
           <Button title="Create Your Own" onPress={this.toggleModal} />
         </View>
+        <ScrollView>
+          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+            {this.state.bands.map((band, index) => {
+              const bgColor = materialColors[colorIndex];
+              colorIndex += 1;
+              if (colorIndex >= materialColors.length) {
+                colorIndex = 0;
+              }
+              return (
+                <Grid
+                  key={index}
+                  bgColor={bgColor}
+                  item={band}
+                  select={this.selectBand}
+                  title={band.name}
+                  id={band.id}
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
       </View>
     );
   }

@@ -1,24 +1,31 @@
 import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { Item, Input, Label } from 'native-base';
-import { Button } from 'react-native-elements';
+import { Button, Card } from 'react-native-elements';
 
 import { colors, styles } from '../../assets/styles';
 
 function Step1(props) {
   const { description, handleInputChange, name } = props;
   return (
-    <View>
+    <Card>
       <View>
-        <Item floatingLabel>
-          <Label>Band Name</Label>
-          <Input onChangeText={text => handleInputChange(text, 'name')} value={name} />
-        </Item>
+        <Label>Band Name</Label>
+        <Input
+          style={{ borderColor: colors.border, borderWidth: 1, borderRadius: 4 }}
+          onChangeText={text => handleInputChange(text, 'name')}
+          value={name}
+        />
       </View>
-      <View>
+      <View style={{ marginTop: 10 }}>
         <Label>Description</Label>
-        <TextInput
-          style={{ height: 100, borderColor: 'gray', borderWidth: 1 }}
+        <Input
+          style={{
+            height: 100,
+            borderColor: colors.border,
+            borderWidth: 1,
+            borderRadius: 4,
+          }}
           maxLength={500}
           multiline
           numberOfLines={8}
@@ -32,7 +39,13 @@ function Step1(props) {
         title="Next"
         style={styles.button}
       />
-    </View>
+      <Button
+        backgroundColor={colors.failure}
+        onPress={props.cancel}
+        title="Cancel"
+        style={styles.button}
+      />
+    </Card>
   );
 }
 

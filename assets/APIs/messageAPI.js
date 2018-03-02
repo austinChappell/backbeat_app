@@ -1,4 +1,3 @@
-import { AsyncStorage } from 'react-native';
 import data from '../data';
 
 const api = data.apiURL;

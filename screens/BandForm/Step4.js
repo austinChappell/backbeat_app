@@ -11,22 +11,29 @@ function Step1(props) {
   return (
     <View>
       <View>
-        <Text>Naame: {props.name}</Text>
+        <Label>Name:</Label>
+        <Text>{props.name}</Text>
       </View>
       <View>
-        <Text>Bio: {props.description}</Text>
+        <Label>Bio:</Label>
+        <Text>{props.description}</Text>
       </View>
       <View>
-        <Text>Genre: {props.genre.label}</Text>
+        <Label>Genre:</Label>
+        <Text>{props.genre.label}</Text>
       </View>
       <View>
-        <Text>Skill: {props.skill.label}</Text>
+        <Label>Skill Level:</Label>
+        <Text>{props.skill.label}</Text>
       </View>
       <View>
-        <Text>City: {props.user.hub}</Text>
+        <Label>Location:</Label>
+        <Text>{props.user.hub}</Text>
       </View>
       <Button
         backgroundColor={colors.primary}
+        disabled={props.saving}
+        loading={props.saving}
         onPress={props.submit}
         title="Create Band"
         style={styles.button}
