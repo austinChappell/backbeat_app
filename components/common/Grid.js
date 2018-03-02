@@ -4,25 +4,24 @@ import { colors, styles } from '../../assets/styles';
 
 function Grid(props) {
   const {
-    bgColor, data, description, id, title,
+    bgColor, data, description, item, fullWidth, grow, title,
   } = props;
   const gridStyle = {
     flex: 1,
-    flexBasis: '50%',
+    flexBasis: fullWidth ? '100%' : '50%',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 0,
-    height: 100,
-    borderColor: colors.white,
+    minHeight: 100,
     backgroundColor: bgColor,
+    flexGrow: grow ? 1 : 0,
   };
   return (
-    <TouchableOpacity style={gridStyle} onPress={() => props.selectStyle(id)}>
+    <TouchableOpacity style={gridStyle} onPress={() => props.select(item)}>
       <View>
         <Text style={{ color: colors.white, fontSize: 18 }}>{title}</Text>
       </View>
       <View>
-        <Text>{description}</Text>
+        <Text style={{ color: colors.white }}>{description}</Text>
       </View>
     </TouchableOpacity>
   );

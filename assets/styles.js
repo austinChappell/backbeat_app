@@ -73,6 +73,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    // minHeight: '100%',
+    // TODO this margin bottom is a temporary hack
+    // fix before release
+    marginBottom: -100,
+  },
+  gridContainerFUll: {
+    flex: 1,
+    minHeight: '100%',
+    justifyContent: 'space-between',
   },
   gridItem: {
     flex: 1,

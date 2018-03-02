@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Picker, ScrollView, TextInput, View } from 'react-native';
+import { Modal, Picker, ScrollView, Text, TextInput, View } from 'react-native';
 import { Button, Card } from 'react-native-elements';
 import { Item, Input, Label } from 'native-base';
 
@@ -8,7 +8,8 @@ import { colors, styles } from '../assets/styles';
 
 import Step1 from './BandForm/Step1';
 import Step2 from './BandForm/Step2';
-import Grid from '../components/common/Grid';
+import Step3 from './BandForm/Step3';
+import Step4 from './BandForm/Step4';
 import NavBar from '../components/NavBar';
 
 class Bands extends Component {
@@ -17,7 +18,7 @@ class Bands extends Component {
     description: '',
     genre: null,
     name: '',
-    style: null,
+    skill: null,
     step: 1,
   };
 
@@ -42,9 +43,40 @@ class Bands extends Component {
           <Step2
             genre={this.state.genre}
             handlePickerChange={this.handlePickerChange}
-            selectStyle={this.selectStyle}
+            selectGenre={this.selectGenre}
           />
         );
+      case 3:
+        return (
+          <Step3
+            skill={this.state.skill}
+            handlePickerChange={this.handlePickerChange}
+            selectSkill={this.selectSkill}
+          />
+        );
+      case 4:
+        return (
+          <Step4
+            name={this.state.name}
+            description={this.state.description}
+            genre={this.state.genre}
+            skill={this.state.skill}
+            submit={this.submit}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  findTitle = () => {
+    switch (this.state.step) {
+      case 1:
+        return 'Name and Bio';
+      case 2:
+        return 'Genre';
+      case 3:
+        return 'Skill Level';
       default:
         return null;
     }
@@ -62,10 +94,20 @@ class Bands extends Component {
     this.setState(o);
   };
 
-  selectStyle = (style) => {
-    this.setState({ style }, () => {
+  selectGenre = (genre) => {
+    this.setState({ genre }, () => {
       this.advanceStep();
     });
+  };
+
+  selectSkill = (skill) => {
+    this.setState({ skill }, () => {
+      this.advanceStep();
+    });
+  };
+
+  submit = () => {
+    // This is where the API call happens
   };
 
   toggleModal = () => {
@@ -74,32 +116,24 @@ class Bands extends Component {
   };
 
   render() {
+    console.log('BAND STATE', this.state);
     const { navigation } = this.props;
     return (
       <View>
         <NavBar navigation={navigation} />
-        <Modal visible={this.state.createFormVisible}>
-          <ScrollView style={{ flex: 1 }}>
-            {this.findStep()}
-            {/* <View>
-            </View>
-            <View>
-              <Label>Genre</Label>
-              <Picker
-                selectedValue={this.state.genre}
-                style={{
-                  marginTop: 0,
-                }}
-                onValueChange={val => this.handlePickerChange(val, 'genre')}
-              >
-                <Picker.Item label="---" value={null} />
-                {this.props.genres.map((genre, index) => {
-                  const selectionIndex = this.state.genre === genre.id;
-                  return <Picker.Item key={index} label={genre.label} value={genre.id} />;
-                })}
-              </Picker>
-            </View> */}
-          </ScrollView>
+        <Modal animationType="fade" visible={this.state.createFormVisible}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 20,
+              backgroundColor: colors.secondary,
+              color: colors.white,
+              padding: 20,
+            }}
+          >
+            {this.findTitle()}
+          </Text>
+          <ScrollView style={{ flex: 1, minHeight: '100%' }}>{this.findStep()}</ScrollView>
         </Modal>
         <View>
           <Button title="Create Your Own" onPress={this.toggleModal} />

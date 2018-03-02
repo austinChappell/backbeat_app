@@ -30,6 +30,7 @@ class Dashboard extends Component {
   };
 
   render() {
+    console.log('DASHBOARD PROPS', this.props);
     const { navigation } = this.props;
 
     const content = this.state.loading ? (
@@ -50,6 +51,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
+  skills: state.skillsReducer.skills,
   user: state.userReducer.user,
 });
 

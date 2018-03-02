@@ -11,9 +11,9 @@ function Step2(props) {
   const { materialColors } = colors;
   let colorIndex = 0;
   return (
-    <View style={styles.gridContainer}>
-      {props.genres.map((genre, index) => {
-        const selected = props.genre === genre.id;
+    <View style={{ flex: 1, justifyContent: 'space-between', height: 175 }}>
+      {props.skills.map((skill, index) => {
+        const selected = props.skill === skill.id;
         const bgColor = materialColors[colorIndex];
         colorIndex += 1;
         if (colorIndex >= materialColors.length) {
@@ -22,12 +22,15 @@ function Step2(props) {
         return (
           <Grid
             key={index}
+            fullWidth
+            grow
+            item={skill}
             bgColor={bgColor}
-            item={genre}
             selected={selected}
-            select={props.selectGenre}
-            title={genre.label}
-            id={genre.id}
+            select={props.selectSkill}
+            title={skill.label}
+            description={skill.description}
+            id={skill.id}
           />
         );
       })}
@@ -37,7 +40,7 @@ function Step2(props) {
 }
 
 const mapStateToProps = state => ({
-  genres: state.genresReducer.genres,
+  skills: state.skillsReducer.skills,
 });
 
 export default connect(mapStateToProps)(Step2);

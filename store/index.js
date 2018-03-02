@@ -4,6 +4,7 @@ import general from './general';
 import genresReducer from './genres';
 import instrumentsReducer from './instruments';
 import messages from './messages';
+import skillsReducer from './skills';
 import userReducer from './user';
 
 const reducer = combineReducers({
@@ -11,6 +12,7 @@ const reducer = combineReducers({
   genresReducer,
   instrumentsReducer,
   messages,
+  skillsReducer,
   userReducer,
 });
 

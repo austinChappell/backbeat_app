@@ -42,6 +42,7 @@ class NavBar extends Component {
           this.props.setToken(token);
           getUserInfo(this.userid, token, this.setUser, this.logout);
           getAll('genres', token, this.props.setGenres);
+          getAll('skills', token, this.props.setSkills);
           getAll('instruments', token, this.props.setInstruments);
         });
       });
@@ -179,6 +180,11 @@ const mapDispatchToProps = dispatch => ({
 
   setInstruments: (instruments) => {
     const action = { type: 'SET_INSTRUMENTS', instruments };
+    dispatch(action);
+  },
+
+  setSkills: (skills) => {
+    const action = { type: 'SET_SKILLS', skills };
     dispatch(action);
   },
 
