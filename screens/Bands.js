@@ -174,7 +174,7 @@ class Bands extends Component {
     const { materialColors } = colors;
     let colorIndex = 0;
     return (
-      <View>
+      <View style={{ backgroundColor: colors.bgLight, flex: 1 }}>
         <NavBar navigation={navigation} />
         <Modal animationType="fade" visible={this.state.createFormVisible}>
           <Text
@@ -190,11 +190,22 @@ class Bands extends Component {
           </Text>
           <ScrollView style={{ flex: 1, minHeight: '100%' }}>{this.findStep()}</ScrollView>
         </Modal>
-        <View>
-          <Button title="Create Your Own" onPress={this.toggleModal} />
-        </View>
-        <ScrollView>
-          <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
+        <ScrollView style={{ padding: 5, flexGrow: 1 }}>
+          <View style={{ padding: 5 }}>
+            <Button
+              title="Create Your Own"
+              onPress={this.toggleModal}
+              backgroundColor={colors.secondary}
+            />
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              backgroundColor: colors.bgLight,
+            }}
+          >
             {this.state.bands.map((band, index) => {
               const bgColor = materialColors[colorIndex];
               colorIndex += 1;
@@ -204,8 +215,10 @@ class Bands extends Component {
               return (
                 <Grid
                   key={index}
-                  bgColor={bgColor}
+                  bgColor={colors.white}
+                  color={colors.primary}
                   item={band}
+                  margin={2}
                   select={this.selectBand}
                   title={band.name}
                   id={band.id}
