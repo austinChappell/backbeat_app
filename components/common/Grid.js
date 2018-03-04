@@ -1,10 +1,20 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { colors, styles } from '../../assets/styles';
 
+const propTypes = {
+  active: PropTypes.bool,
+  select: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+  active: true,
+};
+
 function Grid(props) {
   const {
-    bgColor, data, description, item, fullWidth, grow, title, margin,
+    active, bgColor, data, description, item, fullWidth, grow, title, margin,
   } = props;
   const dblMargin = margin * 2;
   const width = 100;
@@ -30,5 +40,8 @@ function Grid(props) {
     </TouchableOpacity>
   );
 }
+
+Grid.propTypes = propTypes;
+Grid.defaultProps = defaultProps;
 
 export default Grid;

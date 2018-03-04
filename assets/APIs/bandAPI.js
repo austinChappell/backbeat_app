@@ -4,6 +4,28 @@ const { apiURL } = data;
 const api = `${apiURL}/api/bands`;
 
 class BandAPI {
+  addInstrument = (token, bandId, instrumentId, numOfInstruments, index, cb) => {
+    const url = `${api}/${bandId}/instrument`;
+    return fetch(url, {
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      method: 'POST',
+      body: JSON.stringify({ instrumentId }),
+    })
+      .then(response => response.json())
+      .then((results) => {
+        if (index === numOfInstruments - 1) {
+          cb(results);
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+
   addMember = (token, bandId, memberId, cb) => {
     const url = `${api}/${bandId}/member`;
     return fetch(url, {

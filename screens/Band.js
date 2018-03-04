@@ -30,8 +30,7 @@ class Band extends Component {
     this.setBand({});
   }
 
-  getBandRes = (results) => {
-    const band = results[0];
+  getBandRes = (band) => {
     this.setBand(band);
   };
 

@@ -34,7 +34,7 @@ class GeneralAPI {
       .then(response => response.json())
       .then((results) => {
         const { rows } = results;
-        cb(rows);
+        cb(rows[0]);
       })
       .catch((err) => {
         throw err;

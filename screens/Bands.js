@@ -10,6 +10,7 @@ import Step1 from './BandForm/Step1';
 import Step2 from './BandForm/Step2';
 import Step3 from './BandForm/Step3';
 import Step4 from './BandForm/Step4';
+import Step5 from './BandForm/Step5';
 import NavBar from '../components/NavBar';
 
 import { colors } from '../assets/styles';
@@ -17,7 +18,9 @@ import BandAPI from '../assets/APIs/bandAPI';
 
 const bandAPI = new BandAPI();
 
-const { addMember, createBand, getMyBands } = bandAPI;
+const {
+  addInstrument, addMember, createBand, getMyBands,
+} = bandAPI;
 
 const propTypes = {
   navigation: PropTypes.object.isRequired,
@@ -36,6 +39,7 @@ class Bands extends Component {
     createFormVisible: false,
     description: '',
     genre: null,
+    instruments: [],
     name: '',
     saving: false,
     skill: null,
@@ -99,6 +103,18 @@ class Bands extends Component {
             description={this.state.description}
             genre={this.state.genre}
             saving={this.state.saving}
+            setInstruments={this.setInstruments}
+            skill={this.state.skill}
+            submit={this.advanceStep}
+          />
+        );
+      case 5:
+        return (
+          <Step5
+            name={this.state.name}
+            description={this.state.description}
+            genre={this.state.genre}
+            saving={this.state.saving}
             skill={this.state.skill}
             submit={this.submit}
           />
@@ -121,7 +137,17 @@ class Bands extends Component {
     }
   };
 
-  handleAddMemberRes = () => {
+  handleAddMemberRes = (results) => {
+    const bandId = results.rows[0].band_id;
+    const { instruments } = this.state;
+    const numOfInstruments = instruments.length;
+    const { token } = this.props;
+    instruments.forEach((instId, index) => {
+      addInstrument(token, bandId, instId, numOfInstruments, index, this.handleInstRes);
+    });
+  };
+
+  handleInstRes = () => {
     this.toggleModal();
     this.setState({ saving: false });
   };
@@ -164,11 +190,15 @@ class Bands extends Component {
     });
   };
 
+  setInstruments = (instruments) => {
+    this.setState({ instruments });
+  };
+
   submit = () => {
     // This is where the API call happens
     this.setState({ saving: true }, () => {
       const {
-        name, description, skill, genre,
+        name, description, skill, genre, instruments,
       } = this.state;
       const { token, user } = this.props;
       const body = {
@@ -177,6 +207,7 @@ class Bands extends Component {
         skill: skill.id,
         genre: genre.id,
         city: user.hub,
+        instruments,
       };
       createBand(token, body, this.handleRes);
     });
@@ -239,7 +270,9 @@ class Bands extends Component {
           >
             {this.findTitle()}
           </Text>
-          <ScrollView style={{ flex: 1, minHeight: '100%' }}>{this.findStep()}</ScrollView>
+          <ScrollView style={{ flex: 1, backgroundColor: colors.bgLight }}>
+            {this.findStep()}
+          </ScrollView>
         </Modal>
         {content}
       </View>
