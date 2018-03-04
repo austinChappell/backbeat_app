@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ActivityIndicator, View } from 'react-native';
 import { Text } from 'react-native-elements';
@@ -6,6 +7,11 @@ import { Text } from 'react-native-elements';
 import { colors, styles } from '../assets/styles';
 
 import NavBar from '../components/NavBar';
+
+const propTypes = {
+  navigation: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+};
 
 class Dashboard extends Component {
   state = {
@@ -30,7 +36,6 @@ class Dashboard extends Component {
   };
 
   render() {
-    console.log('DASHBOARD PROPS', this.props);
     const { navigation } = this.props;
 
     const content = this.state.loading ? (
@@ -51,8 +56,9 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => ({
-  skills: state.skillsReducer.skills,
   user: state.userReducer.user,
 });
+
+Dashboard.propTypes = propTypes;
 
 export default connect(mapStateToProps)(Dashboard);

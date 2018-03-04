@@ -1,9 +1,18 @@
 import React from 'react';
-import { Text, TextInput, View } from 'react-native';
-import { Item, Input, Label } from 'native-base';
+import PropTypes from 'prop-types';
+import { View } from 'react-native';
+import { Input, Label } from 'native-base';
 import { Button, Card } from 'react-native-elements';
 
 import { colors, styles } from '../../assets/styles';
+
+const propTypes = {
+  advanceStep: PropTypes.func.isRequired,
+  cancel: PropTypes.func.isRequired,
+  description: PropTypes.string.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
 function Step1(props) {
   const { description, handleInputChange, name } = props;
@@ -48,5 +57,7 @@ function Step1(props) {
     </Card>
   );
 }
+
+Step1.propTypes = propTypes;
 
 export default Step1;

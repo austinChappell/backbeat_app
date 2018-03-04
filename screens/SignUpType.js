@@ -14,8 +14,6 @@ const authAPI = new AuthAPI();
 const { getUserInfo } = api;
 const { register } = authAPI;
 
-console.log('button', Button);
-
 class SignUpType extends Component {
   enterSite = (user) => {
     this.props.setUser(user);
@@ -98,8 +96,11 @@ class SignUpType extends Component {
             buttonStyle={styles.button}
             color={colors.white}
             icon={{
- color: 'white', type: 'font-awesome', name: 'google-plus', size: 24,
-}}
+              color: 'white',
+              type: 'font-awesome',
+              name: 'google-plus',
+              size: 24,
+            }}
             large
             title="Sign Up with Google"
             onPress={this.handleSignUpWithFacebookButton}
@@ -109,8 +110,11 @@ class SignUpType extends Component {
             buttonStyle={styles.button}
             color={colors.white}
             icon={{
- color: 'white', type: 'font-awesome', name: 'linkedin', size: 24,
-}}
+              color: 'white',
+              type: 'font-awesome',
+              name: 'linkedin',
+              size: 24,
+            }}
             large
             title="Sign Up with LinkedIn"
             onPress={this.handleSignUpWithFacebookButton}

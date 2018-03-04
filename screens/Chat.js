@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { AsyncStorage, ScrollView } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
@@ -17,6 +18,20 @@ const messageAPI = new MessageAPI();
 const { findUnreadMessages } = helpers;
 const { getAllMessages } = messageAPI;
 
+const propTypes = {
+  messages: PropTypes.array.isRequired,
+  navigation: PropTypes.object.isRequired,
+  setAllMessages: PropTypes.func.isRequired,
+  setUnreadMessages: PropTypes.func.isRequired,
+  token: PropTypes.string,
+  unreadMessages: PropTypes.array.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
+const defaultProps = {
+  token: null,
+};
+
 class Chat extends Component {
   state = {
     currentRecipientId: null,
@@ -33,7 +48,8 @@ class Chat extends Component {
 
     this.socket = io(apiURL);
 
-    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
+    // TODO: pass in data as arg
+    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', () => {
       this.reloadMessages();
     });
   }
@@ -54,16 +70,19 @@ class Chat extends Component {
 
     messages.forEach((message) => {
       const {
-        recipient_id, recipient_name, sender_id, sender_name,
+        recipient_id: recipientId,
+        recipient_name: recipientName,
+        sender_id: senderId,
+        sender_name: senderName,
       } = message;
       // THIS HAS TO BE DOUBLE EQUALS
-      const id = sender_id == user.id ? recipient_id : sender_id;
+      const id = senderId == user.id ? recipientId : senderId;
 
       if (!senderIds.includes(id)) {
         senderIds.push(id);
 
         // THIS HAS TO BE DOUBLE EQUALS
-        const displayName = sender_id == user.id ? recipient_name : sender_name;
+        const displayName = senderId == user.id ? recipientName : senderName;
         message.displayName = displayName;
         message.tag = id;
         const { unreadMessages } = this.props;
@@ -73,16 +92,14 @@ class Chat extends Component {
         }
         messageHistory.push(message);
       }
-      console.log('SENDER IDS', senderIds);
     });
 
     this.setState({ messageHistory });
   };
 
   loadMessages = (tag, currentRecipientName) => {
-    console.log('LOADING MESSAGES');
     const { messages } = this.props;
-    const userMessages = messages.filter(message => message.sender_id === tag || message.recipient_id === tag);
+    const userMessages = messages.filter(m => m.sender_id === tag || m.recipient_id === tag);
     this.setState({ currentRecipientId: tag, currentRecipientName, userMessages });
   };
 
@@ -98,13 +115,14 @@ class Chat extends Component {
   };
 
   render() {
-    console.log('USER INFO FROM CHAT COMPONENT', this.props.user);
-
     const { navigation } = this.props;
-    console.log('CHAT STATE', this.state);
 
     const displayContent = this.state.currentRecipientId ? (
-      // PROBABLY REFACTOR THIS SO THE MESSAGES PROP GETS FILTERED ON THE WAY IN INSTEAD OF FILTERING ON LIST ITEM CLICK. THIS WAY WE CAN MORE EASILY HAVE REAL-TIME MESSAGE UPDATE FROM THE MESSAGE VIEW
+      // PROBABLY REFACTOR THIS SO THE MESSAGES PROP
+      // GETS FILTERED ON THE WAY IN INSTEAD OF
+      // FILTERING ON LIST ITEM CLICK. THIS WAY
+      // WE CAN MORE EASILY HAVE REAL-TIME MESSAGE
+      // UPDATE FROM THE MESSAGE VIEW
       <Message
         currentRecipientId={this.state.currentRecipientId}
         currentRecipientName={this.state.currentRecipientName}
@@ -168,5 +186,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(action);
   },
 });
+
+Chat.propTypes = propTypes;
+Chat.defaultProps = defaultProps;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Chat);

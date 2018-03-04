@@ -1,13 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Picker, View } from 'react-native';
-import { Label } from 'native-base';
+import { View } from 'react-native';
 
-import { colors, styles } from '../../assets/styles';
+import { colors } from '../../assets/styles';
 
 import Grid from '../../components/common/Grid';
 
-function Step2(props) {
+const propTypes = {
+  selectSkill: PropTypes.func.isRequired,
+  skill: PropTypes.object.isRequired,
+  skills: PropTypes.array.isRequired,
+};
+
+function Step3(props) {
   const { materialColors } = colors;
   let colorIndex = 0;
   return (
@@ -43,4 +49,6 @@ const mapStateToProps = state => ({
   skills: state.skillsReducer.skills,
 });
 
-export default connect(mapStateToProps)(Step2);
+Step3.propTypes = propTypes;
+
+export default connect(mapStateToProps)(Step3);

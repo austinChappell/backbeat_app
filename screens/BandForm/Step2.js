@@ -1,11 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Picker, View } from 'react-native';
-import { Label } from 'native-base';
+import { View } from 'react-native';
 
 import { colors, styles } from '../../assets/styles';
 
 import Grid from '../../components/common/Grid';
+
+const propTypes = {
+  genre: PropTypes.object.isRequired,
+  genres: PropTypes.array.isRequired,
+  selectGenre: PropTypes.func.isRequired,
+};
 
 function Step2(props) {
   const { materialColors } = colors;
@@ -24,6 +30,7 @@ function Step2(props) {
             key={index}
             bgColor={bgColor}
             item={genre}
+            margin={0}
             selected={selected}
             select={props.selectGenre}
             title={genre.label}
@@ -39,5 +46,7 @@ function Step2(props) {
 const mapStateToProps = state => ({
   genres: state.genresReducer.genres,
 });
+
+Step2.propTypes = propTypes;
 
 export default connect(mapStateToProps)(Step2);

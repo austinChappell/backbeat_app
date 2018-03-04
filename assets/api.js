@@ -4,26 +4,18 @@ import data from './data';
 const api = data.apiURL;
 
 class Api {
-  createUser = (user, cb) => {
-    console.log('CREATING USER', user, api, cb);
-
-    return fetch(`${api}/signup`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(user),
+  createUser = (user, cb) => fetch(`${api}/signup`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(user),
+  })
+    .then(response => response.json())
+    .then((results) => {
+      cb(results);
     })
-      .then((response) => {
-        console.log('RESPONSE OF CREATE USER FUNC', response);
-        return response.json();
-      })
-      .then((results) => {
-        console.log('RESULTS FROM CREATE USER FUNC', results);
-        cb(results);
-      })
-      .catch(err => console.error('PROBLEM LOGGING OUT', err));
-  };
+    .catch(err => console.error('PROBLEM LOGGING OUT', err));
 
   getProfile = (username, token, cb) =>
     fetch(`${api}/api/profile/${username}/`, {
@@ -35,7 +27,6 @@ class Api {
     })
       .then(response => response.json())
       .then((results) => {
-        console.log('RESULTS', results);
         cb(results);
       });
 
@@ -49,7 +40,6 @@ class Api {
     })
       .then(response => response.json())
       .then((results) => {
-        console.log('USER INFO', results);
         const user = results[0];
         const {
           first_name, id, is_active, last_name, onboarding_stage,
@@ -71,42 +61,32 @@ class Api {
       })
       .catch(err => cbError());
 
-  login = (credentials, cb) => {
-    console.log('HITTING THE LOGIN ROUTE', credentials, cb);
-    return fetch(`${api}/login`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(credentials),
+  login = (credentials, cb) => fetch(`${api}/login`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+    body: JSON.stringify(credentials),
+  })
+    .then(response => response.json())
+    .then((results) => {
+      cb(results);
     })
-      .then((response) => {
-        console.log('RESPONSE FROM LOGIN FUNC', response);
-        return response.json();
-      })
-      .then((results) => {
-        console.log('LOGIN RESULTS', results);
-        cb(results);
-      })
-      .catch((err) => {
-        console.error('LOGIN ERROR', err);
-      });
-  };
+    .catch((err) => {
+      console.error('LOGIN ERROR', err);
+    });
 
-  logout = (cb) => {
-    console.log('hitting the logout route');
-    return fetch(`${api}/logout`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+  logout = cb => fetch(`${api}/logout`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  })
+    .then(response => response.json())
+    .then((results) => {
+      cb(results);
     })
-      .then(response => response.json())
-      .then((results) => {
-        cb(results);
-      })
-      .catch(err => console.error('PROBLEM LOGGING OUT', err));
-  };
+    .catch(err => console.error('PROBLEM LOGGING OUT', err));
 }
 
 export default Api;

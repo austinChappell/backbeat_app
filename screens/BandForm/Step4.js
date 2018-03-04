@@ -1,13 +1,23 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Text, TextInput, View } from 'react-native';
-import { Item, Input, Label } from 'native-base';
+import { Text, View } from 'react-native';
+import { Label } from 'native-base';
 import { Button } from 'react-native-elements';
 
 import { colors, styles } from '../../assets/styles';
 
-function Step1(props) {
-  const { description, handleInputChange, name } = props;
+const propTypes = {
+  description: PropTypes.string.isRequired,
+  genre: PropTypes.object.isRequired,
+  name: PropTypes.string.isRequired,
+  saving: PropTypes.bool.isRequired,
+  skill: PropTypes.object.isRequired,
+  submit: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
+function Step4(props) {
   return (
     <View>
       <View>
@@ -46,4 +56,6 @@ const mapStateToProps = state => ({
   user: state.userReducer.user,
 });
 
-export default connect(mapStateToProps)(Step1);
+Step4.propTypes = propTypes;
+
+export default connect(mapStateToProps)(Step4);

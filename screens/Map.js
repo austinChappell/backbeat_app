@@ -28,7 +28,6 @@ class Map extends Component {
 
   getLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
-      console.log('POSITION', position);
       if (position) {
         const { latitude, longitude } = position.coords;
         this.setState({ latitude, longitude, hasCurrentPosition: true });
@@ -44,7 +43,6 @@ class Map extends Component {
   };
 
   render() {
-    console.log('USER', this.props.user);
     const { navigation, user } = this.props;
     const {
       latitude, longitude, latitudeDelta, longitudeDelta,

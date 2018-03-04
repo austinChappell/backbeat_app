@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { AsyncStorage, TouchableOpacity, View } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
@@ -23,6 +24,19 @@ const { getUserInfo } = api;
 const { findUnreadMessages } = helpers;
 const { getAllMessages } = messageAPI;
 
+const propTypes = {
+  navigation: PropTypes.object.isRequired,
+  setAllMessages: PropTypes.func.isRequired,
+  setGenres: PropTypes.func.isRequired,
+  setInstruments: PropTypes.func.isRequired,
+  setSkills: PropTypes.func.isRequired,
+  setToken: PropTypes.func.isRequired,
+  setUnreadMessages: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired,
+  unreadMessages: PropTypes.array.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
 class NavBar extends Component {
   state = {
     onboardingPercent: 0,
@@ -30,7 +44,6 @@ class NavBar extends Component {
   };
 
   componentDidMount() {
-    console.log('NAVBAR COMPONENT MOUNTED');
     AsyncStorage.getItem('id')
       .then((userid) => {
         this.userid = userid;
@@ -49,7 +62,9 @@ class NavBar extends Component {
 
     this.socket = io(apiURL);
 
-    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (data) => {
+    // TODO: this should probably change to add the message directly,
+    // instead of calling all messages. Pass in data as parameter
+    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', () => {
       getAllMessages(this.token, this.setMessages);
     });
   }
@@ -95,7 +110,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const { navigation, unreadMessages, user } = this.props;
+    const { navigation, unreadMessages } = this.props;
     const { onboardingPercent, userLoaded } = this.state;
     const unreadNotification =
       unreadMessages.length > 0 ? (
@@ -203,5 +218,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(action);
   },
 });
+
+NavBar.propTypes = propTypes;
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

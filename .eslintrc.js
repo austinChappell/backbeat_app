@@ -13,6 +13,8 @@ module.exports = {
     'react/no-array-index-key': 0,
     'react/sort-comp': 0,
     'no-unneeded-ternary': 0,
+    'array-callback-return': 0,
+    'consistent-return': 0,
     eqeqeq: 0,
   },
   globals: {

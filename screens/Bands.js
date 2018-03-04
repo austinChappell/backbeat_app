@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Modal, Picker, ScrollView, Text, TextInput, View } from 'react-native';
-import { Button, Card } from 'react-native-elements';
-import { Item, Input, Label } from 'native-base';
+import { Modal, ScrollView, Text, View } from 'react-native';
+import { Button } from 'react-native-elements';
 
+import Band from './Band';
 import Grid from '../components/common/Grid';
 import Step1 from './BandForm/Step1';
 import Step2 from './BandForm/Step2';
@@ -11,15 +12,26 @@ import Step3 from './BandForm/Step3';
 import Step4 from './BandForm/Step4';
 import NavBar from '../components/NavBar';
 
-import { colors, styles } from '../assets/styles';
+import { colors } from '../assets/styles';
 import BandAPI from '../assets/APIs/bandAPI';
 
 const bandAPI = new BandAPI();
 
 const { addMember, createBand, getMyBands } = bandAPI;
 
+const propTypes = {
+  navigation: PropTypes.object.isRequired,
+  token: PropTypes.string,
+  user: PropTypes.object.isRequired,
+};
+
+const defaultProps = {
+  token: null,
+};
+
 class Bands extends Component {
   state = {
+    band: null,
     bands: [],
     createFormVisible: false,
     description: '',
@@ -46,6 +58,10 @@ class Bands extends Component {
   advanceStep = () => {
     const { step } = this.state;
     this.setState({ step: step + 1 });
+  };
+
+  clearBand = () => {
+    this.setState({ band: null });
   };
 
   findStep = () => {
@@ -105,7 +121,7 @@ class Bands extends Component {
     }
   };
 
-  handleAddMemberRes = (results) => {
+  handleAddMemberRes = () => {
     this.toggleModal();
     this.setState({ saving: false });
   };
@@ -129,8 +145,11 @@ class Bands extends Component {
   };
 
   loadBands = (bands) => {
-    console.log('MY BANDS', bands);
     this.setState({ bands });
+  };
+
+  selectBand = (band) => {
+    this.setState({ band });
   };
 
   selectGenre = (genre) => {
@@ -169,10 +188,42 @@ class Bands extends Component {
   };
 
   render() {
-    console.log('BAND STATE', this.state);
     const { navigation } = this.props;
-    const { materialColors } = colors;
-    let colorIndex = 0;
+    const content = this.state.band ? (
+      <Band goBack={this.clearBand} bandId={this.state.band.id} token={this.props.token} />
+    ) : (
+      <ScrollView style={{ padding: 5, flexGrow: 1 }}>
+        <View style={{ padding: 5 }}>
+          <Button
+            title="Create Your Own"
+            onPress={this.toggleModal}
+            backgroundColor={colors.secondary}
+          />
+        </View>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            backgroundColor: colors.bgLight,
+          }}
+        >
+          {this.state.bands.map((band, index) => (
+            <Grid
+              key={index}
+              bgColor={colors.white}
+              color={colors.primary}
+              item={band}
+              margin={2}
+              select={this.selectBand}
+              title={band.name}
+              id={band.id}
+            />
+          ))}
+        </View>
+      </ScrollView>
+    );
+
     return (
       <View style={{ backgroundColor: colors.bgLight, flex: 1 }}>
         <NavBar navigation={navigation} />
@@ -190,52 +241,18 @@ class Bands extends Component {
           </Text>
           <ScrollView style={{ flex: 1, minHeight: '100%' }}>{this.findStep()}</ScrollView>
         </Modal>
-        <ScrollView style={{ padding: 5, flexGrow: 1 }}>
-          <View style={{ padding: 5 }}>
-            <Button
-              title="Create Your Own"
-              onPress={this.toggleModal}
-              backgroundColor={colors.secondary}
-            />
-          </View>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              backgroundColor: colors.bgLight,
-            }}
-          >
-            {this.state.bands.map((band, index) => {
-              const bgColor = materialColors[colorIndex];
-              colorIndex += 1;
-              if (colorIndex >= materialColors.length) {
-                colorIndex = 0;
-              }
-              return (
-                <Grid
-                  key={index}
-                  bgColor={colors.white}
-                  color={colors.primary}
-                  item={band}
-                  margin={2}
-                  select={this.selectBand}
-                  title={band.name}
-                  id={band.id}
-                />
-              );
-            })}
-          </View>
-        </ScrollView>
+        {content}
       </View>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  genres: state.genresReducer.genres,
   token: state.userReducer.token,
   user: state.userReducer.user,
 });
+
+Bands.propTypes = propTypes;
+Bands.defaultProps = defaultProps;
 
 export default connect(mapStateToProps)(Bands);

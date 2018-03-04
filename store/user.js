@@ -37,7 +37,6 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-  console.log('USER REDUCER RUNNING', action);
   switch (action.type) {
     case constants.HANDLE_FORM_INPUT_CHANGE: {
       const updateObject = {};

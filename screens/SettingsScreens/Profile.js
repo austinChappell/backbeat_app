@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { AsyncStorage, ImagePickerIOS, Picker, View } from 'react-native';
+import { connect } from 'react-redux';
+import { AsyncStorage, Picker, View } from 'react-native';
 import { Avatar, Card } from 'react-native-elements';
-import { Form, Item, Input, Label } from 'native-base';
+import { Form, Input, Label } from 'native-base';
 import ImagePicker from 'react-native-image-crop-picker';
 import Snackbar from 'react-native-snackbar';
 
@@ -18,11 +18,11 @@ const userAPI = new UserAPI();
 const { update } = generalAPI;
 const { uploadAvatar } = userAPI;
 
-console.log('PICKER', Picker);
-
 const propTypes = {
   genres: PropTypes.array.isRequired,
   instruments: PropTypes.array.isRequired,
+  setUser: PropTypes.func.isRequired,
+  token: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,
 };
 
@@ -197,7 +197,6 @@ class Profile extends Component {
   };
 
   render() {
-    console.log('PROFILE STATE', this.state);
     const {
       firstName, lastName, notificationEmail, email, zipCode,
     } = this.state;
@@ -252,7 +251,8 @@ class Profile extends Component {
                   >
                     <Picker.Item label="---" value={null} />
                     {this.props.genres.map((genre, index) => {
-                      const selectionIndex = this.state.genres.findIndex(option => option === genre.id);
+                      const { genres } = this.state;
+                      const selectionIndex = genres.findIndex(opt => opt === genre.id);
                       if (selectionIndex < 0 || selectionIndex === sgIndex) {
                         return <Picker.Item key={index} label={genre.label} value={genre.id} />;
                       }
@@ -281,7 +281,8 @@ class Profile extends Component {
                   >
                     <Picker.Item label="---" value={null} />
                     {this.props.instruments.map((instrument, index) => {
-                      const selectionIndex = this.state.instruments.findIndex(option => option === instrument.id);
+                      const { instruments } = this.state;
+                      const selectionIndex = instruments.findIndex(opt => opt === instrument.id);
                       if (selectionIndex < 0 || selectionIndex === instIndex) {
                         return (
                           <Picker.Item key={index} label={instrument.label} value={instrument.id} />
