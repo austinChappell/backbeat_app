@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 import { Button, Header, Icon, List, ListItem } from 'react-native-elements';
 
@@ -6,10 +7,14 @@ import GoBackNavBar from '../components/GoBackNavBar';
 import SettingsOptions from './SettingsScreens/';
 import { colors, styles } from '../assets/styles';
 
+const propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+};
+
 class Settings extends Component {
   state = {
     headerTitle: '',
-    selection: null
+    selection: null,
   };
 
   changeSelection = (selection, headerTitle) => {
@@ -30,16 +35,12 @@ class Settings extends Component {
               hitSlop={{ top: 20, bottom: 20, left: 50, right: 50 }}
               onPress={() => this.changeSelection(null, '')}
             >
-              <Icon
-                name="ios-arrow-back-outline"
-                type="ionicon"
-                color={colors.primary}
-              />
+              <Icon name="ios-arrow-back-outline" type="ionicon" color={colors.primary} />
             </TouchableOpacity>
           }
           centerComponent={{
             text: this.state.headerTitle,
-            style: { color: colors.primary }
+            style: { color: colors.primary },
           }}
         />
         {innerContent}
@@ -76,5 +77,7 @@ class Settings extends Component {
     return content;
   }
 }
+
+Settings.propTypes = propTypes;
 
 export default Settings;

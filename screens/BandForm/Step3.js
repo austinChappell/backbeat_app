@@ -9,8 +9,8 @@ import Grid from '../../components/common/Grid';
 
 const propTypes = {
   selectSkill: PropTypes.func.isRequired,
-  skill: PropTypes.object.isRequired,
-  skills: PropTypes.array.isRequired,
+  skill: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
+  skills: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 function Step3(props) {
@@ -18,7 +18,7 @@ function Step3(props) {
   let colorIndex = 0;
   return (
     <View style={{ flex: 1, justifyContent: 'space-between', height: 175 }}>
-      {props.skills.map((skill, index) => {
+      {props.skills.map((skill) => {
         const selected = props.skill === skill.id;
         const bgColor = materialColors[colorIndex];
         colorIndex += 1;
@@ -27,7 +27,7 @@ function Step3(props) {
         }
         return (
           <Grid
-            key={index}
+            key={skill.id}
             fullWidth
             grow
             item={skill}

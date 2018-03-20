@@ -18,14 +18,12 @@ import BandAPI from '../assets/APIs/bandAPI';
 
 const bandAPI = new BandAPI();
 
-const {
-  addInstrument, addMember, createBand, getMyBands,
-} = bandAPI;
+const { addInstrument, addMember, createBand, getMyBands } = bandAPI;
 
 const propTypes = {
-  navigation: PropTypes.object.isRequired,
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
   token: PropTypes.string,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const defaultProps = {
@@ -137,7 +135,7 @@ class Bands extends Component {
     }
   };
 
-  handleAddMemberRes = (results) => {
+  handleAddMemberRes = results => {
     const bandId = results.rows[0].band_id;
     const { instruments } = this.state;
     const numOfInstruments = instruments.length;
@@ -164,42 +162,40 @@ class Bands extends Component {
     this.setState(o);
   };
 
-  handleRes = (results) => {
+  handleRes = results => {
     const band = results[0];
     const { token, user } = this.props;
     addMember(token, band.id, user.id, this.handleAddMemberRes);
   };
 
-  loadBands = (bands) => {
+  loadBands = bands => {
     this.setState({ bands });
   };
 
-  selectBand = (band) => {
+  selectBand = band => {
     this.setState({ band });
   };
 
-  selectGenre = (genre) => {
+  selectGenre = genre => {
     this.setState({ genre }, () => {
       this.advanceStep();
     });
   };
 
-  selectSkill = (skill) => {
+  selectSkill = skill => {
     this.setState({ skill }, () => {
       this.advanceStep();
     });
   };
 
-  setInstruments = (instruments) => {
+  setInstruments = instruments => {
     this.setState({ instruments });
   };
 
   submit = () => {
     // This is where the API call happens
     this.setState({ saving: true }, () => {
-      const {
-        name, description, skill, genre, instruments,
-      } = this.state;
+      const { name, description, skill, genre, instruments } = this.state;
       const { token, user } = this.props;
       const body = {
         name,

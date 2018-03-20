@@ -20,12 +20,12 @@ const { getAllMessages } = messageAPI;
 
 const propTypes = {
   messages: PropTypes.array.isRequired,
-  navigation: PropTypes.object.isRequired,
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
   setAllMessages: PropTypes.func.isRequired,
   setUnreadMessages: PropTypes.func.isRequired,
   token: PropTypes.string,
-  unreadMessages: PropTypes.array.isRequired,
-  user: PropTypes.object.isRequired,
+  unreadMessages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const defaultProps = {
@@ -41,7 +41,7 @@ class Chat extends Component {
   };
 
   componentDidMount() {
-    AsyncStorage.getItem('auth_token').then((value) => {
+    AsyncStorage.getItem('auth_token').then(value => {
       this.token = value;
     });
     this.getMessageHistory();
@@ -60,7 +60,8 @@ class Chat extends Component {
 
   clearRecipient = () => {
     this.setState({ currentRecipientId: null, currentRecipientName: null, userMessages: [] }, () =>
-      this.reloadMessages());
+      this.reloadMessages(),
+    );
   };
 
   getMessageHistory = () => {
@@ -68,7 +69,7 @@ class Chat extends Component {
     const senderIds = [];
     const messageHistory = [];
 
-    messages.forEach((message) => {
+    messages.forEach(message => {
       const {
         recipient_id: recipientId,
         recipient_name: recipientName,
@@ -107,7 +108,7 @@ class Chat extends Component {
     getAllMessages(this.token, this.setMessages);
   };
 
-  setMessages = (messages) => {
+  setMessages = messages => {
     this.props.setAllMessages(messages);
     const unreadMessages = findUnreadMessages(messages, this.props.user.id);
     this.props.setUnreadMessages(unreadMessages);
@@ -176,12 +177,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setAllMessages: (messages) => {
+  setAllMessages: messages => {
     const action = { type: 'SET_ALL_MESSAGES', messages };
     dispatch(action);
   },
 
-  setUnreadMessages: (messages) => {
+  setUnreadMessages: messages => {
     const action = { type: 'SET_UNREAD_MESSAGES', messages };
     dispatch(action);
   },

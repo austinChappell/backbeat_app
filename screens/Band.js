@@ -14,7 +14,7 @@ const propTypes = {
   bandId: PropTypes.number.isRequired,
   goBack: PropTypes.func.isRequired,
   token: PropTypes.string.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 class Band extends Component {
@@ -30,7 +30,7 @@ class Band extends Component {
     this.setBand({});
   }
 
-  getBandRes = (band) => {
+  getBandRes = band => {
     this.setBand(band);
   };
 
@@ -38,28 +38,26 @@ class Band extends Component {
     getOne('bands', this.props.bandId, this.props.token, this.getBandRes);
   };
 
-  setBand = (band) => {
+  setBand = band => {
     this.setState({ band });
   };
 
   render() {
     const { band } = this.state;
-    const {
-      admin, description, genre, name, skill_level: skillLevel, users,
-    } = band;
+    const { admin, description, genre, name, skill_level: skillLevel, users } = band;
     const isAdmin = admin ? admin.id === this.props.user.id : false;
     const genreLabel = genre ? genre.label : '';
     const skillLabel = skillLevel ? skillLevel.label : '';
     const userInfo = users
       ? band.users.map((user, index) => {
-        const { first_name: firstName, last_name: lastName, avatar } = user;
-        return (
-          <View key={index}>
-            <Text>{`${firstName} ${lastName}`}</Text>
-            <Avatar medium rounded source={{ uri: avatar }} />
-          </View>
-        );
-      })
+          const { first_name: firstName, last_name: lastName, avatar } = user;
+          return (
+            <View key={index}>
+              <Text>{`${firstName} ${lastName}`}</Text>
+              <Avatar medium rounded source={{ uri: avatar }} />
+            </View>
+          );
+        })
       : null;
 
     const editButton = isAdmin ? (

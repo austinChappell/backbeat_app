@@ -9,8 +9,8 @@ import { colors, styles } from '../assets/styles';
 import NavBar from '../components/NavBar';
 
 const propTypes = {
-  navigation: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 class Dashboard extends Component {

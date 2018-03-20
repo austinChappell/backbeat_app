@@ -1,9 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
 
 import { onSignOut } from '../auth';
 import { colors } from '../assets/styles';
+
+const propTypes = {
+  logoutButton: PropTypes.bool,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
+};
+
+const defaultProps = {
+  logoutButton: false,
+};
 
 function GoBackNavBar(props) {
   const { navigation } = props;
@@ -42,5 +52,8 @@ function GoBackNavBar(props) {
     />
   );
 }
+
+GoBackNavBar.propTypes = propTypes;
+GoBackNavBar.defaultProps = defaultProps;
 
 export default GoBackNavBar;

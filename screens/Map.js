@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 import MapView from 'react-native-maps';
+
 import NavBar from '../components/NavBar';
+
+const propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 class Map extends Component {
   state = {
@@ -27,7 +34,7 @@ class Map extends Component {
   }
 
   getLocation = () => {
-    navigator.geolocation.getCurrentPosition((position) => {
+    navigator.geolocation.getCurrentPosition(position => {
       if (position) {
         const { latitude, longitude } = position.coords;
         this.setState({ latitude, longitude, hasCurrentPosition: true });
@@ -44,9 +51,7 @@ class Map extends Component {
 
   render() {
     const { navigation, user } = this.props;
-    const {
-      latitude, longitude, latitudeDelta, longitudeDelta,
-    } = this.state;
+    const { latitude, longitude, latitudeDelta, longitudeDelta } = this.state;
     const markers = [
       {
         latitude: 37.78825,
@@ -100,5 +105,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
   user: state.userReducer.user,
 });
+
+Map.propTypes = propTypes;
 
 export default connect(mapStateToProps)(Map);

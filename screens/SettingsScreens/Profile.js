@@ -118,7 +118,7 @@ class Profile extends Component {
       cropping: true,
       writeTempFile: false,
       includeBase64: true,
-    }).then((avatar) => {
+    }).then(avatar => {
       const { user, token } = this.props;
       const body = {
         image: avatar.data,
@@ -129,14 +129,14 @@ class Profile extends Component {
     });
   };
 
-  updateAvatar = (results) => {
+  updateAvatar = results => {
     const { avatar } = results.rows[0];
     const { user } = this.props;
     user.avatar = avatar;
     this.setState({ avatar });
   };
 
-  updateResponse = (results) => {
+  updateResponse = results => {
     const user = results[0];
     Snackbar.show({
       title: 'Changes Saved',
@@ -148,7 +148,13 @@ class Profile extends Component {
 
   updateUser = () => {
     const {
-      firstName, lastName, notificationEmail, zipCode, genres, instruments, bio,
+      firstName,
+      lastName,
+      notificationEmail,
+      zipCode,
+      genres,
+      instruments,
+      bio,
     } = this.state;
     const user = {
       firstName,
@@ -164,7 +170,7 @@ class Profile extends Component {
       genreThree: genres[2],
     };
     if (this.validUser()) {
-      AsyncStorage.getItem('auth_token').then((token) => {
+      AsyncStorage.getItem('auth_token').then(token => {
         update('users', token, user, this.updateResponse);
       });
     }
@@ -173,13 +179,14 @@ class Profile extends Component {
   validUser = () => {
     let valid = true;
     let message;
-    const {
-      firstName, lastName, notificationEmail, zipCode,
-    } = this.state;
+    const { firstName, lastName, notificationEmail, zipCode } = this.state;
     if (firstName.trim().length < 3 || lastName.trim().length < 3) {
       valid = false;
       message = 'Use at least three letters.';
-    } else if (notificationEmail && (notificationEmail.indexOf('@') < 1 || notificationEmail.indexOf('.') < 3)) {
+    } else if (
+      notificationEmail &&
+      (notificationEmail.indexOf('@') < 1 || notificationEmail.indexOf('.') < 3)
+    ) {
       valid = false;
       message = 'Invalid email';
     } else if (zipCode.length !== 5 || !Number.isInteger(Number(zipCode))) {
@@ -197,9 +204,7 @@ class Profile extends Component {
   };
 
   render() {
-    const {
-      firstName, lastName, notificationEmail, email, zipCode,
-    } = this.state;
+    const { firstName, lastName, notificationEmail, email, zipCode } = this.state;
 
     return (
       <View contentContainerStyle={{ flex: 0 }}>
@@ -308,7 +313,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setUser: (user) => {
+  setUser: user => {
     const action = {
       type: 'SET_USER',
       user,

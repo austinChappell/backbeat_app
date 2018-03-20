@@ -1,7 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { colors } from '../../assets/styles';
+
+const propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  progress: PropTypes.number.isRequired,
+};
 
 function Progress(props) {
   const { navigation } = props;
@@ -49,5 +55,7 @@ function Progress(props) {
     </View>
   );
 }
+
+Progress.propTypes = propTypes;
 
 export default Progress;

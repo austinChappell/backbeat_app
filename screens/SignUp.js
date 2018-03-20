@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Card, FormInput, FormLabel, Icon } from 'react-native-elements';
 import { AsyncStorage, Text, TouchableOpacity, View } from 'react-native';
 import { Popover, PopoverContainer } from 'react-native-simple-popover';
 
+import FadeInView from '../components/FadeInView';
+
 import { colors, styles } from '../assets/styles';
 import { onSignIn } from '../auth';
-
 import AuthAPI from '../assets/APIs/authAPI';
 import data from '../assets/data';
 
@@ -15,7 +17,10 @@ const authAPI = new AuthAPI();
 const { createUser, validateZip } = authAPI;
 const { dfwCoords } = data;
 
-import FadeInView from '../components/FadeInView';
+const propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  setUser: PropTypes.func.isRequired,
+};
 
 class SignUp extends Component {
   state = {
@@ -35,9 +40,8 @@ class SignUp extends Component {
     zipCity: '',
   };
 
-  enterSite = (results) => {
+  enterSite = results => {
     const user = results.rows[0];
-    console.log('USER RESPONSE FROM SIGNUP', user);
     AsyncStorage.setItem('id', String(user.id)).then(() => {
       this.props.setUser(user);
       onSignIn(user.token).then(() => this.props.navigation.navigate('SignedIn'));
@@ -50,16 +54,14 @@ class SignUp extends Component {
     this.setState(o, () => this.validateForm());
   };
 
-  receiveCoordinates = (results) => {
+  receiveCoordinates = results => {
     console.log('RECEIVING COORDINATES', results);
     const geoData = JSON.parse(results);
     console.log('RECEIVING DATA', geoData);
     if (geoData.places) {
       const { latitude, longitude } = geoData.places[0];
       const zipCity = geoData.places[0]['place name'];
-      const {
-        maxLat, minLat, maxLong, minLong,
-      } = dfwCoords;
+      const { maxLat, minLat, maxLong, minLong } = dfwCoords;
       const latApproved = latitude <= maxLat && latitude >= minLat;
       const longApproved = longitude <= maxLong && longitude >= minLong;
       if (latApproved && longApproved) {
@@ -80,20 +82,22 @@ class SignUp extends Component {
   };
 
   signUp = () => {
-    const {
-      email, firstName, lastName, latitude, longitude, password, zipCode,
-    } = this.state;
+    const { email, firstName, lastName, latitude, longitude, password, zipCode } = this.state;
     const user = {
-      email, firstName, lastName, latitude, longitude, password, zipCode,
+      email,
+      firstName,
+      lastName,
+      latitude,
+      longitude,
+      password,
+      zipCode,
     };
     console.log('USER BEFORE CREATING', user);
     createUser(user, this.enterSite, this.setError);
   };
 
   validateForm = () => {
-    const {
-      formComplete, email, firstName, lastName, password, zipCode,
-    } = this.state;
+    const { formComplete, email, firstName, lastName, password, zipCode } = this.state;
     const formValArr = [
       email.trim(),
       firstName.trim(),
@@ -206,10 +210,12 @@ class SignUp extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setUser: (user) => {
+  setUser: user => {
     const action = { type: 'SET_USER', user };
     dispatch(action);
   },
 });
+
+SignUp.propTypes = propTypes;
 
 export default connect(null, mapDispatchToProps)(SignUp);

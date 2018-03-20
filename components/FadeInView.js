@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Animated, View } from 'react-native';
 
 class FadeInView extends Component {
-
   state = {
     opacity: new Animated.Value(0)
   }

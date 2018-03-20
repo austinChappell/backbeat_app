@@ -9,12 +9,12 @@ import { colors, styles } from '../../assets/styles';
 
 const propTypes = {
   description: PropTypes.string.isRequired,
-  genre: PropTypes.object.isRequired,
+  genre: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
   name: PropTypes.string.isRequired,
   saving: PropTypes.bool.isRequired,
-  skill: PropTypes.object.isRequired,
+  skill: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
   submit: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 function Step5(props) {

@@ -8,8 +8,8 @@ import { colors, styles } from '../../assets/styles';
 import Grid from '../../components/common/Grid';
 
 const propTypes = {
-  genre: PropTypes.object.isRequired,
-  genres: PropTypes.array.isRequired,
+  genre: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
+  genres: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectGenre: PropTypes.func.isRequired,
 };
 
@@ -18,7 +18,7 @@ function Step2(props) {
   let colorIndex = 0;
   return (
     <View style={styles.gridContainer}>
-      {props.genres.map((genre, index) => {
+      {props.genres.map((genre) => {
         const selected = props.genre === genre.id;
         const bgColor = materialColors[colorIndex];
         colorIndex += 1;
@@ -27,7 +27,7 @@ function Step2(props) {
         }
         return (
           <Grid
-            key={index}
+            key={genre.id}
             bgColor={bgColor}
             item={genre}
             margin={0}

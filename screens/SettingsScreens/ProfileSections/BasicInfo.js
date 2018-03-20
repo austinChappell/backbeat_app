@@ -1,10 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Picker, Text, TextInput, View } from 'react-native';
-import { Avatar, Card } from 'react-native-elements';
+import { View } from 'react-native';
+import { Card } from 'react-native-elements';
 import { Form, Item, Input, Label } from 'native-base';
 
-import { colors, styles } from '../../../assets/styles';
+import { colors } from '../../../assets/styles';
+
+const propTypes = {
+  email: PropTypes.string.isRequired,
+  firstName: PropTypes.string.isRequired,
+  handleInputChange: PropTypes.func.isRequired,
+  lastName: PropTypes.string.isRequired,
+  notificationEmail: PropTypes.string.isRequired,
+  zipCode: PropTypes.string.isRequired,
+};
 
 function BasicInfo(props) {
   return (
@@ -52,5 +61,7 @@ function BasicInfo(props) {
     </View>
   );
 }
+
+BasicInfo.propTypes = propTypes;
 
 export default BasicInfo;

@@ -25,7 +25,7 @@ const { findUnreadMessages } = helpers;
 const { getAllMessages } = messageAPI;
 
 const propTypes = {
-  navigation: PropTypes.object.isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   setAllMessages: PropTypes.func.isRequired,
   setGenres: PropTypes.func.isRequired,
   setInstruments: PropTypes.func.isRequired,
@@ -33,8 +33,8 @@ const propTypes = {
   setToken: PropTypes.func.isRequired,
   setUnreadMessages: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired,
-  unreadMessages: PropTypes.array.isRequired,
-  user: PropTypes.object.isRequired,
+  unreadMessages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 class NavBar extends Component {

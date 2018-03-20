@@ -1,20 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { colors, styles } from '../../assets/styles';
 
 const propTypes = {
-  active: PropTypes.bool,
+  bgColor: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  item: PropTypes.objectOf(PropTypes.any).isRequired,
+  fullWidth: PropTypes.bool,
+  grow: PropTypes.bool,
+  margin: PropTypes.number.isRequired,
   select: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-  active: true,
+  fullWidth: false,
+  grow: false,
 };
 
 function Grid(props) {
   const {
-    active, bgColor, data, description, item, fullWidth, grow, title, margin,
+    bgColor, color, description, item, fullWidth, grow, margin, title,
   } = props;
   const dblMargin = margin * 2;
   const width = 100;
@@ -32,10 +39,10 @@ function Grid(props) {
   return (
     <TouchableOpacity style={gridStyle} onPress={() => props.select(item)}>
       <View>
-        <Text style={{ color: props.color, fontSize: 18 }}>{title}</Text>
+        <Text style={{ color, fontSize: 18 }}>{title}</Text>
       </View>
       <View>
-        <Text style={{ color: props.color }}>{description}</Text>
+        <Text style={{ color }}>{description}</Text>
       </View>
     </TouchableOpacity>
   );

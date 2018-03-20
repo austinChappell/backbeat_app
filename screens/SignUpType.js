@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import { AsyncStorage, Text, View } from 'react-native';
-import { colors, styles } from '../assets/styles';
 // import FBSDK, { GraphRequest, GraphRequestManager, LoginButton, LoginManager, AccessToken } from 'react-native-fbsdk';
+
+import { colors, styles } from '../assets/styles';
 import FadeInView from '../components/FadeInView';
 import AuthAPI from '../assets/APIs/authAPI';
 import Api from '../assets/api';
@@ -14,8 +16,13 @@ const authAPI = new AuthAPI();
 const { getUserInfo } = api;
 const { register } = authAPI;
 
+const propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  setUser: PropTypes.func.isRequired,
+};
+
 class SignUpType extends Component {
-  enterSite = (user) => {
+  enterSite = user => {
     this.props.setUser(user);
     onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'));
   };
@@ -65,13 +72,13 @@ class SignUpType extends Component {
   //   );
   // }
 
-  setUser = (results) => {
+  setUser = results => {
     const user = results.rows[0];
     this.token = user.token;
     getUserInfo(user.id, user.token, this.enterSite);
   };
 
-  signUp = (user) => {
+  signUp = user => {
     register(user, this.setUser);
   };
 
@@ -134,10 +141,12 @@ class SignUpType extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setUser: (user) => {
+  setUser: user => {
     const action = { type: 'SET_USER', user };
     dispatch(action);
   },
 });
+
+SignUpType.propTypes = propTypes;
 
 export default connect(null, mapDispatchToProps)(SignUpType);

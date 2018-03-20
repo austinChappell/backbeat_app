@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   AsyncStorage,
@@ -12,8 +13,8 @@ import {
 } from 'react-native';
 import { Avatar, Button, FormInput, Header, Icon } from 'react-native-elements';
 import io from 'socket.io-client';
-import { colors, styles } from '../assets/styles';
 
+import { colors, styles } from '../assets/styles';
 import GeneralAPI from '../assets/APIs/generalAPI';
 import MessageAPI from '../assets/APIs/messageAPI';
 import data from '../assets/data';
@@ -23,6 +24,14 @@ const generalAPI = new GeneralAPI();
 const messageAPI = new MessageAPI();
 const { getUserPhoto } = generalAPI;
 const { markAsRead, sendMessage } = messageAPI;
+
+const propTypes = {
+  currentRecipientId: PropTypes.number.isRequired,
+  currentRecipientName: PropTypes.string.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.object).isRequired,
+  token: PropTypes.string.isRequired,
+  user: PropTypes.objectOf(PropTypes.any).isRequired,
+};
 
 class Message extends Component {
   constructor() {
@@ -40,17 +49,17 @@ class Message extends Component {
 
     this.socket = io(apiURL);
 
-    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', (results) => {
+    this.socket.on('RECEIVE_INDIVIDUAL_MESSAGE', results => {
       this.addMessage(results[0]);
     });
 
-    this.socket.on('NOTIFY_TYPING', (user) => {
+    this.socket.on('NOTIFY_TYPING', user => {
       if (user.id !== this.props.user.id) {
         this.setUserTyping(user);
       }
     });
 
-    this.socket.on('REMOVE_TYPING_USER', (user) => {
+    this.socket.on('REMOVE_TYPING_USER', user => {
       if (user.id !== this.props.user.id) {
         this.clearUserTyping();
       }
@@ -68,7 +77,7 @@ class Message extends Component {
     this.socket.close();
   }
 
-  addMessage = (message) => {
+  addMessage = message => {
     this.props.messages.unshift(message);
     Keyboard.dismiss();
     this.setState({ message: '' }, () => {
@@ -88,7 +97,7 @@ class Message extends Component {
     getUserPhoto(currentRecipientId, token, this.setPhoto);
   };
 
-  handleMessageChange = (message) => {
+  handleMessageChange = message => {
     clearTimeout(this.stopTyping);
     if (!this.state.isTyping) {
       this.socket.emit('MESSAGE_TYPING', this.props.user);
@@ -108,17 +117,17 @@ class Message extends Component {
     }
   };
 
-  readMessage = (message) => {
+  readMessage = message => {
     message.read = false;
   };
 
-  scrollDown = (animated) => {
+  scrollDown = animated => {
     setTimeout(() => {
       this.scrollView.scrollToEnd({ animated });
     }, 0);
   };
 
-  setPhoto = (data) => {
+  setPhoto = data => {
     const profileImage = data.profile_image_url
       ? data.profile_image_url
       : 'http://res.cloudinary.com/dsjyqaulz/image/upload/v1509814626/profile_image_placeholder_kn7eon.png';
@@ -126,7 +135,7 @@ class Message extends Component {
     this.setState({ profileImage });
   };
 
-  setUserTyping = (user) => {
+  setUserTyping = user => {
     this.setState({ userTyping: user.first_name }, this.scrollDown(true));
   };
 
@@ -146,16 +155,12 @@ class Message extends Component {
     );
   };
 
-  updateMessages = (results) => {
+  updateMessages = results => {
     this.socket.emit('SEND_INDIVIDUAL_MESSAGE', results);
     this.socket.emit('STOP_TYPING', this.props.user);
   };
 
   render() {
-    console.log('this user', this.user);
-    console.log('MESSAGE STATE', this.state);
-    console.log('MESSAGE PROPS', this.props);
-
     const { messages, user } = this.props;
     const dates = [];
 
@@ -323,5 +328,7 @@ class Message extends Component {
 const mapStateToProps = state => ({
   user: state.userReducer.user,
 });
+
+Message.propTypes = propTypes;
 
 export default connect(mapStateToProps)(Message);

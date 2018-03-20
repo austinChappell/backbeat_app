@@ -1,27 +1,31 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 import { AsyncStorage, Text, View } from 'react-native';
-import { colors, styles } from '../assets/styles';
 // import FBSDK, { GraphRequest, GraphRequestManager, LoginButton, LoginManager, AccessToken } from 'react-native-fbsdk';
+
+import { colors, styles } from '../assets/styles';
 import FadeInView from '../components/FadeInView';
 import AuthAPI from '../assets/APIs/authAPI';
 import Api from '../assets/api';
 import { onSignIn } from '../auth';
 
-const api = new Api()
-const authAPI = new AuthAPI()
+const api = new Api();
+const authAPI = new AuthAPI();
 const { getUserInfo } = api;
 const { checkFBToken, registerFB } = authAPI;
 
-console.log('button', Button)
+const propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  setUser: PropTypes.func.isRequired,
+};
 
 class SignInType extends Component {
-
-  enterSite = (user) => {
-    this.props.setUser(user)
-    onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'))
-  }
+  enterSite = user => {
+    this.props.setUser(user);
+    onSignIn(this.token).then(() => this.props.navigation.navigate('SignedIn'));
+  };
 
   // handleSignUpWithFacebookButton = () => {
   //   // Attempt a login using the Facebook login dialog asking for default permissions.
@@ -70,32 +74,31 @@ class SignInType extends Component {
   //   );
   // }
 
-  setUser = (results) => {
+  setUser = results => {
     const user = results.rows[0];
     if (user) {
       this.token = user.token;
-      getUserInfo(user.id, user.token, this.enterSite)
+      getUserInfo(user.id, user.token, this.enterSite);
     } else {
-      this.signUp(this.user)
+      this.signUp(this.user);
     }
-  }
+  };
 
-  signIn = (user) => {
-    checkFBToken(user, this.setUser)
-  }
+  signIn = user => {
+    checkFBToken(user, this.setUser);
+  };
 
-  signUp = (user) => {
-    registerFB(user, this.setUser)
-  }
+  signUp = user => {
+    registerFB(user, this.setUser);
+  };
 
   render() {
-
     const { navigation } = this.props;
 
     return (
-      <View style={ styles.container }>
+      <View style={styles.container}>
         <FadeInView>
-          <Text style={ styles.header }>The Back Beat</Text>
+          <Text style={styles.header}>The Back Beat</Text>
           {/* <Button
             backgroundColor={colors.facebook}
             buttonStyle={styles.button}
@@ -133,18 +136,19 @@ class SignInType extends Component {
           />
         </FadeInView>
       </View>
-    )
+    );
   }
-
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    setUser: (user) => {
-      const action = { type: 'SET_USER', user }
-      dispatch(action)
-    }
-  }
-}
+    setUser: user => {
+      const action = { type: 'SET_USER', user };
+      dispatch(action);
+    },
+  };
+};
+
+SignInType.propTypes = propTypes;
 
 export default connect(null, mapDispatchToProps)(SignInType);
