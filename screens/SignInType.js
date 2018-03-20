@@ -17,7 +17,7 @@ const { getUserInfo } = api;
 const { checkFBToken, registerFB } = authAPI;
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   setUser: PropTypes.func.isRequired,
 };
 

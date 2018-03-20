@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import GoBackNavBar from '../components/GoBackNavBar';
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 

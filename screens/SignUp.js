@@ -18,7 +18,7 @@ const { createUser, validateZip } = authAPI;
 const { dfwCoords } = data;
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   setUser: PropTypes.func.isRequired,
 };
 

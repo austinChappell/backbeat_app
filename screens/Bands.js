@@ -21,7 +21,7 @@ const bandAPI = new BandAPI();
 const { addInstrument, addMember, createBand, getMyBands } = bandAPI;
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   token: PropTypes.string,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
 };

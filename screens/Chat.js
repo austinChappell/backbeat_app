@@ -20,7 +20,7 @@ const { getAllMessages } = messageAPI;
 
 const propTypes = {
   messages: PropTypes.array.isRequired,
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   setAllMessages: PropTypes.func.isRequired,
   setUnreadMessages: PropTypes.func.isRequired,
   token: PropTypes.string,

@@ -5,7 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 const propTypes = {
   bgColor: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   item: PropTypes.objectOf(PropTypes.any).isRequired,
   fullWidth: PropTypes.bool,
   grow: PropTypes.bool,
@@ -15,6 +15,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+  description: '',
   fullWidth: false,
   grow: false,
 };

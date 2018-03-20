@@ -6,7 +6,7 @@ import { Text } from 'react-native-elements';
 import NavBar from '../components/NavBar';
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const Notifications = ({ navigation }) => (

@@ -7,7 +7,7 @@ import MapView from 'react-native-maps';
 import NavBar from '../components/NavBar';
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   user: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 

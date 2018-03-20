@@ -14,7 +14,7 @@ const api = new Api();
 const { getUserInfo, login } = api;
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   setUser: PropTypes.func.isRequired,
 };
 

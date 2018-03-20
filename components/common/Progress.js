@@ -5,7 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../../assets/styles';
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
   progress: PropTypes.number.isRequired,
 };
 

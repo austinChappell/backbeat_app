@@ -8,7 +8,7 @@ import SettingsOptions from './SettingsScreens/';
 import { colors, styles } from '../assets/styles';
 
 const propTypes = {
-  navigation: PropTypes.objectOf(PropTypes.func).isRequired,
+  navigation: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 class Settings extends Component {
