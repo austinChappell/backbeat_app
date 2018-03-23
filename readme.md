@@ -6,7 +6,7 @@
 
 Install Xcode
 
-download, extract, and replace the boost_1_63_0 directory in node_modules/react-native/third-party
+Download, extract, and replace the boost_1_63_0 directory in node_modules/react-native/third-party
 
 This source can be found here (https://sourceforge.net/projects/boost/files/boost/1.63.0/
 
