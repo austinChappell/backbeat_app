@@ -217,7 +217,11 @@ class Bands extends Component {
   render() {
     const { navigation } = this.props;
     const content = this.state.band ? (
-      <Band goBack={this.clearBand} bandId={this.state.band.id} token={this.props.token} />
+      <Band
+        bandId={this.state.band.id}
+        goBack={this.clearBand}
+        token={this.props.token}
+      />
     ) : (
       <ScrollView style={{ padding: 5, flexGrow: 1 }}>
         <View style={{ padding: 5 }}>
@@ -237,14 +241,14 @@ class Bands extends Component {
         >
           {this.state.bands.map((band, index) => (
             <Grid
-              key={index}
               bgColor={colors.white}
               color={colors.primary}
+              id={band.id}
               item={band}
+              key={index}
               margin={2}
               select={this.selectBand}
               title={band.name}
-              id={band.id}
             />
           ))}
         </View>

@@ -133,6 +133,10 @@ const styles = StyleSheet.create({
     color: '#E4FDE1',
     fontSize: 20,
   },
+  slider: {
+    flexDirection: 'row',
+    overflow: 'scroll',
+  },
   spinnerContainer: {
     flex: 1,
     paddingTop: '40%',
