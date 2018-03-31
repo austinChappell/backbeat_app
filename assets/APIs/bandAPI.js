@@ -1,4 +1,8 @@
 import data from '../data';
+import {
+  get,
+  put
+} from './main';
 
 const { apiURL } = data;
 const api = `${apiURL}/api/bands`;
@@ -69,22 +73,13 @@ class BandAPI {
 
   getMyBands = (token, cb) => {
     const url = `${api}/`;
-    fetch(url, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(response => response.json())
-      .then((results) => {
-        const bands = results.rows;
-        cb(bands);
-      })
-      .catch((err) => {
-        throw err;
-      });
+    get(url, token, cb);
   };
+
+  updateBand = (id, token, body, cb) => {
+    const url = `${api}/${id}`;
+    put(url, token, body, cb);
+  }
 }
 
 export default BandAPI;

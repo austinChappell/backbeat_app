@@ -47,12 +47,26 @@ class Band extends Component {
 
   toggleEdit = () => {
     const { isEditing } = this.state;
-    this.setState({ isEditing: !isEditing })
+    this.setState({ isEditing: !isEditing }, () => {
+      if (!this.state.isEditing) {
+        this.props.updateParent();
+      }
+    })
   }
 
   render() {
-    const { band, isEditing } = this.state;
-    const { admin, description, genre, name, skill_level: skillLevel, users } = band;
+    const { 
+      band,
+      isEditing
+    } = this.state;
+    const {
+      admin,
+      description,
+      genre,
+      name,
+      skill_level: skillLevel,
+      users
+    } = band;
     const isAdmin = admin ? admin.id === this.props.user.id : false;
     const genreLabel = genre ? genre.label : '';
     const skillLabel = skillLevel ? skillLevel.label : '';
@@ -71,7 +85,10 @@ class Band extends Component {
 
     const editButton = isAdmin ? (
       <View>
-        <Button title="Edit Band" onPress={this.toggleEdit} />
+        <Button
+          title="Edit Band"
+          onPress={this.toggleEdit}
+        />
       </View>
     ) : null;
 
@@ -79,6 +96,7 @@ class Band extends Component {
       <BandEdit
         band={this.state.band}
         goBack={this.toggleEdit}
+        updateParent={this.getData}
       />
     ) : (
       <View>
@@ -89,12 +107,7 @@ class Band extends Component {
             type="ionicon"
           />
         </View>
-        <Card title="The Title">          
-          <View>
-          </View>
-          <View>
-            <Text>{name}</Text>
-          </View>
+        <Card title={name}>
           <View>
             <Text>{description}</Text>
           </View>

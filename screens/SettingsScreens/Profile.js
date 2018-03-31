@@ -290,7 +290,11 @@ class Profile extends Component {
                       const selectionIndex = instruments.findIndex(opt => opt === instrument.id);
                       if (selectionIndex < 0 || selectionIndex === instIndex) {
                         return (
-                          <Picker.Item key={index} label={instrument.label} value={instrument.id} />
+                          <Picker.Item
+                            key={index}
+                            label={instrument.label}
+                            value={instrument.id}
+                          />
                         );
                       }
                     })}

@@ -47,13 +47,13 @@ class Bands extends Component {
   componentDidMount() {
     const { token } = this.props;
     if (token !== null) {
-      getMyBands(token, this.loadBands);
+      this.getData()
     }
   }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.token !== this.props.token) {
-      getMyBands(newProps.token, this.loadBands);
+  componentDidUpdate(prevProps) {
+    if (prevProps.token !== this.props.token) {
+      this.getData()
     }
   }
 
@@ -135,6 +135,10 @@ class Bands extends Component {
     }
   };
 
+  getData = () => {
+    getMyBands(this.props.token, this.loadBands);
+  }
+
   handleAddMemberRes = results => {
     const bandId = results.rows[0].band_id;
     const { instruments } = this.state;
@@ -168,7 +172,8 @@ class Bands extends Component {
     addMember(token, band.id, user.id, this.handleAddMemberRes);
   };
 
-  loadBands = bands => {
+  loadBands = results => {
+    const bands = results.rows;
     this.setState({ bands });
   };
 
@@ -218,9 +223,11 @@ class Bands extends Component {
     const { navigation } = this.props;
     const content = this.state.band ? (
       <Band
+        band={this.state.band}
         bandId={this.state.band.id}
         goBack={this.clearBand}
         token={this.props.token}
+        updateParent={this.getData}
       />
     ) : (
       <ScrollView style={{ padding: 5, flexGrow: 1 }}>
