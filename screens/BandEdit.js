@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Picker, ScrollView, Text, View } from 'react-native';
-import { Card, FormInput, Icon } from 'react-native-elements';
+import { Button, Card, FormInput, Icon } from 'react-native-elements';
 import { Form, Input, Label } from 'native-base';
 
 import FormPicker from '../components/common/FormPicker';
 
 import BandAPI from '../assets/APIs/bandAPI';
+import BandEditMembers from './BandEditMembers';
 
 const bandAPI = new BandAPI();
 
@@ -16,6 +17,7 @@ const { updateBand } = bandAPI;
 class BandEdit extends Component {
   state = {
     description: '',
+    editMembers: false,
     genreId: null,
     name: '',
     skillId: null,
@@ -90,7 +92,14 @@ class BandEdit extends Component {
       skillId,
     } = this.state;
 
-    return (
+    const content = this.state.editMembers ? 
+      <ScrollView>
+        <BandEditMembers
+          band={this.props.band}
+          goBack={() => this.setState({ editMembers: false })}
+        />
+      </ScrollView>
+      :
       <ScrollView>
         <View style={{ flexDirection: 'row', paddingLeft: 25, marginTop: 15 }}>
           <Icon
@@ -129,8 +138,13 @@ class BandEdit extends Component {
             />
           </Form>
         </Card>
-      </ScrollView>
-    )
+        <Button
+          onPress={() => this.setState({ editMembers: true })}
+          title="Edit Members"
+        />
+      </ScrollView>;
+
+    return content;
   }
 }
 
